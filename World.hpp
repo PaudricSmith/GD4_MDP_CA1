@@ -29,6 +29,8 @@ public:
 	void Update(sf::Time dt);
 	void Draw();
 	CommandQueue& getCommandQueue();
+	bool HasAlivePlayer() const;
+	bool HasPlayerReachedEnd() const;
 
 private:
 	void LoadTextures();
@@ -42,19 +44,21 @@ private:
 	void AddEnemy(AircraftType type, float relX, float relY);
 	void AddEnemies();
 	void GuideMissiles();
+	void HandleCollisions();
+	void DestroyEntitiesOutsideView();
 
 private:
 	struct SpawnPoint
 	{
 		SpawnPoint(AircraftType type, float x, float y) : m_type(type), m_x(x), m_y(y)
 		{
-			
+
 		}
 		AircraftType m_type;
 		float m_x;
 		float m_y;
 	};
-	
+
 
 private:
 	sf::RenderWindow& m_window;
@@ -72,4 +76,3 @@ private:
 	std::vector<SpawnPoint> m_enemy_spawn_points;
 	std::vector<Aircraft*>	m_active_enemies;
 };
-

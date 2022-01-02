@@ -6,7 +6,7 @@ struct AircraftMover
 {
 	AircraftMover(float vx, float vy) : velocity(vx, vy)
 	{
-		
+
 	}
 
 	void operator()(Aircraft& aircraft, sf::Time) const
@@ -17,7 +17,7 @@ struct AircraftMover
 	sf::Vector2f velocity;
 };
 
-Player::Player()
+Player::Player() : m_current_mission_status(MissionStatus::kMissionRunning)
 {
 	//Set initial key bindings
 	m_key_binding[sf::Keyboard::A] = PlayerAction::kMoveLeft;
@@ -31,7 +31,7 @@ Player::Player()
 	InitialiseActions();
 
 	//Assign all categories to the player's aircraft
-	for(auto& pair : m_action_binding)
+	for (auto& pair : m_action_binding)
 	{
 		pair.second.category = Category::kPlayerAircraft;
 	}
@@ -40,10 +40,10 @@ Player::Player()
 
 void Player::HandleEvent(const sf::Event& event, CommandQueue& commands)
 {
-	if(event.type == sf::Event::KeyPressed)
+	if (event.type == sf::Event::KeyPressed)
 	{
 		auto found = m_key_binding.find(event.key.code);
-		if(found != m_key_binding.end() && !IsRealtimeAction(found->second))
+		if (found != m_key_binding.end() && !IsRealtimeAction(found->second))
 		{
 			commands.Push(m_action_binding[found->second]);
 		}
@@ -53,9 +53,9 @@ void Player::HandleEvent(const sf::Event& event, CommandQueue& commands)
 void Player::HandleRealtimeInput(CommandQueue& commands)
 {
 	//Check if any keybinding keys are pressed
-	for(auto pair: m_key_binding)
+	for (auto pair : m_key_binding)
 	{
-		if(sf::Keyboard::isKeyPressed(pair.first) && IsRealtimeAction(pair.second))
+		if (sf::Keyboard::isKeyPressed(pair.first) && IsRealtimeAction(pair.second))
 		{
 			commands.Push(m_action_binding[pair.second]);
 		}
@@ -65,9 +65,9 @@ void Player::HandleRealtimeInput(CommandQueue& commands)
 void Player::AssignKey(PlayerAction action, sf::Keyboard::Key key)
 {
 	//Remove all keys that are already bound to action
-	for(auto itr = m_key_binding.begin(); itr != m_key_binding.end();)
+	for (auto itr = m_key_binding.begin(); itr != m_key_binding.end();)
 	{
-		if(itr->second == action)
+		if (itr->second == action)
 		{
 			m_key_binding.erase(itr++);
 		}
@@ -81,14 +81,24 @@ void Player::AssignKey(PlayerAction action, sf::Keyboard::Key key)
 
 sf::Keyboard::Key Player::GetAssignedKey(PlayerAction action) const
 {
-	for(auto pair : m_key_binding)
+	for (auto pair : m_key_binding)
 	{
-		if(pair.second == action)
+		if (pair.second == action)
 		{
 			return pair.first;
 		}
 	}
 	return sf::Keyboard::Unknown;
+}
+
+void Player::SetMissionStatus(MissionStatus status)
+{
+	m_current_mission_status = status;
+}
+
+MissionStatus Player::GetMissionStatus() const
+{
+	return m_current_mission_status;
 }
 
 void Player::InitialiseActions()
@@ -102,20 +112,20 @@ void Player::InitialiseActions()
 
 	m_action_binding[PlayerAction::kFire].action = DerivedAction<Aircraft>([](Aircraft& a, sf::Time
 		)
-	{
-		a.Fire();
-	});
+		{
+			a.Fire();
+		});
 
 	m_action_binding[PlayerAction::kLaunchMissile].action = DerivedAction<Aircraft>([](Aircraft& a, sf::Time
 		)
-	{
-		a.LaunchMissile();
-	});
+		{
+			a.LaunchMissile();
+		});
 }
 
 bool Player::IsRealtimeAction(PlayerAction action)
 {
-	switch(action)
+	switch (action)
 	{
 	case PlayerAction::kMoveLeft:
 	case PlayerAction::kMoveRight:

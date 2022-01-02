@@ -95,5 +95,3 @@ void SettingsState::AddButtonLabel(PlayerAction action, float y, const std::stri
 	m_gui_container.Pack(m_binding_buttons[static_cast<int>(action)]);
 	m_gui_container.Pack(m_binding_labels[static_cast<int>(action)]);
 }
-
-

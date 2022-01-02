@@ -36,4 +36,3 @@ private:
 	std::size_t m_statistics_numframes;
 	static const sf::Time kTimePerFrame;
 };
-

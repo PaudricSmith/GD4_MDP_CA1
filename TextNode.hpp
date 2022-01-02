@@ -17,4 +17,3 @@ private:
 private:
 	sf::Text m_text;
 };
-
