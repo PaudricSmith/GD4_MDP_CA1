@@ -1,9 +1,10 @@
 #pragma once
 enum class Textures
 {
-	kEagle,
-	kRaptor,
-	kAvenger,
+	kCamo,
+	kSand,
+	kGreen,
+	kBrown,
 	kDesert,
 	kBullet,
 	kMissile,

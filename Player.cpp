@@ -1,17 +1,17 @@
 #include "Player.hpp"
-#include "Aircraft.hpp"
+#include "Tank.hpp"
 #include <algorithm>
 
-struct AircraftMover
+struct TankMover
 {
-	AircraftMover(float vx, float vy) : velocity(vx, vy)
+	TankMover(float vx, float vy) : velocity(vx, vy)
 	{
 
 	}
 
-	void operator()(Aircraft& aircraft, sf::Time) const
+	void operator()(Tank& tank, sf::Time) const
 	{
-		aircraft.Accelerate(velocity * aircraft.GetMaxSpeed());
+		tank.Accelerate(velocity * tank.GetMaxSpeed());
 	}
 
 	sf::Vector2f velocity;
@@ -21,19 +21,34 @@ Player::Player() : m_current_mission_status(MissionStatus::kMissionRunning)
 {
 	//Set initial key bindings
 	m_key_binding[sf::Keyboard::A] = PlayerAction::kMoveLeft;
+	m_key_binding[sf::Keyboard::Left] = PlayerAction::kMoveLeft;
+	//m_key_binding[sf::Joystick::Left] = PlayerAction::kMoveLeft;
+
 	m_key_binding[sf::Keyboard::D] = PlayerAction::kMoveRight;
+	m_key_binding[sf::Keyboard::Right] = PlayerAction::kMoveRight;
+	//m_key_binding[sf::Joystick::Right] = PlayerAction::kMoveRight;
+
 	m_key_binding[sf::Keyboard::W] = PlayerAction::kMoveUp;
+	m_key_binding[sf::Keyboard::Up] = PlayerAction::kMoveUp;
+	//m_key_binding[sf::Joystick::Up] = PlayerAction::kMoveUp;
+
 	m_key_binding[sf::Keyboard::S] = PlayerAction::kMoveDown;
+	m_key_binding[sf::Keyboard::Down] = PlayerAction::kMoveDown;
+	//m_key_binding[sf::Joystick::Down] = PlayerAction::kMoveDown;
+
 	m_key_binding[sf::Keyboard::Space] = PlayerAction::kFire;
+	//m_key_binding[sf::Joystick::Space] = PlayerAction::kFire;
+
 	m_key_binding[sf::Keyboard::M] = PlayerAction::kLaunchMissile;
+	//m_key_binding[sf::Joystick::M] = PlayerAction::kLaunchMissile;
 
 	//Set initial action bindings
 	InitialiseActions();
 
-	//Assign all categories to the player's aircraft
+	//Assign all categories to the player's tank
 	for (auto& pair : m_action_binding)
 	{
-		pair.second.category = Category::kPlayerAircraft;
+		pair.second.category = Category::kPlayerTank;
 	}
 }
 
@@ -104,19 +119,20 @@ MissionStatus Player::GetMissionStatus() const
 void Player::InitialiseActions()
 {
 	const float player_speed = 200.f;
+	const float speed_multiplier = 0.5f;
 
-	m_action_binding[PlayerAction::kMoveLeft].action = DerivedAction<Aircraft>(AircraftMover(-1, 0.f));
-	m_action_binding[PlayerAction::kMoveRight].action = DerivedAction<Aircraft>(AircraftMover(+1, 0.f));
-	m_action_binding[PlayerAction::kMoveUp].action = DerivedAction<Aircraft>(AircraftMover(0.f, -1));
-	m_action_binding[PlayerAction::kMoveDown].action = DerivedAction<Aircraft>(AircraftMover(0, 1));
+	m_action_binding[PlayerAction::kMoveLeft].action = DerivedAction<Tank>(TankMover(-1 * speed_multiplier, 0.f));
+	m_action_binding[PlayerAction::kMoveRight].action = DerivedAction<Tank>(TankMover(+1 * speed_multiplier, 0.f));
+	m_action_binding[PlayerAction::kMoveUp].action = DerivedAction<Tank>(TankMover(0.f, -1 * speed_multiplier));
+	m_action_binding[PlayerAction::kMoveDown].action = DerivedAction<Tank>(TankMover(0, 1 * speed_multiplier));
 
-	m_action_binding[PlayerAction::kFire].action = DerivedAction<Aircraft>([](Aircraft& a, sf::Time
+	m_action_binding[PlayerAction::kFire].action = DerivedAction<Tank>([](Tank& a, sf::Time
 		)
 		{
 			a.Fire();
 		});
 
-	m_action_binding[PlayerAction::kLaunchMissile].action = DerivedAction<Aircraft>([](Aircraft& a, sf::Time
+	m_action_binding[PlayerAction::kLaunchMissile].action = DerivedAction<Tank>([](Tank& a, sf::Time
 		)
 		{
 			a.LaunchMissile();

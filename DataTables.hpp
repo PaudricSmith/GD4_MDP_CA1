@@ -5,7 +5,7 @@
 
 #include "ResourceIdentifiers.hpp"
 
-class Aircraft;
+class Tank;
 
 struct Direction
 {
@@ -17,7 +17,7 @@ struct Direction
 	float m_distance;
 };
 
-struct AircraftData
+struct TankData
 {
 	int m_hitpoints;
 	float m_speed;
@@ -35,12 +35,10 @@ struct ProjectileData
 
 struct PickupData
 {
-	std::function<void(Aircraft&)> m_action;
+	std::function<void(Tank&)> m_action;
 	Textures m_texture;
 };
 
-std::vector<AircraftData> InitializeAircraftData();
+std::vector<TankData> InitializeTankData();
 std::vector<ProjectileData> InitializeProjectileData();
 std::vector<PickupData> InitializePickupData();
-
-

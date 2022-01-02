@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Aircraft.cpp">
+    <ClCompile Include="Tank.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp">
@@ -98,10 +98,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Aircraft.hpp">
+    <ClInclude Include="Tank.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AircraftType.hpp">
+    <ClInclude Include="TankType.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Application.hpp">

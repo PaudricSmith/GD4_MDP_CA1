@@ -15,10 +15,10 @@ World::World(sf::RenderWindow& window, FontHolder& font)
 	, m_fonts(font)
 	, m_scenegraph()
 	, m_scene_layers()
-	, m_world_bounds(0.f, 0.f, m_camera.getSize().x, 2000)
+	, m_world_bounds(0.f, 0.f, m_camera.getSize().x, 1000)
 	, m_spawn_position(m_camera.getSize().x / 2.f, m_world_bounds.height - m_camera.getSize().y / 2.f)
-	, m_scrollspeed(-50.f)
-	, m_player_aircraft(nullptr)
+	, m_scrollspeed(0.f)
+	, m_player_tank(nullptr)
 {
 	LoadTextures();
 	BuildScene();
@@ -31,7 +31,8 @@ void World::Update(sf::Time dt)
 	//Scroll the world
 	m_camera.move(0, m_scrollspeed * dt.asSeconds());
 
-	m_player_aircraft->SetVelocity(0.f, 0.f);
+	m_player_tank->SetVelocity(0.f, 0.f);
+
 	DestroyEntitiesOutsideView();
 	GuideMissiles();
 
@@ -61,19 +62,20 @@ void World::Draw()
 
 bool World::HasAlivePlayer() const
 {
-	return !m_player_aircraft->IsMarkedForRemoval();
+	return !m_player_tank->IsMarkedForRemoval();
 }
 
 bool World::HasPlayerReachedEnd() const
 {
-	return !m_world_bounds.contains(m_player_aircraft->getPosition());
+	return !m_world_bounds.contains(m_player_tank->getPosition());
 }
 
 void World::LoadTextures()
 {
-	m_textures.Load(Textures::kEagle, "Media/Textures/Eagle.png");
-	m_textures.Load(Textures::kRaptor, "Media/Textures/Raptor.png");
-	m_textures.Load(Textures::kAvenger, "Media/Textures/Avenger.png");
+	m_textures.Load(Textures::kCamo, "Media/Textures/Tank/Camo Tank/Tank_B_Big_Green_128x194.png");
+	m_textures.Load(Textures::kSand, "Media/Textures/Tank/sand/Tank_Big_Yellow_128x194.png");
+	m_textures.Load(Textures::kGreen, "Media/Textures/Tank/green/Tank_B_Big_Green_2_128x194.png");
+	m_textures.Load(Textures::kBrown, "Media/Textures/Tank/brown/Tank_Big_Brown_128x194.png");
 	m_textures.Load(Textures::kDesert, "Media/Textures/Desert.png");
 
 	m_textures.Load(Textures::kBullet, "Media/Textures/Bullet.png");
@@ -106,20 +108,20 @@ void World::BuildScene()
 	background_sprite->setPosition(m_world_bounds.left, m_world_bounds.top);
 	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(background_sprite));
 
-	//Add player's aircraft
-	std::unique_ptr<Aircraft> leader(new Aircraft(AircraftType::kEagle, m_textures, m_fonts));
-	m_player_aircraft = leader.get();
-	m_player_aircraft->setPosition(m_spawn_position);
+	//Add player's tank
+	std::unique_ptr<Tank> leader(new Tank(TankType::kCamo, m_textures, m_fonts));
+	m_player_tank = leader.get();
+	m_player_tank->setPosition(m_spawn_position);
 	m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(leader));
 
 	// //Add two escorts
-	// std::unique_ptr<Aircraft> leftEscort(new Aircraft(AircraftType::kRaptor, m_textures, m_fonts));
+	// std::unique_ptr<Tank> leftEscort(new Tank(TankType::kSand, m_textures, m_fonts));
 	// leftEscort->setPosition(-80.f, 50.f);
-	// m_player_aircraft->AttachChild(std::move(leftEscort));
+	// m_player_tank->AttachChild(std::move(leftEscort));
 	//
-	// std::unique_ptr<Aircraft> rightEscort(new Aircraft(AircraftType::kRaptor, m_textures, m_fonts));
+	// std::unique_ptr<Tank> rightEscort(new Tank(TankType::kSand, m_textures, m_fonts));
 	// rightEscort->setPosition(80.f, 50.f);
-	// m_player_aircraft->AttachChild(std::move(rightEscort));
+	// m_player_tank->AttachChild(std::move(rightEscort));
 
 	AddEnemies();
 }
@@ -134,25 +136,25 @@ void World::AdaptPlayerPosition()
 	//Keep the player on the screen
 	sf::FloatRect view_bounds = GetViewBounds();
 	const float border_distance = 40.f;
-	sf::Vector2f position = m_player_aircraft->getPosition();
+	sf::Vector2f position = m_player_tank->getPosition();
 	position.x = std::max(position.x, view_bounds.left + border_distance);
 	position.x = std::min(position.x, view_bounds.left + view_bounds.width - border_distance);
 	position.y = std::max(position.y, view_bounds.top + border_distance);
 	position.y = std::min(position.y, view_bounds.top + view_bounds.height - border_distance);
-	m_player_aircraft->setPosition(position);
+	m_player_tank->setPosition(position);
 
 }
 
 void World::AdaptPlayerVelocity()
 {
-	sf::Vector2f velocity = m_player_aircraft->GetVelocity();
+	sf::Vector2f velocity = m_player_tank->GetVelocity();
 	//if moving diagonally then reduce velocity
 	if (velocity.x != 0.f && velocity.y != 0.f)
 	{
-		m_player_aircraft->SetVelocity(velocity / std::sqrt(2.f));
+		m_player_tank->SetVelocity(velocity / std::sqrt(2.f));
 	}
 	//Add scrolling velocity
-	m_player_aircraft->Accelerate(0.f, m_scrollspeed);
+	m_player_tank->Accelerate(0.f, m_scrollspeed);
 }
 
 sf::FloatRect World::GetViewBounds() const
@@ -176,7 +178,7 @@ void World::SpawnEnemies()
 	while (!m_enemy_spawn_points.empty() && m_enemy_spawn_points.back().m_y > GetBattlefieldBounds().top)
 	{
 		SpawnPoint spawn = m_enemy_spawn_points.back();
-		std::unique_ptr<Aircraft> enemy(new Aircraft(spawn.m_type, m_textures, m_fonts));
+		std::unique_ptr<Tank> enemy(new Tank(spawn.m_type, m_textures, m_fonts));
 		enemy->setPosition(spawn.m_x, spawn.m_y);
 		enemy->setRotation(180.f);
 		m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(enemy));
@@ -186,7 +188,7 @@ void World::SpawnEnemies()
 	}
 }
 
-void World::AddEnemy(AircraftType type, float relX, float relY)
+void World::AddEnemy(TankType type, float relX, float relY)
 {
 	SpawnPoint spawn(type, m_spawn_position.x + relX, m_spawn_position.y - relY);
 	m_enemy_spawn_points.emplace_back(spawn);
@@ -195,13 +197,13 @@ void World::AddEnemy(AircraftType type, float relX, float relY)
 void World::AddEnemies()
 {
 	//Add all enemies
-	AddEnemy(AircraftType::kRaptor, 0.f, 500.f);
-	AddEnemy(AircraftType::kRaptor, 0.f, 1000.f);
-	AddEnemy(AircraftType::kRaptor, 100.f, 1100.f);
-	AddEnemy(AircraftType::kRaptor, -100.f, 1100.f);
-	AddEnemy(AircraftType::kAvenger, -70.f, 1400.f);
-	AddEnemy(AircraftType::kAvenger, 70.f, 1400.f);
-	AddEnemy(AircraftType::kAvenger, 70.f, 1600.f);
+	AddEnemy(TankType::kSand, 0.f, 500.f);
+	AddEnemy(TankType::kSand, 0.f, 1000.f);
+	AddEnemy(TankType::kSand, 100.f, 1100.f);
+	AddEnemy(TankType::kSand, -100.f, 1100.f);
+	AddEnemy(TankType::kGreen, -70.f, 1400.f);
+	AddEnemy(TankType::kGreen, 70.f, 1400.f);
+	AddEnemy(TankType::kGreen, 70.f, 1600.f);
 
 	//Sort according to y value so that lower enemies are checked first
 	std::sort(m_enemy_spawn_points.begin(), m_enemy_spawn_points.end(), [](SpawnPoint lhs, SpawnPoint rhs)
@@ -214,8 +216,8 @@ void World::GuideMissiles()
 {
 	// Setup command that stores all enemies in mActiveEnemies
 	Command enemyCollector;
-	enemyCollector.category = Category::kEnemyAircraft;
-	enemyCollector.action = DerivedAction<Aircraft>([this](Aircraft& enemy, sf::Time)
+	enemyCollector.category = Category::kEnemyTank;
+	enemyCollector.action = DerivedAction<Tank>([this](Tank& enemy, sf::Time)
 		{
 			if (!enemy.IsDestroyed())
 				m_active_enemies.push_back(&enemy);
@@ -231,10 +233,10 @@ void World::GuideMissiles()
 				return;
 
 			float minDistance = std::numeric_limits<float>::max();
-			Aircraft* closestEnemy = nullptr;
+			Tank* closestEnemy = nullptr;
 
 			// Find closest enemy
-			for (Aircraft* enemy : m_active_enemies)
+			for (Tank* enemy : m_active_enemies)
 			{
 				float enemyDistance = Distance(missile, *enemy);
 
@@ -281,30 +283,30 @@ void World::HandleCollisions()
 	m_scenegraph.CheckSceneCollision(m_scenegraph, collision_pairs);
 	for (SceneNode::Pair pair : collision_pairs)
 	{
-		if (MatchesCategories(pair, Category::Type::kPlayerAircraft, Category::Type::kEnemyAircraft))
+		if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kEnemyTank))
 		{
-			auto& player = static_cast<Aircraft&>(*pair.first);
-			auto& enemy = static_cast<Aircraft&>(*pair.second);
+			auto& player = static_cast<Tank&>(*pair.first);
+			auto& enemy = static_cast<Tank&>(*pair.second);
 			//Collision
 			player.Damage(enemy.GetHitPoints());
 			enemy.Destroy();
 		}
 
-		else if (MatchesCategories(pair, Category::Type::kPlayerAircraft, Category::Type::kPickup))
+		else if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kPickup))
 		{
-			auto& player = static_cast<Aircraft&>(*pair.first);
+			auto& player = static_cast<Tank&>(*pair.first);
 			auto& pickup = static_cast<Pickup&>(*pair.second);
 			//Apply the pickup effect
 			pickup.Apply(player);
 			pickup.Destroy();
 		}
 
-		else if (MatchesCategories(pair, Category::Type::kPlayerAircraft, Category::Type::kEnemyProjectile) || MatchesCategories(pair, Category::Type::kEnemyAircraft, Category::Type::kAlliedProjectile))
+		else if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kEnemyProjectile) || MatchesCategories(pair, Category::Type::kEnemyTank, Category::Type::kAlliedProjectile))
 		{
-			auto& aircraft = static_cast<Aircraft&>(*pair.first);
+			auto& tank = static_cast<Tank&>(*pair.first);
 			auto& projectile = static_cast<Projectile&>(*pair.second);
-			//Apply the projectile damage to the plane
-			aircraft.Damage(projectile.GetDamage());
+			//Apply the projectile damage to the tank
+			tank.Damage(projectile.GetDamage());
 			projectile.Destroy();
 		}
 
@@ -315,7 +317,7 @@ void World::HandleCollisions()
 void World::DestroyEntitiesOutsideView()
 {
 	Command command;
-	command.category = Category::Type::kEnemyAircraft | Category::Type::kProjectile;
+	command.category = Category::Type::kEnemyTank | Category::Type::kProjectile;
 	command.action = DerivedAction<Entity>([this](Entity& e, sf::Time)
 		{
 			//Does the object intersect with the battlefield
