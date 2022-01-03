@@ -28,6 +28,7 @@ World::World(sf::RenderWindow& window, FontHolder& font)
 
 void World::Update(sf::Time dt)
 {
+
 	//Scroll the world
 	m_camera.move(0, m_scrollspeed * dt.asSeconds());
 

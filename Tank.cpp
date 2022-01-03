@@ -191,6 +191,11 @@ float Tank::GetMaxSpeed() const
 	return Table[static_cast<int>(m_type)].m_speed;
 }
 
+float Tank::GetRotationSpeed() const
+{
+	return Table[static_cast<int>(m_type)].m_rotationSpeed;
+}
+
 void Tank::Fire()
 {
 	//Only ships with a non-zero fire interval fire
