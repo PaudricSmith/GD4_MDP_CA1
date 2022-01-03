@@ -13,10 +13,12 @@ SettingsState::SettingsState(StateStack& stack, Context context)
 	m_background_sprite.setTexture(context.textures->Get(Textures::kTitleScreen));
 
 	// Build key binding buttons and labels
-	AddButtonLabel(PlayerAction::kMoveLeft, 300.f, "Move Left", context);
-	AddButtonLabel(PlayerAction::kMoveRight, 350.f, "Move Right", context);
-	AddButtonLabel(PlayerAction::kMoveUp, 400.f, "Move Up", context);
-	AddButtonLabel(PlayerAction::kMoveDown, 450.f, "Move Down", context);
+	AddButtonLabel(PlayerAction::kMoveLeft, 200.f, "Move Left", context);
+	AddButtonLabel(PlayerAction::kMoveRight, 250.f, "Move Right", context);
+	AddButtonLabel(PlayerAction::kMoveUp, 300.f, "Move Up", context);
+	AddButtonLabel(PlayerAction::kMoveDown, 350.f, "Move Down", context);
+	AddButtonLabel(PlayerAction::kRotateLeft, 400.f, "Rotate Left", context);
+	AddButtonLabel(PlayerAction::kRotateRight, 450.f, "Rotate Right", context);
 	AddButtonLabel(PlayerAction::kFire, 500.f, "Fire", context);
 	AddButtonLabel(PlayerAction::kLaunchMissile, 550.f, "Missile", context);
 
@@ -94,4 +96,4 @@ void SettingsState::AddButtonLabel(PlayerAction action, float y, const std::stri
 
 	m_gui_container.Pack(m_binding_buttons[static_cast<int>(action)]);
 	m_gui_container.Pack(m_binding_labels[static_cast<int>(action)]);
-}
+}\
