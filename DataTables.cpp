@@ -10,6 +10,7 @@ std::vector<TankData> InitializeTankData()
 
 	data[static_cast<int>(TankType::kCamo)].m_hitpoints = 100;
 	data[static_cast<int>(TankType::kCamo)].m_speed = 200.f;
+	//data[static_cast<int>(TankType::kCamo)].m_rotationSpeed = 1.f;
 	data[static_cast<int>(TankType::kCamo)].m_fire_interval = sf::seconds(1);
 	data[static_cast<int>(TankType::kCamo)].m_texture = Textures::kCamo;
 
@@ -17,6 +18,7 @@ std::vector<TankData> InitializeTankData()
 	data[static_cast<int>(TankType::kSand)].m_speed = 80.f;
 	data[static_cast<int>(TankType::kSand)].m_fire_interval = sf::Time::Zero;
 	data[static_cast<int>(TankType::kSand)].m_texture = Textures::kSand;
+
 	//AI
 	data[static_cast<int>(TankType::kSand)].m_directions.emplace_back(Direction(+45.f, 80.f));
 	data[static_cast<int>(TankType::kSand)].m_directions.emplace_back(Direction(-45.f, 160.f));
@@ -40,15 +42,15 @@ std::vector<ProjectileData> InitializeProjectileData()
 	std::vector<ProjectileData> data(static_cast<int>(ProjectileType::kProjectileCount));
 
 	data[static_cast<int>(ProjectileType::kAlliedBullet)].m_damage = 10;
-	data[static_cast<int>(ProjectileType::kAlliedBullet)].m_speed = 300;
+	data[static_cast<int>(ProjectileType::kAlliedBullet)].m_speed = 200;
 	data[static_cast<int>(ProjectileType::kAlliedBullet)].m_texture = Textures::kBullet;
 
 	data[static_cast<int>(ProjectileType::kEnemyBullet)].m_damage = 10;
-	data[static_cast<int>(ProjectileType::kEnemyBullet)].m_speed = 300;
+	data[static_cast<int>(ProjectileType::kEnemyBullet)].m_speed = 200;
 	data[static_cast<int>(ProjectileType::kEnemyBullet)].m_texture = Textures::kBullet;
 
 	data[static_cast<int>(ProjectileType::kMissile)].m_damage = 200;
-	data[static_cast<int>(ProjectileType::kMissile)].m_speed = 150.f;
+	data[static_cast<int>(ProjectileType::kMissile)].m_speed = 100.f;
 	data[static_cast<int>(ProjectileType::kMissile)].m_texture = Textures::kMissile;
 	return data;
 }
