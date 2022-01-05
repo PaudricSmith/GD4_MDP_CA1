@@ -1,5 +1,7 @@
 #include "Player.hpp"
 #include "Tank.hpp"
+#include "Utility.hpp"
+
 #include <algorithm>
 #include <iostream>
 
@@ -10,7 +12,25 @@ struct TankMover
 
 	void operator()(Tank& tank, sf::Time) const
 	{
-		tank.Accelerate(velocity * tank.GetMaxSpeed());
+		// Movement in direction of forward code based on this webpage
+	    // https://www.cplusplus.com/forum/general/110659/ 
+		
+		float currentTankRotation = tank.getRotation();
+		sf::Vector2f newTankPosition;
+
+		// Moving forwards / backwards
+		if (velocity.y > 0) // If up key pressed, get the x and y postion for the direction based on tank angle
+		{
+			newTankPosition.x = -sin(Utility::ToRadians(currentTankRotation));
+			newTankPosition.y = cos(Utility::ToRadians(currentTankRotation));
+		}
+		else if (velocity.y < 0) // If down key pressed, same but invert the signs
+		{
+			newTankPosition.x = sin(Utility::ToRadians(currentTankRotation));
+			newTankPosition.y = -cos(Utility::ToRadians(currentTankRotation));
+		}
+
+		tank.Accelerate(newTankPosition * tank.GetMaxSpeed());
 	}
 
 	sf::Vector2f velocity;
@@ -32,33 +52,23 @@ struct TankRotator
 
 Player::Player() : m_current_mission_status(MissionStatus::kMissionRunning)
 {
-
 	//Set initial key bindings
-	m_key_binding[sf::Keyboard::A] = PlayerAction::kMoveLeft;
-	m_key_binding[sf::Keyboard::Left] = PlayerAction::kMoveLeft;
-	//m_joystick_binding[sf::Joystick::Left] = PlayerAction::kMoveLeft;
-
-	m_key_binding[sf::Keyboard::D] = PlayerAction::kMoveRight;
-	m_key_binding[sf::Keyboard::Right] = PlayerAction::kMoveRight;
-	//m_key_binding[sf::Joystick::Right] = PlayerAction::kMoveRight;
-
+	
+	// Forward / Backwards
 	m_key_binding[sf::Keyboard::W] = PlayerAction::kMoveUp;
 	m_key_binding[sf::Keyboard::Up] = PlayerAction::kMoveUp;
-	//m_key_binding[sf::Joystick::Up] = PlayerAction::kMoveUp;
 
 	m_key_binding[sf::Keyboard::S] = PlayerAction::kMoveDown;
 	m_key_binding[sf::Keyboard::Down] = PlayerAction::kMoveDown;
-	//m_key_binding[sf::Joystick::Down] = PlayerAction::kMoveDown;
 
-	m_key_binding[sf::Keyboard::Q] = PlayerAction::kRotateLeft;
+	// Rotation
+	m_key_binding[sf::Keyboard::A] = PlayerAction::kRotateLeft;
+	m_key_binding[sf::Keyboard::D] = PlayerAction::kRotateRight;
 
-	m_key_binding[sf::Keyboard::E] = PlayerAction::kRotateRight;
-
+	// Weapons
 	m_key_binding[sf::Keyboard::Space] = PlayerAction::kFire;
-	//m_key_binding[sf::Joystick::Space] = PlayerAction::kFire;
-
 	m_key_binding[sf::Keyboard::M] = PlayerAction::kLaunchMissile;
-	//m_key_binding[sf::Joystick::M] = PlayerAction::kLaunchMissile;
+
 
 	//Set initial action bindings
 	InitialiseActions();
