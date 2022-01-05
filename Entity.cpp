@@ -35,6 +35,13 @@ void Entity::Accelerate(float vx, float vy)
 	m_velocity.y += vy;
 }
 
+void Entity::Rotate(float angle)
+{
+	m_rotation = angle;
+
+	this->rotate(m_rotation);
+}
+
 void Entity::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 {
 	move(m_velocity * dt.asSeconds());

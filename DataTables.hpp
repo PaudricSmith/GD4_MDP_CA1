@@ -21,6 +21,7 @@ struct TankData
 {
 	int m_hitpoints;
 	float m_speed;
+	float m_rotationSpeed = 1.0f;
 	Textures m_texture;
 	sf::Time m_fire_interval;
 	std::vector<Direction> m_directions;

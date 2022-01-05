@@ -22,12 +22,13 @@ World::World(sf::RenderWindow& window, FontHolder& font)
 {
 	LoadTextures();
 	BuildScene();
-	std::cout << m_camera.getSize().x << m_camera.getSize().y << std::endl;
+	//std::cout << m_camera.getSize().x << m_camera.getSize().y << std::endl;
 	m_camera.setCenter(m_spawn_position);
 }
 
 void World::Update(sf::Time dt)
 {
+
 	//Scroll the world
 	m_camera.move(0, m_scrollspeed * dt.asSeconds());
 
@@ -261,7 +262,7 @@ bool MatchesCategories(SceneNode::Pair& colliders, Category::Type type1, Categor
 {
 	unsigned int category1 = colliders.first->GetCategory();
 	unsigned int category2 = colliders.second->GetCategory();
-	std::cout << category1 << category2 << std::endl;
+	//std::cout << category1 << category2 << std::endl;
 	if (type1 & category1 && type2 & category2)
 	{
 		return true;

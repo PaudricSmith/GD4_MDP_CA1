@@ -22,6 +22,7 @@ public:
 	void UpdateTexts();
 	void UpdateMovementPattern(sf::Time dt);
 	float GetMaxSpeed() const;
+	float GetRotationSpeed() const;
 	void Fire();
 	void LaunchMissile();
 	void CreateBullets(SceneNode& node, const TextureHolder& textures) const;

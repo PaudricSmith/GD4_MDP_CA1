@@ -191,6 +191,11 @@ float Tank::GetMaxSpeed() const
 	return Table[static_cast<int>(m_type)].m_speed;
 }
 
+float Tank::GetRotationSpeed() const
+{
+	return Table[static_cast<int>(m_type)].m_rotationSpeed;
+}
+
 void Tank::Fire()
 {
 	//Only ships with a non-zero fire interval fire
@@ -274,13 +279,19 @@ void Tank::CreateProjectile(SceneNode& node, ProjectileType type, float x_offset
 	const TextureHolder& textures) const
 {
 	std::cout << "Creating projectile " << static_cast<int>(type) << std::endl;
+
 	std::unique_ptr<Projectile> projectile(new Projectile(type, textures));
 	sf::Vector2f offset(x_offset * m_sprite.getGlobalBounds().width, y_offset * m_sprite.getGlobalBounds().height);
-	sf::Vector2f velocity(0, projectile->GetMaxSpeed());
 
-	float sign = IsAllied() ? -1.f : +1.f;
-	projectile->setPosition(GetWorldPosition() + offset * sign);
-	projectile->SetVelocity(velocity * sign);
+	// Calculate x and y starting position of the projectile in terms of the angle of rotation of tank in degrees.
+	float projectileXPos = sinf(Utility::ToRadians(getRotation()));
+	float projectileYPos = -cosf(Utility::ToRadians(getRotation()));
+	// Join together in a sf::Vector2f
+	sf::Vector2f projectilePos(projectileXPos, projectileYPos);
+	
+	projectile->setPosition(GetWorldPosition() + projectilePos * (offset.x + offset.y));
+	projectile->setRotation(getRotation());
+	projectile->SetVelocity(projectilePos * projectile->GetMaxSpeed());
 	node.AttachChild(std::move(projectile));
 }
 

@@ -9,6 +9,8 @@
 #include "PauseState.hpp"
 #include "SettingsState.hpp"
 
+#include <iostream>
+
 const sf::Time Application::kTimePerFrame = sf::seconds(1.f / 60.f);
 
 Application::Application()
@@ -72,6 +74,38 @@ void Application::ProcessInput()
 
 void Application::Update(sf::Time delta_time)
 {
+	// JOYSTICK MOVEMENT CONTROLS
+	//if (sf::Joystick::hasAxis(0, sf::Joystick::V))
+	//{
+
+	//	std::cout << "Has Axis!" << sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X) << std::endl;
+
+	//	//commands.Push(m_action_binding[PlayerAction::kMoveLeft]);
+
+	//}
+	//if (sf::Event::JoystickConnected)
+	//{
+	//	if (sf::Joystick::isConnected(0))
+	//	{
+	//		std::cout << "Joystick connected" << std::endl;
+	//	}
+	//	if (sf::Joystick::isConnected(0) == false)
+	//	{
+	//		std::cout << "Joystick Disconnected" << std::endl;
+	//	}
+	//	if (sf::Joystick::isConnected(1))
+	//	{
+	//		std::cout << "Joystick connected" << std::endl;
+	//	}
+	//	if (sf::Joystick::isConnected(1) == false)
+	//	{
+	//		std::cout << "Joystick Disconnected" << std::endl;
+	//	}
+	//}
+	
+
+	//std::cout << "Constantly Updating !" << std::endl;
+
 	m_stack.Update(delta_time);
 }
 

@@ -32,5 +32,5 @@ private:
 	sf::Sprite m_background_sprite;
 	GUI::Container m_gui_container;
 	std::array<GUI::Button::Ptr, static_cast<int>(PlayerAction::kActionCount)> m_binding_buttons;
-	std::array<GUI::Label::Ptr, static_cast<int>(PlayerAction::kActionCount)> 	m_binding_labels;
+	std::array<GUI::Label::Ptr, static_cast<int>(PlayerAction::kActionCount)> m_binding_labels;
 };

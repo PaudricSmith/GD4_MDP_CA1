@@ -24,6 +24,7 @@ private:
 
 private:
 	std::map<sf::Keyboard::Key, PlayerAction> m_key_binding;
+	std::map<sf::Joystick::Axis, PlayerAction> m_joystick_binding;
 	std::map<PlayerAction, Command> m_action_binding;
 	MissionStatus m_current_mission_status;
 };
