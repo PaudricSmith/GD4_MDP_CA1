@@ -13,7 +13,7 @@
 class Tank : public Entity
 {
 public:
-	Tank(TankType type, const TextureHolder& textures, const FontHolder& fonts);
+	Tank(TankType type, TankType cannonType, const TextureHolder& textures, const FontHolder& fonts);
 	unsigned int GetCategory() const override;
 
 	void IncreaseFireRate();
@@ -23,6 +23,9 @@ public:
 	void UpdateMovementPattern(sf::Time dt);
 	float GetMaxSpeed() const;
 	float GetRotationSpeed() const;
+	float GetCannonRotationSpeed() const;
+	float GetCannonRotationAngle() const;
+	void RotateCannon(float angle);
 	void Fire();
 	void LaunchMissile();
 	void CreateBullets(SceneNode& node, const TextureHolder& textures) const;
@@ -44,25 +47,29 @@ private:
 
 private:
 	TankType m_type;
+	TankType m_cannon_type;
+	
 	sf::Sprite m_sprite;
+	sf::Sprite m_cannon_sprite;
+	sf::Time m_fire_countdown;
 
-	Command m_fire_command;
-	Command m_missile_command;
-	Command m_drop_pickup_command;
+	TextNode* m_health_display;
+	TextNode* m_missile_display;
 
 	bool m_is_firing;
 	bool m_is_launching_missile;
-
-	sf::Time m_fire_countdown;
-
 	bool m_is_marked_for_removal;
 
+	float m_travelled_distance;
+	float m_cannon_rotation;
+
+	int m_directions_index;
 
 	unsigned int m_fire_rate;
 	unsigned int m_spread_level;
 	unsigned int m_missile_ammo;
-	TextNode* m_health_display;
-	TextNode* m_missile_display;
-	float m_travelled_distance;
-	int m_directions_index;
+
+	Command m_fire_command;
+	Command m_missile_command;
+	Command m_drop_pickup_command;
 };

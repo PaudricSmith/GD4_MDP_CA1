@@ -36,14 +36,28 @@ struct TankMover
 	sf::Vector2f velocity;
 };
 
-struct TankRotator
+struct TankRotator // Rotate Tank
 {
 	TankRotator(float angle) : rotation(angle)
 	{}
 
 	void operator()(Tank& tank, sf::Time) const
 	{
-		tank.Rotate(rotation * tank.GetRotationSpeed());
+		tank.Rotate(rotation * tank.GetRotationSpeed()); // Rotate Tank by sign and Tank rotation speed
+		std::cout << "\nTank Rotation Angle == " << tank.getRotation();
+	}
+
+	float rotation;
+};
+
+struct CannonRotator // Rotate Cannon
+{
+	CannonRotator(float angle) : rotation(angle)
+	{}
+
+	void operator()(Tank& tank, sf::Time) const
+	{
+		tank.RotateCannon(rotation * tank.GetCannonRotationSpeed()); // Rotate Tank Cannon by sign and cannon speed
 	}
 
 	float rotation;
@@ -54,16 +68,21 @@ Player::Player() : m_current_mission_status(MissionStatus::kMissionRunning)
 {
 	//Set initial key bindings
 	
-	// Forward / Backwards
+	// Move Forwards 
 	m_key_binding[sf::Keyboard::W] = PlayerAction::kMoveUp;
 	m_key_binding[sf::Keyboard::Up] = PlayerAction::kMoveUp;
 
+	// Move Backwards
 	m_key_binding[sf::Keyboard::S] = PlayerAction::kMoveDown;
 	m_key_binding[sf::Keyboard::Down] = PlayerAction::kMoveDown;
 
-	// Rotation
+	// Rotation Of Tank
 	m_key_binding[sf::Keyboard::A] = PlayerAction::kRotateLeft;
 	m_key_binding[sf::Keyboard::D] = PlayerAction::kRotateRight;
+
+	// Rotation Of Cannon
+	m_key_binding[sf::Keyboard::Q] = PlayerAction::kRotateCannonLeft;
+	m_key_binding[sf::Keyboard::E] = PlayerAction::kRotateCannonRight;
 
 	// Weapons
 	m_key_binding[sf::Keyboard::Space] = PlayerAction::kFire;
@@ -200,16 +219,20 @@ MissionStatus Player::GetMissionStatus() const
 
 void Player::InitialiseActions()
 {
-	const float player_speed = 200.f;
+	//const float player_speed = 200.f;
 	const float speed_multiplier = 0.5f;
 
-	m_action_binding[PlayerAction::kMoveLeft].action = DerivedAction<Tank>(TankMover(-1 * speed_multiplier, 0.f));
-	m_action_binding[PlayerAction::kMoveRight].action = DerivedAction<Tank>(TankMover(+1 * speed_multiplier, 0.f));
+	/*m_action_binding[PlayerAction::kMoveLeft].action = DerivedAction<Tank>(TankMover(-1 * speed_multiplier, 0.f));
+	m_action_binding[PlayerAction::kMoveRight].action = DerivedAction<Tank>(TankMover(+1 * speed_multiplier, 0.f));*/
+
 	m_action_binding[PlayerAction::kMoveUp].action = DerivedAction<Tank>(TankMover(0.f, -1 * speed_multiplier));
 	m_action_binding[PlayerAction::kMoveDown].action = DerivedAction<Tank>(TankMover(0, 1 * speed_multiplier));
 	
 	m_action_binding[PlayerAction::kRotateLeft].action = DerivedAction<Tank>(TankRotator(-1.f));
 	m_action_binding[PlayerAction::kRotateRight].action = DerivedAction<Tank>(TankRotator(1.f));
+
+	m_action_binding[PlayerAction::kRotateCannonLeft].action = DerivedAction<Tank>(CannonRotator(-1.f));
+	m_action_binding[PlayerAction::kRotateCannonRight].action = DerivedAction<Tank>(CannonRotator(1.f));
 
 	m_action_binding[PlayerAction::kFire].action = DerivedAction<Tank>([](Tank& a, sf::Time
 		)
@@ -234,6 +257,8 @@ bool Player::IsRealtimeAction(PlayerAction action)
 	case PlayerAction::kMoveDown:
 	case PlayerAction::kRotateLeft:
 	case PlayerAction::kRotateRight:
+	case PlayerAction::kRotateCannonLeft:
+	case PlayerAction::kRotateCannonRight:
 	case PlayerAction::kFire:
 		return true;
 	default:

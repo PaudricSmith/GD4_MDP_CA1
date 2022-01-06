@@ -73,7 +73,8 @@ bool World::HasPlayerReachedEnd() const
 
 void World::LoadTextures()
 {
-	m_textures.Load(Textures::kCamo, "Media/Textures/Tank/Camo Tank/Tank_B_Big_Green_128x194.png");
+	m_textures.Load(Textures::kCamo, "Media/Textures/Tank/Camo Tank/Camo Tank Base.png"); // Tank_B_Big_Green_128x194.png
+	m_textures.Load(Textures::kCannonCamo, "Media/Textures/Tank/Camo Tank/Camo Tank Turret.png");
 	m_textures.Load(Textures::kSand, "Media/Textures/Tank/sand/Tank_Big_Yellow_128x194.png");
 	m_textures.Load(Textures::kGreen, "Media/Textures/Tank/green/Tank_B_Big_Green_2_128x194.png");
 	m_textures.Load(Textures::kBrown, "Media/Textures/Tank/brown/Tank_Big_Brown_128x194.png");
@@ -110,7 +111,7 @@ void World::BuildScene()
 	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(background_sprite));
 
 	//Add player's tank
-	std::unique_ptr<Tank> leader(new Tank(TankType::kCamo, m_textures, m_fonts));
+	std::unique_ptr<Tank> leader(new Tank(TankType::kCamo, TankType::kCannonCamo, m_textures, m_fonts));
 	m_player_tank = leader.get();
 	m_player_tank->setPosition(m_spawn_position);
 	m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(leader));
@@ -179,7 +180,7 @@ void World::SpawnEnemies()
 	while (!m_enemy_spawn_points.empty() && m_enemy_spawn_points.back().m_y > GetBattlefieldBounds().top)
 	{
 		SpawnPoint spawn = m_enemy_spawn_points.back();
-		std::unique_ptr<Tank> enemy(new Tank(spawn.m_type, m_textures, m_fonts));
+		std::unique_ptr<Tank> enemy(new Tank(spawn.m_type, TankType::kCannonCamo, m_textures, m_fonts));
 		enemy->setPosition(spawn.m_x, spawn.m_y);
 		enemy->setRotation(180.f);
 		m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(enemy));

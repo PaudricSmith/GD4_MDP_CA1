@@ -26,6 +26,8 @@ Textures ToTextureID(TankType type)
 	{
 	case TankType::kCamo:
 		return Textures::kCamo;
+	case TankType::kCannonCamo:
+		return Textures::kCannonCamo;
 	case TankType::kSand:
 		return Textures::kSand;
 	case TankType::kGreen:
@@ -34,10 +36,12 @@ Textures ToTextureID(TankType type)
 	return Textures::kCamo;
 }
 
-Tank::Tank(TankType type, const TextureHolder& textures, const FontHolder& fonts)
+Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, const FontHolder& fonts)
 	: Entity(Table[static_cast<int>(type)].m_hitpoints)
 	, m_type(type)
+	, m_cannon_type(cannonType)
 	, m_sprite(textures.Get(Table[static_cast<int>(type)].m_texture))
+	, m_cannon_sprite(textures.Get(Table[static_cast<int>(cannonType)].m_cannon_texture))
 	, m_is_firing(false)
 	, m_is_launching_missile(false)
 	, m_fire_countdown(sf::Time::Zero)
@@ -49,12 +53,27 @@ Tank::Tank(TankType type, const TextureHolder& textures, const FontHolder& fonts
 	, m_missile_display(nullptr)
 	, m_travelled_distance(0.f)
 	, m_directions_index(0)
+	, m_cannon_rotation(0)
 {
 	// Reduce Tank sprite size
 	m_sprite.setScale(0.5f, 0.5f);
-
+	m_cannon_sprite.setScale(0.5f, 0.5f);
+	          
+	// Set Origin of Tank and Cannon
 	Utility::CentreOrigin(m_sprite);
 
+	sf::FloatRect bounds = m_cannon_sprite.getLocalBounds();
+	m_cannon_sprite.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 1.7f));
+
+	// Set Offset of Tank and Cannon
+	sf::Vector2f tankOriginOffset = sf::Vector2f(0.0f, -7.0f);
+	m_sprite.setPosition(tankOriginOffset);
+
+	sf::Vector2f cannonOriginOffset = sf::Vector2f(0.0f, 2.0f);
+	m_cannon_sprite.setPosition(cannonOriginOffset);
+
+
+	// Create Nodes
 	m_fire_command.category = static_cast<int>(Category::Type::kScene);
 	m_fire_command.action = [this, &textures](SceneNode& node, sf::Time)
 	{
@@ -86,12 +105,12 @@ Tank::Tank(TankType type, const TextureHolder& textures, const FontHolder& fonts
 	}
 
 	UpdateTexts();
-
 }
 
 void Tank::DrawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(m_sprite, states);
+	target.draw(m_cannon_sprite, states);
 }
 
 unsigned int Tank::GetCategory() const
@@ -141,7 +160,6 @@ void Tank::UpdateTexts()
 			m_missile_display->SetString("M: " + std::to_string(m_missile_ammo));
 		}
 	}
-
 }
 
 void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
@@ -152,12 +170,17 @@ void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 		m_is_marked_for_removal = true;
 		return;
 	}
+
 	//Check if bullets or missiles are fired
 	CheckProjectileLaunch(dt, commands);
+
 	// Update enemy movement pattern; apply velocity
 	UpdateMovementPattern(dt);
+
 	Entity::UpdateCurrent(dt, commands);
+
 	UpdateTexts();
+	
 }
 
 void Tank::UpdateMovementPattern(sf::Time dt)
@@ -182,8 +205,6 @@ void Tank::UpdateMovementPattern(sf::Time dt)
 		m_travelled_distance += GetMaxSpeed() * dt.asSeconds();
 
 	}
-
-
 }
 
 float Tank::GetMaxSpeed() const
@@ -193,7 +214,34 @@ float Tank::GetMaxSpeed() const
 
 float Tank::GetRotationSpeed() const
 {
-	return Table[static_cast<int>(m_type)].m_rotationSpeed;
+	return Table[static_cast<int>(m_type)].m_rotation_speed;
+}
+
+float Tank::GetCannonRotationSpeed() const
+{
+	return Table[static_cast<int>(m_type)].m_cannon_rotation_speed;
+}
+
+float Tank::GetCannonRotationAngle() const
+{
+	return m_cannon_rotation;
+}
+
+void Tank::RotateCannon(float angle)
+{
+	m_cannon_rotation += angle;
+
+	if (m_cannon_rotation > 359)
+	{
+		m_cannon_rotation = 0;
+	}
+	else if (m_cannon_rotation < 0)
+	{
+		m_cannon_rotation = 359;
+	}
+
+	m_cannon_sprite.rotate(angle);
+
 }
 
 void Tank::Fire()
@@ -243,7 +291,6 @@ void Tank::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
 		commands.Push(m_missile_command);
 		m_is_launching_missile = false;
 	}
-
 }
 
 bool Tank::IsAllied() const
@@ -270,9 +317,7 @@ void Tank::CreateBullets(SceneNode& node, const TextureHolder& textures) const
 		CreateProjectile(node, type, 0.0f, 0.5f, textures);
 		CreateProjectile(node, type, 0.5f, 0.5f, textures);
 		break;
-
 	}
-
 }
 
 void Tank::CreateProjectile(SceneNode& node, ProjectileType type, float x_offset, float y_offset,
@@ -283,14 +328,30 @@ void Tank::CreateProjectile(SceneNode& node, ProjectileType type, float x_offset
 	std::unique_ptr<Projectile> projectile(new Projectile(type, textures));
 	sf::Vector2f offset(x_offset * m_sprite.getGlobalBounds().width, y_offset * m_sprite.getGlobalBounds().height);
 
-	// Calculate x and y starting position of the projectile in terms of the angle of rotation of tank in degrees.
-	float projectileXPos = sinf(Utility::ToRadians(getRotation()));
-	float projectileYPos = -cosf(Utility::ToRadians(getRotation()));
+	// Calculate x and y starting position of the projectile in terms of the angle of rotation of tank and cannon in degrees.
+	float tankAngle = getRotation();
+	float cannonAngle = GetCannonRotationAngle();
+	float totalAngle = tankAngle + cannonAngle;
+	float projectileAngle;
+
+	if (totalAngle > 180)
+		projectileAngle = totalAngle - 360;
+	else
+		projectileAngle = totalAngle;
+
+	std::cout << "Tank Base Rotation Angle == " << tankAngle << std::endl;
+	std::cout << "Tank Cannon Rotation Angle == " << cannonAngle << std::endl;
+	std::cout << "Total Angle == " << totalAngle << std::endl;
+	std::cout << "Projectile Angle == " << projectileAngle << std::endl;
+
+	float projectileXPos = sinf(Utility::ToRadians(projectileAngle));
+	float projectileYPos = -cosf(Utility::ToRadians(projectileAngle));
+
 	// Join together in a sf::Vector2f
 	sf::Vector2f projectilePos(projectileXPos, projectileYPos);
 	
-	projectile->setPosition(GetWorldPosition() + projectilePos * (offset.x + offset.y));
-	projectile->setRotation(getRotation());
+	projectile->setPosition(GetWorldPosition() + projectilePos * (offset.x + offset.y + 10.0f));
+	projectile->setRotation(projectileAngle);
 	projectile->SetVelocity(projectilePos * projectile->GetMaxSpeed());
 	node.AttachChild(std::move(projectile));
 }

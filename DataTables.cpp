@@ -9,31 +9,14 @@ std::vector<TankData> InitializeTankData()
 	std::vector<TankData> data(static_cast<int>(TankType::kTankCount));
 
 	data[static_cast<int>(TankType::kCamo)].m_hitpoints = 100;
-	data[static_cast<int>(TankType::kCamo)].m_speed = 200.f;
-	//data[static_cast<int>(TankType::kCamo)].m_rotationSpeed = 1.f;
+	data[static_cast<int>(TankType::kCamo)].m_speed = 100.f;
+	data[static_cast<int>(TankType::kCamo)].m_rotation_speed = 1.f;
+	data[static_cast<int>(TankType::kCamo)].m_cannon_rotation_speed = 2.0f;
 	data[static_cast<int>(TankType::kCamo)].m_fire_interval = sf::seconds(1);
 	data[static_cast<int>(TankType::kCamo)].m_texture = Textures::kCamo;
+	// Set the tanks cannon texture to the tanks data
+	data[static_cast<int>(TankType::kCannonCamo)].m_cannon_texture = Textures::kCannonCamo;
 
-	data[static_cast<int>(TankType::kSand)].m_hitpoints = 20;
-	data[static_cast<int>(TankType::kSand)].m_speed = 80.f;
-	data[static_cast<int>(TankType::kSand)].m_fire_interval = sf::Time::Zero;
-	data[static_cast<int>(TankType::kSand)].m_texture = Textures::kSand;
-
-	//AI
-	data[static_cast<int>(TankType::kSand)].m_directions.emplace_back(Direction(+45.f, 80.f));
-	data[static_cast<int>(TankType::kSand)].m_directions.emplace_back(Direction(-45.f, 160.f));
-	data[static_cast<int>(TankType::kSand)].m_directions.emplace_back(Direction(+45.f, 80.f));
-
-	data[static_cast<int>(TankType::kGreen)].m_hitpoints = 40;
-	data[static_cast<int>(TankType::kGreen)].m_speed = 50.f;
-	data[static_cast<int>(TankType::kGreen)].m_fire_interval = sf::seconds(2);
-	data[static_cast<int>(TankType::kGreen)].m_texture = Textures::kGreen;
-	//AI
-	data[static_cast<int>(TankType::kGreen)].m_directions.emplace_back(Direction(+45.f, 50.f));
-	data[static_cast<int>(TankType::kGreen)].m_directions.emplace_back(Direction(0.f, 50.f));
-	data[static_cast<int>(TankType::kGreen)].m_directions.emplace_back(Direction(-45.f, 100.f));
-	data[static_cast<int>(TankType::kGreen)].m_directions.emplace_back(Direction(0.f, 50.f));
-	data[static_cast<int>(TankType::kGreen)].m_directions.emplace_back(Direction(+45.f, 50.f));
 	return data;
 }
 
