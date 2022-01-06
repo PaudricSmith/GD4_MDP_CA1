@@ -2,6 +2,7 @@
 enum class Textures
 {
 	kCamo,
+	kCannonCamo,
 	kSand,
 	kGreen,
 	kBrown,
