@@ -73,6 +73,7 @@ private:
 	sf::Vector2f m_spawn_position;
 	float m_scrollspeed;
 	Tank* m_player_tank;
+	Tank* m_player_tank_2;
 	std::vector<SpawnPoint> m_enemy_spawn_points;
 	std::vector<Tank*>	m_active_enemies;
 };

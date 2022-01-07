@@ -4,18 +4,31 @@
 #include "PickupType.hpp"
 #include "ProjectileType.hpp"
 
+
 std::vector<TankData> InitializeTankData()
 {
+	// Initialize vector size with Tank count
 	std::vector<TankData> data(static_cast<int>(TankType::kTankCount));
 
+	// Player 1 Tank
 	data[static_cast<int>(TankType::kCamo)].m_hitpoints = 100;
 	data[static_cast<int>(TankType::kCamo)].m_speed = 100.f;
 	data[static_cast<int>(TankType::kCamo)].m_rotation_speed = 1.f;
 	data[static_cast<int>(TankType::kCamo)].m_cannon_rotation_speed = 2.0f;
 	data[static_cast<int>(TankType::kCamo)].m_fire_interval = sf::seconds(1);
 	data[static_cast<int>(TankType::kCamo)].m_texture = Textures::kCamo;
-	// Set the tanks cannon texture to the tanks data
+	// Set the Tanks Cannon texture
 	data[static_cast<int>(TankType::kCannonCamo)].m_cannon_texture = Textures::kCannonCamo;
+
+	// Player 2 Tank
+	data[static_cast<int>(TankType::kSand)].m_hitpoints = 100;
+	data[static_cast<int>(TankType::kSand)].m_speed = 100.f;
+	data[static_cast<int>(TankType::kSand)].m_rotation_speed = 1.f;
+	data[static_cast<int>(TankType::kSand)].m_cannon_rotation_speed = 2.0f;
+	data[static_cast<int>(TankType::kSand)].m_fire_interval = sf::seconds(1);
+	data[static_cast<int>(TankType::kSand)].m_texture = Textures::kSand;
+	// Set the Tanks Cannon texture
+	data[static_cast<int>(TankType::kCannonSand)].m_cannon_texture = Textures::kCannonSand;
 
 	return data;
 }
@@ -54,5 +67,18 @@ std::vector<PickupData> InitializePickupData()
 
 	data[static_cast<int>(PickupType::kFireRate)].m_texture = Textures::kFireRate;
 	data[static_cast<int>(PickupType::kFireRate)].m_action = std::bind(&Tank::IncreaseFireRate, std::placeholders::_1);
+	return data;
+}
+
+std::vector<PlayerData> InitializePlayerData()
+{
+	std::vector<PlayerData> data(static_cast<int>(PlayerNumber::kPlayerCount));
+
+	// Player 1 
+	data[static_cast<int>(PlayerNumber::kPlayer1)].playerCategory = Category::kPlayerTank;
+
+	// Player 2 
+	data[static_cast<int>(PlayerNumber::kPlayer2)].playerCategory = Category::kPlayer2Tank;
+
 	return data;
 }

@@ -1,9 +1,18 @@
 #pragma once
+
 #include <functional>
 #include <vector>
+#include <map>
 #include <SFML/System/Time.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/Event.hpp>
 
 #include "ResourceIdentifiers.hpp"
+#include "Category.hpp"
+#include "PlayerAction.hpp"
+#include "Category.hpp"
+#include "Player.hpp"
+
 
 class Tank;
 
@@ -42,6 +51,14 @@ struct PickupData
 	Textures m_texture;
 };
 
+struct PlayerData
+{
+	Category::Type playerCategory;
+
+	std::map<sf::Keyboard::Key, PlayerAction> m_key_binding;
+};
+
 std::vector<TankData> InitializeTankData();
 std::vector<ProjectileData> InitializeProjectileData();
 std::vector<PickupData> InitializePickupData();
+std::vector<PlayerData> InitializePlayerData();

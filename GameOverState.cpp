@@ -17,9 +17,14 @@ GameOverState::GameOverState(StateStack& stack, Context context)
 
 	m_game_over_text.setFont(font);
 	if (context.player->GetMissionStatus() == MissionStatus::kMissionFailure)
-		m_game_over_text.setString("Mission failed!");
+		m_game_over_text.setString("Mission failed Player 1!");
 	else
-		m_game_over_text.setString("Mission successful!");
+		m_game_over_text.setString("Mission successful Player 1!");
+
+	if (context.player2->GetMissionStatus() == MissionStatus::kMissionFailure)
+		m_game_over_text.setString("Mission failed Player 2!");
+	else
+		m_game_over_text.setString("Mission successful Player 2!");
 
 	m_game_over_text.setCharacterSize(70);
 	Utility::CentreOrigin(m_game_over_text);

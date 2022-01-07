@@ -1,4 +1,5 @@
 #pragma once
+
 //SceneNode category used to dispatch commands
 namespace Category
 {
@@ -7,13 +8,14 @@ namespace Category
 		kNone = 0,
 		kScene = 1 << 0,
 		kPlayerTank = 1 << 1,
-		kAlliedTank = 1 << 2,
-		kEnemyTank = 1 << 3,
-		kPickup = 1 << 4,
-		kAlliedProjectile = 1 << 5,
-		kEnemyProjectile = 1 << 6,
+		kPlayer2Tank = 1 << 2,
+		kAlliedTank = 1 << 3,
+		kEnemyTank = 1 << 4,
+		kPickup = 1 << 5,
+		kAlliedProjectile = 1 << 6,
+		kEnemyProjectile = 1 << 7,
 
-		kTank = kPlayerTank | kAlliedTank | kEnemyTank,
+		kTank = kPlayerTank | kPlayer2Tank| kAlliedTank | kEnemyTank,
 		kProjectile = kAlliedProjectile | kEnemyProjectile,
 	};
 }

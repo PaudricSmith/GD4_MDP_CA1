@@ -3,8 +3,8 @@ enum class PlayerAction
 {
 	kMoveLeft,
 	kMoveRight,
-	kMoveUp,
-	kMoveDown,
+	kMoveForwards,
+	kMoveBackwards,
 	kRotateRight,
 	kRotateLeft,
 	kRotateCannonRight,

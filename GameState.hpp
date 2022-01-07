@@ -1,6 +1,8 @@
 #pragma once
+
 #include "State.hpp"
 #include "World.hpp"
+#include "Player.hpp"
 
 class GameState : public State
 {
@@ -13,4 +15,5 @@ public:
 private:
 	World m_world;
 	Player& m_player;
+	Player& m_player_2;
 };

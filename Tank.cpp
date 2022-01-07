@@ -20,22 +20,6 @@ namespace
 }
 
 
-Textures ToTextureID(TankType type)
-{
-	switch (type)
-	{
-	case TankType::kCamo:
-		return Textures::kCamo;
-	case TankType::kCannonCamo:
-		return Textures::kCannonCamo;
-	case TankType::kSand:
-		return Textures::kSand;
-	case TankType::kGreen:
-		return Textures::kGreen;
-	}
-	return Textures::kCamo;
-}
-
 Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, const FontHolder& fonts)
 	: Entity(Table[static_cast<int>(type)].m_hitpoints)
 	, m_type(type)
@@ -66,11 +50,12 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	m_cannon_sprite.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 1.7f));
 
 	// Set Offset of Tank and Cannon
-	sf::Vector2f tankOriginOffset = sf::Vector2f(0.0f, -7.0f);
+	sf::Vector2f tankOriginOffset = sf::Vector2f(0.0f, -10.0f);
 	m_sprite.setPosition(tankOriginOffset);
 
 	sf::Vector2f cannonOriginOffset = sf::Vector2f(0.0f, 2.0f);
 	m_cannon_sprite.setPosition(cannonOriginOffset);
+
 
 
 	// Create Nodes
@@ -104,6 +89,14 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 		AttachChild(std::move(missileDisplay));
 	}
 
+	if (Tank::GetCategory() == static_cast<int>(Category::kPlayer2Tank))
+	{
+		std::unique_ptr<TextNode> missileDisplay(new TextNode(fonts, ""));
+		missileDisplay->setPosition(0, 70);
+		m_missile_display = missileDisplay.get();
+		AttachChild(std::move(missileDisplay));
+	}
+
 	UpdateTexts();
 }
 
@@ -115,9 +108,16 @@ void Tank::DrawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 
 unsigned int Tank::GetCategory() const
 {
-	if (IsAllied())
+	if (IsPlayerTank())
 	{
-		return static_cast<int>(Category::kPlayerTank);
+		if (m_type == TankType::kCamo)
+		{
+			return static_cast<int>(Category::kPlayerTank);
+		}
+		else
+		{
+			return static_cast<int>(Category::kPlayer2Tank);
+		}
 	}
 	return static_cast<int>(Category::kEnemyTank);
 }
@@ -265,7 +265,7 @@ void Tank::LaunchMissile()
 void Tank::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
 {
 	//Enemies try and fire as often as possible
-	if (!IsAllied())
+	if (!IsPlayerTank())
 	{
 		Fire();
 	}
@@ -293,16 +293,16 @@ void Tank::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
 	}
 }
 
-bool Tank::IsAllied() const
+bool Tank::IsPlayerTank() const
 {
-	return m_type == TankType::kCamo;
+	return m_type == TankType::kCamo || m_type == TankType::kSand;
 }
 
 
-//TODO Do enemies need a different offset as they are flying down the screen?
 void Tank::CreateBullets(SceneNode& node, const TextureHolder& textures) const
 {
-	ProjectileType type = IsAllied() ? ProjectileType::kAlliedBullet : ProjectileType::kEnemyBullet;
+	ProjectileType type = IsPlayerTank() ? ProjectileType::kAlliedBullet : ProjectileType::kEnemyBullet;
+
 	switch (m_spread_level)
 	{
 	case 1:
@@ -335,14 +335,13 @@ void Tank::CreateProjectile(SceneNode& node, ProjectileType type, float x_offset
 	float projectileAngle;
 
 	if (totalAngle > 180)
+	{
 		projectileAngle = totalAngle - 360;
+	}
 	else
+	{
 		projectileAngle = totalAngle;
-
-	std::cout << "Tank Base Rotation Angle == " << tankAngle << std::endl;
-	std::cout << "Tank Cannon Rotation Angle == " << cannonAngle << std::endl;
-	std::cout << "Total Angle == " << totalAngle << std::endl;
-	std::cout << "Projectile Angle == " << projectileAngle << std::endl;
+	}
 
 	float projectileXPos = sinf(Utility::ToRadians(projectileAngle));
 	float projectileYPos = -cosf(Utility::ToRadians(projectileAngle));
@@ -368,7 +367,7 @@ bool Tank::IsMarkedForRemoval() const
 
 void Tank::CheckPickupDrop(CommandQueue& commands)
 {
-	if (!IsAllied() && Utility::RandomInt(3) == 0)
+	if (!IsPlayerTank() && Utility::RandomInt(3) == 0)
 	{
 		commands.Push(m_drop_pickup_command);
 	}

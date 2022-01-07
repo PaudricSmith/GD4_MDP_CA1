@@ -12,20 +12,30 @@ SettingsState::SettingsState(StateStack& stack, Context context)
 {
 	m_background_sprite.setTexture(context.textures->Get(Textures::kTitleScreen));
 
-	// Build key binding buttons and labels
-	AddButtonLabel(PlayerAction::kMoveLeft, 200.f, "Move Left", context);
-	AddButtonLabel(PlayerAction::kMoveRight, 250.f, "Move Right", context);
-	AddButtonLabel(PlayerAction::kMoveUp, 300.f, "Move Up", context);
-	AddButtonLabel(PlayerAction::kMoveDown, 350.f, "Move Down", context);
-	AddButtonLabel(PlayerAction::kRotateLeft, 400.f, "Rotate Left", context);
-	AddButtonLabel(PlayerAction::kRotateRight, 450.f, "Rotate Right", context);
-	AddButtonLabel(PlayerAction::kFire, 500.f, "Fire", context);
-	AddButtonLabel(PlayerAction::kLaunchMissile, 550.f, "Missile", context);
+	// Build key binding buttons and labels Player 1
+	AddButtonLabel(PlayerAction::kMoveForwards, 0.0f, 200.f, "Move Forwards", context);
+	AddButtonLabel(PlayerAction::kMoveBackwards, 0.0f, 250.f, "Move Backwards", context);
+	AddButtonLabel(PlayerAction::kRotateLeft, 0.0f, 300.f, "Rotate Left", context);
+	AddButtonLabel(PlayerAction::kRotateRight, 0.0f, 350.f, "Rotate Right", context);
+	AddButtonLabel(PlayerAction::kRotateCannonLeft, 0.0f, 400.f, "Rotate Gun Left", context);
+	AddButtonLabel(PlayerAction::kRotateCannonRight, 0.0f, 450.f, "Rotate Gun Right", context);
+	AddButtonLabel(PlayerAction::kFire, 0.0f, 500.f, "Fire", context);
+	AddButtonLabel(PlayerAction::kLaunchMissile, 0.0f, 550.f, "Missile", context);
+
+	// Build key binding buttons and labels Player 2
+	AddButtonLabel(PlayerAction::kMoveForwards, 300.0f, 200.f, "Move Forwards", context);
+	AddButtonLabel(PlayerAction::kMoveBackwards, 300.0f, 250.f, "Move Backwards", context);
+	AddButtonLabel(PlayerAction::kRotateLeft, 300.0f, 300.f, "Rotate Left", context);
+	AddButtonLabel(PlayerAction::kRotateRight, 300.0f, 350.f, "Rotate Right", context);
+	AddButtonLabel(PlayerAction::kRotateCannonLeft, 300.0f, 400.f, "Rotate Gun Left", context);
+	AddButtonLabel(PlayerAction::kRotateCannonRight, 300.0f, 450.f, "Rotate Gun Right", context);
+	AddButtonLabel(PlayerAction::kFire, 300.0f, 500.f, "Fire", context);
+	AddButtonLabel(PlayerAction::kLaunchMissile, 300.0f, 550.f, "Missile", context);
 
 	UpdateLabels();
 
 	auto back_button = std::make_shared<GUI::Button>(*context.fonts, *context.textures);
-	back_button->setPosition(80.f, 620.f);
+	back_button->setPosition(400.f, 620.f);
 	back_button->SetText("Back");
 	back_button->SetCallback(std::bind(&SettingsState::RequestStackPop, this));
 
@@ -59,6 +69,9 @@ bool SettingsState::HandleEvent(const sf::Event& event)
 			{
 				GetContext().player->AssignKey(static_cast<PlayerAction>(action), event.key.code);
 				m_binding_buttons[action]->Deactivate();
+
+				GetContext().player2->AssignKey(static_cast<PlayerAction>(action), event.key.code);
+				m_binding_buttons[action]->Deactivate();
 			}
 			break;
 		}
@@ -76,15 +89,19 @@ bool SettingsState::HandleEvent(const sf::Event& event)
 void SettingsState::UpdateLabels()
 {
 	Player& player = *GetContext().player;
+	Player& player2 = *GetContext().player2;
 
 	for (std::size_t i = 0; i < static_cast<int>(PlayerAction::kActionCount); ++i)
 	{
 		sf::Keyboard::Key key = player.GetAssignedKey(static_cast<PlayerAction>(i));
 		m_binding_labels[i]->SetText(Utility::toString(key));
+
+		sf::Keyboard::Key key2 = player2.GetAssignedKey(static_cast<PlayerAction>(i));
+		m_binding_labels[i]->SetText(Utility::toString(key2));
 	}
 }
 
-void SettingsState::AddButtonLabel(PlayerAction action, float y, const std::string& text, Context context)
+void SettingsState::AddButtonLabel(PlayerAction action, float x, float y, const std::string& text, Context context)
 {
 	m_binding_buttons[static_cast<int>(action)] = std::make_shared<GUI::Button>(*context.fonts, *context.textures);
 	m_binding_buttons[static_cast<int>(action)]->setPosition(80.f, y);

@@ -1,15 +1,27 @@
 #pragma once
-#include "Command.hpp"
-#include <SFML/Window/Event.hpp>
+
 #include <map>
+#include <SFML/Window/Event.hpp>
+
+#include "Command.hpp"
 #include "CommandQueue.hpp"
 #include "MissionStatus.hpp"
 #include "PlayerAction.hpp"
+#include "PlayerNumber.hpp"
+
+
+enum class PlayerNumber
+{
+	kPlayer1,
+	kPlayer2,
+	kPlayerCount
+};
+
 
 class Player
 {
 public:
-	Player();
+	Player(PlayerNumber playerNumber);
 	void HandleEvent(const sf::Event& event, CommandQueue& commands);
 	void HandleRealtimeInput(CommandQueue& commands);
 
@@ -23,8 +35,10 @@ private:
 	static bool IsRealtimeAction(PlayerAction action);
 
 private:
+	PlayerNumber m_player_number;
+
 	std::map<sf::Keyboard::Key, PlayerAction> m_key_binding;
-	std::map<sf::Joystick::Axis, PlayerAction> m_joystick_binding;
 	std::map<PlayerAction, Command> m_action_binding;
+
 	MissionStatus m_current_mission_status;
 };

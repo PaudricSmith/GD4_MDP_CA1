@@ -40,7 +40,7 @@ private:
 	void UpdateCurrent(sf::Time dt, CommandQueue& commands) override;
 
 	void CheckProjectileLaunch(sf::Time dt, CommandQueue& commands);
-	bool IsAllied() const;
+	bool IsPlayerTank() const;
 	void CreatePickup(SceneNode& node, const TextureHolder& textures) const;
 	void CheckPickupDrop(CommandQueue& commands);
 

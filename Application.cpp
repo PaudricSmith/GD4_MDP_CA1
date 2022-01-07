@@ -15,7 +15,9 @@ const sf::Time Application::kTimePerFrame = sf::seconds(1.f / 60.f);
 
 Application::Application()
 	:m_window(sf::VideoMode(1024, 768), "States", sf::Style::Close)
-	, m_stack(State::Context(m_window, m_textures, m_fonts, m_player))
+	, m_player(PlayerNumber::kPlayer1)
+	, m_player_2(PlayerNumber::kPlayer2)
+	, m_stack(State::Context(m_window, m_textures, m_fonts, m_player, m_player_2))
 	, m_statistics_numframes(0)
 {
 	m_window.setKeyRepeatEnabled(false);
@@ -74,38 +76,6 @@ void Application::ProcessInput()
 
 void Application::Update(sf::Time delta_time)
 {
-	// JOYSTICK MOVEMENT CONTROLS
-	//if (sf::Joystick::hasAxis(0, sf::Joystick::V))
-	//{
-
-	//	std::cout << "Has Axis!" << sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X) << std::endl;
-
-	//	//commands.Push(m_action_binding[PlayerAction::kMoveLeft]);
-
-	//}
-	//if (sf::Event::JoystickConnected)
-	//{
-	//	if (sf::Joystick::isConnected(0))
-	//	{
-	//		std::cout << "Joystick connected" << std::endl;
-	//	}
-	//	if (sf::Joystick::isConnected(0) == false)
-	//	{
-	//		std::cout << "Joystick Disconnected" << std::endl;
-	//	}
-	//	if (sf::Joystick::isConnected(1))
-	//	{
-	//		std::cout << "Joystick connected" << std::endl;
-	//	}
-	//	if (sf::Joystick::isConnected(1) == false)
-	//	{
-	//		std::cout << "Joystick Disconnected" << std::endl;
-	//	}
-	//}
-	
-
-	//std::cout << "Constantly Updating !" << std::endl;
-
 	m_stack.Update(delta_time);
 }
 
