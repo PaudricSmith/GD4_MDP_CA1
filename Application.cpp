@@ -14,7 +14,7 @@
 const sf::Time Application::kTimePerFrame = sf::seconds(1.f / 60.f);
 
 Application::Application()
-	:m_window(sf::VideoMode(1024, 768), "States", sf::Style::Close)
+	:m_window(sf::VideoMode(1024, 768), "Tank-Like", sf::Style::Close)
 	, m_player(PlayerNumber::kPlayer1)
 	, m_player_2(PlayerNumber::kPlayer2)
 	, m_stack(State::Context(m_window, m_textures, m_fonts, m_player, m_player_2))

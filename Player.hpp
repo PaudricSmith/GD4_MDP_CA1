@@ -6,7 +6,7 @@
 #include "Command.hpp"
 #include "CommandQueue.hpp"
 #include "MissionStatus.hpp"
-#include "PlayerAction.hpp"
+#include "PlayerActions.hpp"
 #include "PlayerNumber.hpp"
 
 
@@ -25,20 +25,20 @@ public:
 	void HandleEvent(const sf::Event& event, CommandQueue& commands);
 	void HandleRealtimeInput(CommandQueue& commands);
 
-	void AssignKey(PlayerAction action, sf::Keyboard::Key key);
-	sf::Keyboard::Key GetAssignedKey(PlayerAction action) const;
+	void AssignKey(PlayerActions action, sf::Keyboard::Key key);
+	sf::Keyboard::Key GetAssignedKey(PlayerActions action) const;
 	void SetMissionStatus(MissionStatus status);
 	MissionStatus GetMissionStatus() const;
 
 private:
 	void InitialiseActions();
-	static bool IsRealtimeAction(PlayerAction action);
+	static bool IsRealtimeAction(PlayerActions action);
 
 private:
 	PlayerNumber m_player_number;
 
-	std::map<sf::Keyboard::Key, PlayerAction> m_key_binding;
-	std::map<PlayerAction, Command> m_action_binding;
+	std::map<sf::Keyboard::Key, PlayerActions> m_key_binding;
+	std::map<PlayerActions, Command> m_action_binding;
 
 	MissionStatus m_current_mission_status;
 };

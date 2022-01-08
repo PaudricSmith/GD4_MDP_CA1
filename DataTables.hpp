@@ -9,7 +9,7 @@
 
 #include "ResourceIdentifiers.hpp"
 #include "Category.hpp"
-#include "PlayerAction.hpp"
+#include "PlayerActions.hpp"
 #include "Category.hpp"
 #include "Player.hpp"
 
@@ -55,7 +55,7 @@ struct PlayerData
 {
 	Category::Type playerCategory;
 
-	std::map<sf::Keyboard::Key, PlayerAction> m_key_binding;
+	std::map<sf::Keyboard::Key, PlayerActions> m_key_binding;
 };
 
 std::vector<TankData> InitializeTankData();

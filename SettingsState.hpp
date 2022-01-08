@@ -24,13 +24,19 @@ public:
 
 
 private:
-	void UpdateLabels();
-	void AddButtonLabel(PlayerAction action, float x, float y, const std::string& text, Context context);
+	void UpdateP1Labels();
+	void UpdateP2Labels();
+	void AddP1ButtonLabel(PlayerActions action, float x_offset, float y_offset, float x_label_offset, const std::string& text, Context context);
+	void AddP2ButtonLabel(PlayerActions action, float x_offset, float y_offset, float x_label_offset, const std::string& text, Context context);
 
 
 private:
+	int m_playerActionsHalfSize;
+
 	sf::Sprite m_background_sprite;
 	GUI::Container m_gui_container;
-	std::array<GUI::Button::Ptr, static_cast<int>(PlayerAction::kActionCount)> m_binding_buttons;
-	std::array<GUI::Label::Ptr, static_cast<int>(PlayerAction::kActionCount)> m_binding_labels;
+	std::array<GUI::Button::Ptr, static_cast<int>(PlayerActions::kActionCount)> m_binding_buttons;
+	std::array<GUI::Button::Ptr, static_cast<int>(PlayerActions::kActionCount)> m_binding_buttons_2;
+	std::array<GUI::Label::Ptr, static_cast<int>(PlayerActions::kActionCount)> m_binding_labels;
+	std::array<GUI::Label::Ptr, static_cast<int>(PlayerActions::kActionCount)> m_binding_labels_2;
 };

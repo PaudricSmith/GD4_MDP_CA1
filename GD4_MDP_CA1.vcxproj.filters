@@ -155,7 +155,7 @@
     <ClInclude Include="Player.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerAction.hpp">
+    <ClInclude Include="PlayerActions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Projectile.hpp">
