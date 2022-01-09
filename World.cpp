@@ -65,16 +65,12 @@ void World::Draw()
 
 bool World::HasAlivePlayer1() const
 {
-	std::cout << "In HasAlivePlayer1() function " << std::endl;
-
 	// If a Player 1 Tank is not destroyed, hence Player 1 is still alive
 	return !m_player_tank->IsMarkedForRemoval();
 }
 
 bool World::HasAlivePlayer2() const
 {
-	std::cout << "In HasAlivePlayer2() function " << std::endl;
-
 	// If a Player 2 Tank is not destroyed, hence Player 2 is still alive
 	return !m_player_tank_2->IsMarkedForRemoval();
 }
@@ -136,13 +132,13 @@ void World::BuildScene()
 	//Add Player 1 Tank
 	std::unique_ptr<Tank> leader(new Tank(TankType::kCamo, TankType::kCannonCamo, m_textures, m_fonts));
 	m_player_tank = leader.get();
-	m_player_tank->setPosition(m_spawn_position.x - 400.0f, m_spawn_position.y);
+	m_player_tank->setPosition(m_spawn_position.x - 200.0f, m_spawn_position.y);
 	m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(leader));
 
 	//Add Player 2 Tank
 	std::unique_ptr<Tank> leader2(new Tank(TankType::kSand, TankType::kCannonSand, m_textures, m_fonts));
 	m_player_tank_2 = leader2.get();
-	m_player_tank_2->setPosition(m_spawn_position.x + 400.0f, m_spawn_position.y);
+	m_player_tank_2->setPosition(m_spawn_position.x + 200.0f, m_spawn_position.y);
 	m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(leader2));
 
 
@@ -175,7 +171,7 @@ void World::AdaptPlayerPosition()
 	player1Pos.y = std::max(player1Pos.y, view_bounds.top + border_distance);
 	player1Pos.y = std::min(player1Pos.y, view_bounds.top + view_bounds.height - border_distance);
 	m_player_tank->setPosition(player1Pos);
-
+	   
 	// Keep Player 2 Tank inside the screen / bounds
 	sf::Vector2f player2Pos = m_player_tank_2->getPosition();
 	player2Pos.x = std::max(player2Pos.x, view_bounds.left + border_distance);
@@ -309,6 +305,7 @@ bool MatchesCategories(SceneNode::Pair& colliders, Category::Type type1, Categor
 	unsigned int category1 = colliders.first->GetCategory();
 	unsigned int category2 = colliders.second->GetCategory();
 	//std::cout << category1 << category2 << std::endl;
+
 	if (type1 & category1 && type2 & category2)
 	{
 		return true;
@@ -335,25 +332,36 @@ void World::HandleCollisions()
 			auto& player = static_cast<Tank&>(*pair.first);
 			auto& player2 = static_cast<Tank&>(*pair.second);
 
-			//Collision
-			player.Damage(player2.GetHitPoints());
-
-			//enemy.Destroy();
-
-		}
-
-		else if (MatchesCategories(pair, Category::Type::kPlayer2Tank, Category::Type::kPlayerTank))
-		{
-			auto& player2 = static_cast<Tank&>(*pair.first);
-			auto& player = static_cast<Tank&>(*pair.second);
+			sf::Vector2f player1Pos = player.getPosition();
+			sf::Vector2f player2Pos = player2.getPosition();
 
 			//Collision
-			player2.Damage(player.GetHitPoints());
+			if (player1Pos.x < player2Pos.x)
+			{
+				m_player_tank->move(-1.0f, 0.0f);
+				m_player_tank_2->move(1.0f, 0.0f);
+			}
+			if (player1Pos.x > player2Pos.x)
+			{
+				m_player_tank->move(1.0f, 0.0f);
+				m_player_tank_2->move(-1.0f, 0.0f);
+			}
+			if (player1Pos.y < player2Pos.y)
+			{
+				m_player_tank->move(0.0f, -1.0f);
+				m_player_tank_2->move(0.0f, 1.0f);
+			}
+			if (player1Pos.y > player2Pos.y)
+			{
+				m_player_tank->move(0.0f, 1.0f);
+				m_player_tank_2->move(0.0f, -1.0f);
+			}
 
-			//enemy.Destroy();
+			// Damage Player Tanks 
+			player.Damage(1.0f);
+			player2.Damage(1.0f);
 
 		}
-
 		else if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kPickup))
 		{
 			auto& player = static_cast<Tank&>(*pair.first);
@@ -363,7 +371,6 @@ void World::HandleCollisions()
 			pickup.Apply(player);
 			pickup.Destroy();
 		}
-
 		else if (MatchesCategories(pair, Category::Type::kPlayer2Tank, Category::Type::kPickup))
 		{
 			auto& player2 = static_cast<Tank&>(*pair.first);
@@ -373,7 +380,6 @@ void World::HandleCollisions()
 			pickup.Apply(player2);
 			pickup.Destroy();
 		}
-
 		else if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kAlliedProjectile) 
 			|| MatchesCategories(pair, Category::Type::kPlayer2Tank, Category::Type::kAlliedProjectile))
 		{
