@@ -46,14 +46,11 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	// Set Origin of Tank and Cannon
 	Utility::CentreOrigin(m_sprite);
 
-	sf::FloatRect bounds = m_cannon_sprite.getLocalBounds();
-	m_cannon_sprite.setOrigin(std::floor(bounds.left + bounds.width / 2.f), std::floor(bounds.top + bounds.height / 1.7f));
+	sf::FloatRect cannonBounds = m_cannon_sprite.getLocalBounds();
+	m_cannon_sprite.setOrigin(std::floor(cannonBounds.left + cannonBounds.width / 2.0f), std::floor(cannonBounds.top + cannonBounds.height / 1.43f));
 
-	// Set Offset of Tank and Cannon
-	sf::Vector2f tankOriginOffset = sf::Vector2f(0.0f, -10.0f);
-	m_sprite.setPosition(tankOriginOffset);
-
-	sf::Vector2f cannonOriginOffset = sf::Vector2f(0.0f, 2.0f);
+	// Adjust cannon position on the Tank
+	sf::Vector2f cannonOriginOffset = sf::Vector2f(1.0f, 2.0f);
 	m_cannon_sprite.setPosition(cannonOriginOffset);
 
 
@@ -349,7 +346,8 @@ void Tank::CreateProjectile(SceneNode& node, ProjectileType type, float x_offset
 	// Join together in a sf::Vector2f
 	sf::Vector2f projectilePos(projectileXPos, projectileYPos);
 	
-	projectile->setPosition(GetWorldPosition() + projectilePos * (offset.x + offset.y + 10.0f));
+	// Added on 52.0f to the projectile position.y so the projectile will be outside their collision box and not damage itself.
+	projectile->setPosition(GetWorldPosition() + projectilePos * (offset.x + offset.y + 52.0f));
 	projectile->setRotation(projectileAngle);
 	projectile->SetVelocity(projectilePos * projectile->GetMaxSpeed());
 	node.AttachChild(std::move(projectile));
