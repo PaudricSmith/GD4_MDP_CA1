@@ -6,6 +6,7 @@
 #include "Player.hpp"
 #include "ResourceHolder.hpp"
 #include "Utility.hpp"
+#include <iostream>
 
 GameOverState::GameOverState(StateStack& stack, Context context)
 	: State(stack, context)
@@ -16,15 +17,14 @@ GameOverState::GameOverState(StateStack& stack, Context context)
 	sf::Vector2f windowSize(context.window->getSize());
 
 	m_game_over_text.setFont(font);
-	if (context.player->GetMissionStatus() == MissionStatus::kMissionFailure)
-		m_game_over_text.setString("Mission failed Player 1!");
-	else
-		m_game_over_text.setString("Mission successful Player 1!");
-
-	if (context.player2->GetMissionStatus() == MissionStatus::kMissionFailure)
-		m_game_over_text.setString("Mission failed Player 2!");
-	else
-		m_game_over_text.setString("Mission successful Player 2!");
+	if (context.player->GetMissionStatus() == MissionStatus::kMissionSuccess)
+		m_game_over_text.setString("Player 1 Camo Tank Wins!");
+	else if (context.player->GetMissionStatus() == MissionStatus::kMissionFailure)
+		m_game_over_text.setString("Player 2 Sand Tank Wins!");
+	else if (context.player2->GetMissionStatus() == MissionStatus::kMissionSuccess)
+		m_game_over_text.setString("Player 2 Sand Tank Wins!");
+	else if (context.player2->GetMissionStatus() == MissionStatus::kMissionFailure)
+		m_game_over_text.setString("Player 1 Camo Tank Wins!");
 
 	m_game_over_text.setCharacterSize(70);
 	Utility::CentreOrigin(m_game_over_text);

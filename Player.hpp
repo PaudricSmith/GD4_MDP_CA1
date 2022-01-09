@@ -29,6 +29,7 @@ public:
 	sf::Keyboard::Key GetAssignedKey(PlayerActions action) const;
 	void SetMissionStatus(MissionStatus status);
 	MissionStatus GetMissionStatus() const;
+	int GetPlayerNumber() const;
 
 private:
 	void InitialiseActions();

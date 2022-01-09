@@ -29,7 +29,8 @@ public:
 	void Update(sf::Time dt);
 	void Draw();
 	CommandQueue& getCommandQueue();
-	bool HasAlivePlayer() const;
+	bool HasAlivePlayer1() const;
+	bool HasAlivePlayer2() const;
 	bool HasPlayerReachedEnd() const;
 
 private:

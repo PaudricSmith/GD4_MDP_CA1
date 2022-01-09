@@ -18,14 +18,24 @@ void GameState::Draw()
 
 bool GameState::Update(sf::Time dt)
 {
+
 	m_world.Update(dt);
-	if (!m_world.HasAlivePlayer())
+
+	if (!m_world.HasAlivePlayer1()) // If Player 1 has died in the world
 	{
 		m_player.SetMissionStatus(MissionStatus::kMissionFailure);
-		m_player_2.SetMissionStatus(MissionStatus::kMissionFailure);
+		m_player_2.SetMissionStatus(MissionStatus::kMissionSuccess);
+		
 		RequestStackPush(StateID::kGameOver);
 	}
-	else if (m_world.HasPlayerReachedEnd())
+	else if (!m_world.HasAlivePlayer2()) // If Player 2 has died in the world
+	{
+		m_player.SetMissionStatus(MissionStatus::kMissionSuccess);
+		m_player_2.SetMissionStatus(MissionStatus::kMissionFailure);
+	
+		RequestStackPush(StateID::kGameOver);
+	}
+	else if (m_world.HasPlayerReachedEnd()) 
 	{
 		m_player.SetMissionStatus(MissionStatus::kMissionSuccess);
 		m_player_2.SetMissionStatus(MissionStatus::kMissionSuccess);

@@ -63,10 +63,20 @@ void World::Draw()
 	m_window.draw(m_scenegraph);
 }
 
-bool World::HasAlivePlayer() const
+bool World::HasAlivePlayer1() const
 {
-	// If a Player Tank is not destroyed, hence still alive
-	return !m_player_tank->IsMarkedForRemoval() && !m_player_tank_2->IsMarkedForRemoval();
+	std::cout << "In HasAlivePlayer1() function " << std::endl;
+
+	// If a Player 1 Tank is not destroyed, hence Player 1 is still alive
+	return !m_player_tank->IsMarkedForRemoval();
+}
+
+bool World::HasAlivePlayer2() const
+{
+	std::cout << "In HasAlivePlayer2() function " << std::endl;
+
+	// If a Player 2 Tank is not destroyed, hence Player 2 is still alive
+	return !m_player_tank_2->IsMarkedForRemoval();
 }
 
 bool World::HasPlayerReachedEnd() const

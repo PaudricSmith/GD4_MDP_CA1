@@ -21,15 +21,17 @@ public:
 	void CollectMissiles(unsigned int count);
 	void UpdateTexts();
 	void UpdateMovementPattern(sf::Time dt);
-	float GetMaxSpeed() const;
-	float GetRotationSpeed() const;
-	float GetCannonRotationSpeed() const;
-	float GetCannonRotationAngle() const;
 	void RotateCannon(float angle);
 	void Fire();
 	void LaunchMissile();
 	void CreateBullets(SceneNode& node, const TextureHolder& textures) const;
 	void CreateProjectile(SceneNode& node, ProjectileType type, float x_offset, float y_offset, const TextureHolder& textures) const;
+
+	float GetMaxSpeed() const;
+	float GetRotationSpeed() const;
+	float GetCannonRotationSpeed() const;
+	float GetCannonRotationAngle() const;
+	TankType GetTankType() const;
 
 	sf::FloatRect GetBoundingRect() const override;
 	bool IsMarkedForRemoval() const override;

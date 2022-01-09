@@ -211,6 +211,11 @@ MissionStatus Player::GetMissionStatus() const
 	return m_current_mission_status;
 }
 
+int Player::GetPlayerNumber() const
+{
+	return static_cast<int>(m_player_number);
+}
+
 void Player::InitialiseActions()
 {
 	const float speed_multiplier = 0.5f;
