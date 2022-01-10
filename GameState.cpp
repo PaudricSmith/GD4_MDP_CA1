@@ -9,6 +9,8 @@ GameState::GameState(StateStack& stack, Context context)
 	, m_player(*context.player)
 	, m_player_2(*context.player2)
 {
+	// Play Menu Music Track
+	context.musicPlayer->Play(MusicTracks::kLevel1Track);
 }
 
 void GameState::Draw()

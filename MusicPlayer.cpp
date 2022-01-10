@@ -3,8 +3,8 @@
 
 MusicPlayer::MusicPlayer() : m_volume(100.0f)
 {
-	m_track_filenames[MusicTracks::kMenuTrack] = "Media/Music/DynamicFight_2.mp3";
-	m_track_filenames[MusicTracks::kLevel1Track] = "Media/Music/Music_BG.mp3";
+	m_track_filenames[MusicTracks::kMenuTrack] = "Media/Audio/Music/DynamicFight_2.ogg";
+	m_track_filenames[MusicTracks::kLevel1Track] = "Media/Audio/Music/Music_BG.wav";
 }
 
 void MusicPlayer::Play(MusicTracks track)
