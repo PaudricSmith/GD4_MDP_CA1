@@ -6,6 +6,7 @@
 #include "Player.hpp"
 #include "ResourceHolder.hpp"
 #include "Utility.hpp"
+#include <iostream>
 
 GameOverState::GameOverState(StateStack& stack, Context context)
 	: State(stack, context)
@@ -16,10 +17,14 @@ GameOverState::GameOverState(StateStack& stack, Context context)
 	sf::Vector2f windowSize(context.window->getSize());
 
 	m_game_over_text.setFont(font);
-	if (context.player->GetMissionStatus() == MissionStatus::kMissionFailure)
-		m_game_over_text.setString("Mission failed!");
-	else
-		m_game_over_text.setString("Mission successful!");
+	if (context.player->GetMissionStatus() == MissionStatus::kMissionSuccess)
+		m_game_over_text.setString("Player 1 Camo Tank Wins!");
+	else if (context.player->GetMissionStatus() == MissionStatus::kMissionFailure)
+		m_game_over_text.setString("Player 2 Sand Tank Wins!");
+	else if (context.player2->GetMissionStatus() == MissionStatus::kMissionSuccess)
+		m_game_over_text.setString("Player 2 Sand Tank Wins!");
+	else if (context.player2->GetMissionStatus() == MissionStatus::kMissionFailure)
+		m_game_over_text.setString("Player 1 Camo Tank Wins!");
 
 	m_game_over_text.setCharacterSize(70);
 	Utility::CentreOrigin(m_game_over_text);
@@ -42,9 +47,9 @@ void GameOverState::Draw()
 
 bool GameOverState::Update(sf::Time dt)
 {
-	// Show state for 3 seconds, after return to menu
+	// Show state for 5 seconds, after return to menu
 	m_elapsed_time += dt;
-	if (m_elapsed_time > sf::seconds(3))
+	if (m_elapsed_time > sf::seconds(5))
 	{
 		RequestStackClear();
 		RequestStackPush(StateID::kMenu);

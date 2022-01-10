@@ -1,9 +1,16 @@
+#include <algorithm>
+#include <iostream>
+
 #include "Player.hpp"
 #include "Tank.hpp"
 #include "Utility.hpp"
+#include "DataTables.hpp"
 
-#include <algorithm>
-#include <iostream>
+
+namespace
+{
+	const std::vector<PlayerData> Table = InitializePlayerData();
+}
 
 struct TankMover
 {
@@ -44,7 +51,6 @@ struct TankRotator // Rotate Tank
 	void operator()(Tank& tank, sf::Time) const
 	{
 		tank.Rotate(rotation * tank.GetRotationSpeed()); // Rotate Tank by sign and Tank rotation speed
-		std::cout << "\nTank Rotation Angle == " << tank.getRotation();
 	}
 
 	float rotation;
@@ -63,40 +69,65 @@ struct CannonRotator // Rotate Cannon
 	float rotation;
 };
 
-
-Player::Player() : m_current_mission_status(MissionStatus::kMissionRunning)
+Player::Player(PlayerNumber playerNumber) : m_current_mission_status(MissionStatus::kMissionRunning)
+	, m_player_number(playerNumber)
 {
-	//Set initial key bindings
 	
-	// Move Forwards 
-	m_key_binding[sf::Keyboard::W] = PlayerAction::kMoveUp;
-	m_key_binding[sf::Keyboard::Up] = PlayerAction::kMoveUp;
+	//Set initial key bindings
 
-	// Move Backwards
-	m_key_binding[sf::Keyboard::S] = PlayerAction::kMoveDown;
-	m_key_binding[sf::Keyboard::Down] = PlayerAction::kMoveDown;
+	if (m_player_number == PlayerNumber::kPlayer1) // Player 1 Initial Key bindings
+	{
+		// Move Forwards 
+		m_key_binding[sf::Keyboard::W] = PlayerActions::kMoveForwards;
 
-	// Rotation Of Tank
-	m_key_binding[sf::Keyboard::A] = PlayerAction::kRotateLeft;
-	m_key_binding[sf::Keyboard::D] = PlayerAction::kRotateRight;
+		// Move Backwards
+		m_key_binding[sf::Keyboard::S] = PlayerActions::kMoveBackwards;
 
-	// Rotation Of Cannon
-	m_key_binding[sf::Keyboard::Q] = PlayerAction::kRotateCannonLeft;
-	m_key_binding[sf::Keyboard::E] = PlayerAction::kRotateCannonRight;
+		// Rotation Of Tank
+		m_key_binding[sf::Keyboard::A] = PlayerActions::kRotateLeft;
+		m_key_binding[sf::Keyboard::D] = PlayerActions::kRotateRight;
 
-	// Weapons
-	m_key_binding[sf::Keyboard::Space] = PlayerAction::kFire;
-	m_key_binding[sf::Keyboard::M] = PlayerAction::kLaunchMissile;
+		// Rotation Of Cannon
+		m_key_binding[sf::Keyboard::Q] = PlayerActions::kRotateCannonLeft;
+		m_key_binding[sf::Keyboard::E] = PlayerActions::kRotateCannonRight;
 
+		// Weapons
+		m_key_binding[sf::Keyboard::LShift] = PlayerActions::kFire;
+		m_key_binding[sf::Keyboard::LControl] = PlayerActions::kLaunchMissile;
+
+	}
+	else if (m_player_number == PlayerNumber::kPlayer2) // Player 2 Initial Key Bindings
+	{
+		// Move Forwards 
+		m_key_binding[sf::Keyboard::I] = PlayerActions::kMoveForwards2;
+
+		// Move Backwards
+		m_key_binding[sf::Keyboard::K] = PlayerActions::kMoveBackwards2;
+
+		// Rotation Of Tank
+		m_key_binding[sf::Keyboard::J] = PlayerActions::kRotateLeft2;
+		m_key_binding[sf::Keyboard::L] = PlayerActions::kRotateRight2;
+
+		// Rotation Of Cannon
+		m_key_binding[sf::Keyboard::U] = PlayerActions::kRotateCannonLeft2;
+		m_key_binding[sf::Keyboard::O] = PlayerActions::kRotateCannonRight2;
+
+		// Weapons
+		m_key_binding[sf::Keyboard::Space] = PlayerActions::kFire2;
+		m_key_binding[sf::Keyboard::Slash] = PlayerActions::kLaunchMissile2;
+	}
+	
 
 	//Set initial action bindings
 	InitialiseActions();
 
-	//Assign all categories to the player's tank
+
+	//Assign player category to the player 1 
 	for (auto& pair : m_action_binding)
 	{
-		pair.second.category = Category::kPlayerTank;
+		pair.second.category = static_cast<int>(Table[static_cast<int>(m_player_number)].playerCategory);
 	}
+
 }
 
 
@@ -131,54 +162,17 @@ void Player::HandleEvent(const sf::Event& event, CommandQueue& commands)
 
 void Player::HandleRealtimeInput(CommandQueue& commands)
 {
-	//std::cout << "In Realtime Input when pressed Left movement key!" << std::endl;
-
 	//Check if any keybinding keys are pressed
 	for (auto pair : m_key_binding)
 	{
 		if (sf::Keyboard::isKeyPressed(pair.first) && IsRealtimeAction(pair.second))
 		{
-			/*std::cout << "In Realtime Input when pressed Left movement key!" << std::endl;*/
-
 			commands.Push(m_action_binding[pair.second]);
 		}
 	}
-
-	// JOYSTICK MOVEMENT CONTROLS
-	/*if (sf::Joystick::PovX)
-	{
-		if (event.joystickMove.axis == sf::Joystick::X)
-		{
-			if (event.joystickMove.position < 0 && !IsRealtimeAction(PlayerAction::kMoveLeft))
-			{
-				std::cout << "Joystick Id: " << event.joystickMove.joystickId << std::endl;
-				std::cout << "X axis Left!" << std::endl;
-				std::cout << "New position: " << event.joystickMove.position << std::endl;
-
-				commands.Push(m_action_binding[PlayerAction::kMoveLeft]);
-			}
-		}
-	}*/
-
-	// JOYSTICK MOVEMENT CONTROLS
-	/*if (event.type == sf::Event::JoystickMoved)
-	{
-		std::cout << "New position: " << event.joystickMove.position << std::endl;
-		if (event.joystickMove.axis == sf::Joystick::X)
-		{
-			if (event.joystickMove.position < -1.0f && IsRealtimeAction(PlayerAction::kMoveLeft))
-			{
-				std::cout << "Joystick Id: " << event.joystickMove.joystickId << std::endl;
-				std::cout << "X axis Left!" << std::endl;
-				std::cout << "New position: " << event.joystickMove.position << std::endl;
-
-				commands.Push(m_action_binding[PlayerAction::kMoveLeft]);
-			}
-		}
-	}*/
 }
 
-void Player::AssignKey(PlayerAction action, sf::Keyboard::Key key)
+void Player::AssignKey(PlayerActions action, sf::Keyboard::Key key)
 {
 	//Remove all keys that are already bound to action
 	for (auto itr = m_key_binding.begin(); itr != m_key_binding.end();)
@@ -195,7 +189,7 @@ void Player::AssignKey(PlayerAction action, sf::Keyboard::Key key)
 	m_key_binding[key] = action;
 }
 
-sf::Keyboard::Key Player::GetAssignedKey(PlayerAction action) const
+sf::Keyboard::Key Player::GetAssignedKey(PlayerActions action) const
 {
 	for (auto pair : m_key_binding)
 	{
@@ -217,49 +211,62 @@ MissionStatus Player::GetMissionStatus() const
 	return m_current_mission_status;
 }
 
-void Player::InitialiseActions()
+int Player::GetPlayerNumber() const
 {
-	//const float player_speed = 200.f;
-	const float speed_multiplier = 0.5f;
-
-	/*m_action_binding[PlayerAction::kMoveLeft].action = DerivedAction<Tank>(TankMover(-1 * speed_multiplier, 0.f));
-	m_action_binding[PlayerAction::kMoveRight].action = DerivedAction<Tank>(TankMover(+1 * speed_multiplier, 0.f));*/
-
-	m_action_binding[PlayerAction::kMoveUp].action = DerivedAction<Tank>(TankMover(0.f, -1 * speed_multiplier));
-	m_action_binding[PlayerAction::kMoveDown].action = DerivedAction<Tank>(TankMover(0, 1 * speed_multiplier));
-	
-	m_action_binding[PlayerAction::kRotateLeft].action = DerivedAction<Tank>(TankRotator(-1.f));
-	m_action_binding[PlayerAction::kRotateRight].action = DerivedAction<Tank>(TankRotator(1.f));
-
-	m_action_binding[PlayerAction::kRotateCannonLeft].action = DerivedAction<Tank>(CannonRotator(-1.f));
-	m_action_binding[PlayerAction::kRotateCannonRight].action = DerivedAction<Tank>(CannonRotator(1.f));
-
-	m_action_binding[PlayerAction::kFire].action = DerivedAction<Tank>([](Tank& a, sf::Time
-		)
-		{
-			a.Fire();
-		});
-
-	m_action_binding[PlayerAction::kLaunchMissile].action = DerivedAction<Tank>([](Tank& a, sf::Time
-		)
-		{
-			a.LaunchMissile();
-		});
+	return static_cast<int>(m_player_number);
 }
 
-bool Player::IsRealtimeAction(PlayerAction action)
+void Player::InitialiseActions()
+{
+	const float speed_multiplier = 0.5f;
+
+	// Player 1 Action Bindings
+	m_action_binding[PlayerActions::kMoveForwards].action = DerivedAction<Tank>(TankMover(0.f, -1 * speed_multiplier));
+	m_action_binding[PlayerActions::kMoveBackwards].action = DerivedAction<Tank>(TankMover(0, 1 * speed_multiplier));
+	
+	m_action_binding[PlayerActions::kRotateLeft].action = DerivedAction<Tank>(TankRotator(-1.f));
+	m_action_binding[PlayerActions::kRotateRight].action = DerivedAction<Tank>(TankRotator(1.f));
+
+	m_action_binding[PlayerActions::kRotateCannonLeft].action = DerivedAction<Tank>(CannonRotator(-1.f));
+	m_action_binding[PlayerActions::kRotateCannonRight].action = DerivedAction<Tank>(CannonRotator(1.f));
+
+	m_action_binding[PlayerActions::kFire].action = DerivedAction<Tank>([](Tank& a, sf::Time){a.Fire();});
+	m_action_binding[PlayerActions::kLaunchMissile].action = DerivedAction<Tank>([](Tank& a, sf::Time){a.LaunchMissile();});
+
+
+	// Player 2 Action Bindings
+	m_action_binding[PlayerActions::kMoveForwards2].action = DerivedAction<Tank>(TankMover(0.f, -1 * speed_multiplier));
+	m_action_binding[PlayerActions::kMoveBackwards2].action = DerivedAction<Tank>(TankMover(0, 1 * speed_multiplier));
+
+	m_action_binding[PlayerActions::kRotateLeft2].action = DerivedAction<Tank>(TankRotator(-1.f));
+	m_action_binding[PlayerActions::kRotateRight2].action = DerivedAction<Tank>(TankRotator(1.f));
+
+	m_action_binding[PlayerActions::kRotateCannonLeft2].action = DerivedAction<Tank>(CannonRotator(-1.f));
+	m_action_binding[PlayerActions::kRotateCannonRight2].action = DerivedAction<Tank>(CannonRotator(1.f));
+
+	m_action_binding[PlayerActions::kFire2].action = DerivedAction<Tank>([](Tank& a, sf::Time) {a.Fire(); });
+	m_action_binding[PlayerActions::kLaunchMissile2].action = DerivedAction<Tank>([](Tank& a, sf::Time) {a.LaunchMissile(); });
+
+}
+
+bool Player::IsRealtimeAction(PlayerActions action)
 {
 	switch (action)
 	{
-	case PlayerAction::kMoveLeft:
-	case PlayerAction::kMoveRight:
-	case PlayerAction::kMoveUp:
-	case PlayerAction::kMoveDown:
-	case PlayerAction::kRotateLeft:
-	case PlayerAction::kRotateRight:
-	case PlayerAction::kRotateCannonLeft:
-	case PlayerAction::kRotateCannonRight:
-	case PlayerAction::kFire:
+	case PlayerActions::kMoveForwards:
+	case PlayerActions::kMoveBackwards:
+	case PlayerActions::kRotateLeft:
+	case PlayerActions::kRotateRight:
+	case PlayerActions::kRotateCannonLeft:
+	case PlayerActions::kRotateCannonRight:
+	case PlayerActions::kFire:
+	case PlayerActions::kMoveForwards2:
+	case PlayerActions::kMoveBackwards2:
+	case PlayerActions::kRotateLeft2:
+	case PlayerActions::kRotateRight2:
+	case PlayerActions::kRotateCannonLeft2:
+	case PlayerActions::kRotateCannonRight2:
+	case PlayerActions::kFire2:
 		return true;
 	default:
 		return false;

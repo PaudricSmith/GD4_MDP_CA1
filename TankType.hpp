@@ -4,13 +4,10 @@ enum class TankType
 	kCamo,
 	kCannonCamo,
 	kSand,
+	kCannonSand,
 	kGreen,
+	kCannonGreen,
 	kBrown,
+	kCannonBrown,
 	kTankCount
-};
-
-enum class CannonType
-{
-	kCannonCamo,
-	kCannonCount
 };
