@@ -78,21 +78,10 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	m_health_display = healthDisplay.get();
 	AttachChild(std::move(healthDisplay));
 
-	if (Tank::GetCategory() == static_cast<int>(Category::kPlayerTank))
-	{
-		std::unique_ptr<TextNode> missileDisplay(new TextNode(fonts, ""));
-		missileDisplay->setPosition(0, 70);
-		m_missile_display = missileDisplay.get();
-		AttachChild(std::move(missileDisplay));
-	}
-
-	if (Tank::GetCategory() == static_cast<int>(Category::kPlayer2Tank))
-	{
-		std::unique_ptr<TextNode> missileDisplay(new TextNode(fonts, ""));
-		missileDisplay->setPosition(0, 70);
-		m_missile_display = missileDisplay.get();
-		AttachChild(std::move(missileDisplay));
-	}
+	std::unique_ptr<TextNode> missileDisplay(new TextNode(fonts, ""));
+	missileDisplay->setPosition(0, 70);
+	m_missile_display = missileDisplay.get();
+	AttachChild(std::move(missileDisplay));
 
 	UpdateTexts();
 }

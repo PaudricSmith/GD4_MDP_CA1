@@ -1,2 +1,9 @@
-﻿  DataTables.cpp
+﻿  Tank.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(186,78): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(187,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(188,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(337,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(337,48): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(338,50): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(338,49): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   GD4_MDP_CA1.vcxproj -> D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\Debug\GD4_MDP_CA1.exe
