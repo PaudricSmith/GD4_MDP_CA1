@@ -17,6 +17,7 @@ enum class Textures
 	kFireSpread,
 	kFireRate,
 	kTitleScreen,
+	kButtons,
 	kButtonNormal,
 	kButtonSelected,
 	kButtonPressed

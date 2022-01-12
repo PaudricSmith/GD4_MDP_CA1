@@ -19,12 +19,13 @@ namespace
 SoundPlayer::SoundPlayer()
 {
 	m_sound_buffers.Load(SoundEffects::kLaunchMissile, "Media/Audio/SFX/dive.wav");
-	/*m_sound_buffers.Load(SoundEffects::kAlliedGunfire, "Media/Sound/AlliedGunfire.wav");
-	m_sound_buffers.Load(SoundEffects::kEnemyGunfire, "Media/Sound/EnemyGunfire.wav");
-	m_sound_buffers.Load(SoundEffects::kExplosion1, "Media/Sound/Explosion1.wav");
-	m_sound_buffers.Load(SoundEffects::kExplosion2, "Media/Sound/Explosion2.wav");
-	m_sound_buffers.Load(SoundEffects::kCollectPickup, "Media/Sound/CollectPickup.wav");
-	m_sound_buffers.Load(SoundEffects::kButton, "Media/Sound/Button.wav");*/
+	//m_sound_buffers.Load(SoundEffects::kAlliedGunfire, "Media/Sound/AlliedGunfire.wav");
+	//m_sound_buffers.Load(SoundEffects::kEnemyGunfire, "Media/Sound/EnemyGunfire.wav");
+	//m_sound_buffers.Load(SoundEffects::kExplosion1, "Media/Sound/Explosion1.wav");
+	//m_sound_buffers.Load(SoundEffects::kExplosion2, "Media/Sound/Explosion2.wav");
+	//m_sound_buffers.Load(SoundEffects::kCollectPickup, "Media/Sound/CollectPickup.wav");
+	m_sound_buffers.Load(SoundEffects::kButtonSelected, "Media/Audio/SFX/Slide_Sharp_01.wav");
+	m_sound_buffers.Load(SoundEffects::kButtonPressed, "Media/Audio/SFX/Click_Heavy_00.wav");
 
 	// Listener points towards the screen (default in SFML)
 	sf::Listener::setDirection(0.f, 0.f, -1.f);
