@@ -8,11 +8,11 @@ class PauseState : public State
 {
 public:
 	PauseState(StateStack& stack, Context context);
+	~PauseState();
 
 	virtual void		Draw();
 	virtual bool		Update(sf::Time dt);
 	virtual bool		HandleEvent(const sf::Event& event);
-
 
 private:
 	sf::Sprite			m_background_sprite;

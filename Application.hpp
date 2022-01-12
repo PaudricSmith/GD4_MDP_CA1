@@ -7,6 +7,7 @@
 #include "ResourceHolder.hpp"
 #include "ResourceIdentifiers.hpp"
 #include "StateStack.hpp"
+#include "MusicPlayer.hpp"
 
 class Application
 {
@@ -26,6 +27,7 @@ private:
 	Player m_player;
 	Player m_player_2;
 
+	MusicPlayer m_music_player;
 	TextureHolder m_textures;
 	FontHolder m_fonts;
 
@@ -33,7 +35,7 @@ private:
 
 	sf::Text m_statistics_text;
 	sf::Time m_statistics_updatetime;
-
 	std::size_t m_statistics_numframes;
+
 	static const sf::Time kTimePerFrame;
 };
