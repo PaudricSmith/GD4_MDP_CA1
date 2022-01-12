@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ResourceHolder.hpp"
 #include "ResourceIdentifiers.hpp"
 #include "SceneNode.hpp"
@@ -10,22 +11,20 @@
 #include <SFML/System/NonCopyable.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 
 #include <array>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 #include "CommandQueue.hpp"
-
-//Foward
-namespace sf
-{
-	class RenderWindow;
-}
+#include "SoundPlayer.hpp"
 
 
 class World : private sf::NonCopyable
 {
 public:
-	explicit World(sf::RenderWindow& window, FontHolder& font);
+	explicit World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds);
 	void Update(sf::Time dt);
 	void Draw();
 	CommandQueue& getCommandQueue();
@@ -47,6 +46,7 @@ private:
 	void GuideMissiles();
 	void HandleCollisions();
 	void DestroyEntitiesOutsideView();
+	void UpdateSounds();
 
 private:
 	struct SpawnPoint
@@ -62,10 +62,11 @@ private:
 
 
 private:
-	sf::RenderWindow& m_window;
+	sf::RenderTarget& m_target;
 	sf::View m_camera;
 	TextureHolder m_textures;
 	FontHolder& m_fonts;
+	SoundPlayer& m_sounds;
 	SceneNode m_scenegraph;
 	std::array<SceneNode*, static_cast<int>(Layers::kLayerCount)> m_scene_layers;
 	CommandQueue m_command_queue;

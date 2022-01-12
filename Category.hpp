@@ -14,6 +14,7 @@ namespace Category
 		kPickup = 1 << 5,
 		kAlliedProjectile = 1 << 6,
 		kEnemyProjectile = 1 << 7,
+		kSoundEffect = 1 << 8,
 
 		kTank = kPlayerTank | kPlayer2Tank| kAlliedTank | kEnemyTank,
 		kProjectile = kAlliedProjectile | kEnemyProjectile,

@@ -7,12 +7,14 @@
 #include "Pickup.hpp"
 #include "Projectile.hpp"
 #include "Utility.hpp"
+#include "SoundNode.hpp"
 
-World::World(sf::RenderWindow& window, FontHolder& font)
-	: m_window(window)
-	, m_camera(window.getDefaultView())
+World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds)
+	: m_target(output_target)
+	, m_camera(output_target.getDefaultView())
 	, m_textures()
 	, m_fonts(font)
+	, m_sounds(sounds)
 	, m_scenegraph()
 	, m_scene_layers()
 	, m_world_bounds(0.f, 0.f, m_camera.getSize().x, m_camera.getSize().y)
@@ -23,7 +25,6 @@ World::World(sf::RenderWindow& window, FontHolder& font)
 {
 	LoadTextures();
 	BuildScene();
-	//std::cout << m_camera.getSize().x << m_camera.getSize().y << std::endl;
 	m_camera.setCenter(m_spawn_position);
 }
 
@@ -55,12 +56,14 @@ void World::Update(sf::Time dt)
 	//Apply movement
 	m_scenegraph.Update(dt, m_command_queue);
 	AdaptPlayerPosition();
+
+	UpdateSounds();
 }
 
 void World::Draw()
 {
-	m_window.setView(m_camera);
-	m_window.draw(m_scenegraph);
+	m_target.setView(m_camera);
+	m_target.draw(m_scenegraph);
 }
 
 bool World::HasAlivePlayer1() const
@@ -128,6 +131,11 @@ void World::BuildScene()
 	std::unique_ptr<SpriteNode> background_sprite(new SpriteNode(texture, textureRect));
 	background_sprite->setPosition(m_world_bounds.left, m_world_bounds.top);
 	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(background_sprite));
+
+	// Add sound effect node for Players
+	std::unique_ptr<SoundNode> soundNode(new SoundNode(m_sounds));
+	m_scenegraph.AttachChild(std::move(soundNode));
+
 
 	//Add Player 1 Tank
 	std::unique_ptr<Tank> leader(new Tank(TankType::kCamo, TankType::kCannonCamo, m_textures, m_fonts));
@@ -407,4 +415,18 @@ void World::DestroyEntitiesOutsideView()
 			}
 		});
 	m_command_queue.Push(command);
+}
+
+void World::UpdateSounds()
+{
+	
+	// Set listener's position to player
+    //sf::Vector2f player1SoundPos = sf::Vector2f(500, 500);
+
+	//m_sounds_2.SetListenerPosition(player2SoundPos);
+	m_sounds.SetListenerPosition(m_spawn_position);
+	
+	// Remove unused sounds
+	m_sounds.RemoveStoppedSounds();
+	
 }

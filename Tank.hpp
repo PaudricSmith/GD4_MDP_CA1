@@ -35,6 +35,7 @@ public:
 
 	sf::FloatRect GetBoundingRect() const override;
 	bool IsMarkedForRemoval() const override;
+	void PlayLocalSound(CommandQueue& commands, SoundEffects effect);
 
 
 private:
@@ -61,6 +62,7 @@ private:
 	bool m_is_firing;
 	bool m_is_launching_missile;
 	bool m_is_marked_for_removal;
+	bool m_played_explosion_sound;
 
 	float m_travelled_distance;
 	float m_cannon_rotation;

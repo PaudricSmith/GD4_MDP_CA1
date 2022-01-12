@@ -146,6 +146,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="MusicPlayer.cpp" />
+    <ClCompile Include="SoundNode.cpp" />
+    <ClCompile Include="SoundPlayer.cpp" />
     <ClCompile Include="Tank.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Button.cpp" />
@@ -178,6 +180,9 @@
     <ClInclude Include="MusicPlayer.hpp" />
     <ClInclude Include="MusicTracks.hpp" />
     <ClInclude Include="PlayerNumber.hpp" />
+    <ClInclude Include="SoundEffects.hpp" />
+    <ClInclude Include="SoundNode.hpp" />
+    <ClInclude Include="SoundPlayer.hpp" />
     <ClInclude Include="Tank.hpp" />
     <ClInclude Include="TankType.hpp" />
     <ClInclude Include="Application.hpp" />

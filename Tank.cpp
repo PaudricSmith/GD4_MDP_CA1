@@ -12,6 +12,7 @@
 #include "DataTables.hpp"
 #include "Pickup.hpp"
 #include "PickupType.hpp"
+#include "SoundNode.hpp"
 
 
 namespace
@@ -38,6 +39,7 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	, m_travelled_distance(0.f)
 	, m_directions_index(0)
 	, m_cannon_rotation(0)
+	, m_played_explosion_sound(false)
 {
 	// Reduce Tank sprite size
 	m_sprite.setScale(0.5f, 0.5f);
@@ -150,6 +152,8 @@ void Tank::UpdateTexts()
 
 void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 {
+	UpdateTexts();
+	
 	if (IsDestroyed())
 	{
 		CheckPickupDrop(commands);
@@ -164,8 +168,6 @@ void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 	UpdateMovementPattern(dt);
 
 	Entity::UpdateCurrent(dt, commands);
-
-	UpdateTexts();
 	
 }
 
@@ -279,6 +281,7 @@ void Tank::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
 	//Missile launch
 	if (m_is_launching_missile)
 	{
+		PlayLocalSound(commands, SoundEffects::kLaunchMissile);
 		commands.Push(m_missile_command);
 		m_is_launching_missile = false;
 	}
@@ -372,4 +375,19 @@ void Tank::CreatePickup(SceneNode& node, const TextureHolder& textures) const
 	pickup->setPosition(GetWorldPosition());
 	pickup->SetVelocity(0.f, 1.f);
 	node.AttachChild(std::move(pickup));
+}
+
+void Tank::PlayLocalSound(CommandQueue& commands, SoundEffects effect)
+{
+	sf::Vector2f world_position = GetWorldPosition();
+
+	Command command;
+	command.category = Category::kSoundEffect;
+	command.action = DerivedAction<SoundNode>(
+		[effect, world_position](SoundNode& node, sf::Time)
+		{
+			node.PlaySound(effect, world_position);
+		});
+
+	commands.Push(command);
 }

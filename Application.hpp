@@ -1,4 +1,5 @@
 #pragma once
+
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Time.hpp>
@@ -28,6 +29,7 @@ private:
 	Player m_player_2;
 
 	MusicPlayer m_music_player;
+	SoundPlayer m_sounds;
 	TextureHolder m_textures;
 	FontHolder m_fonts;
 
