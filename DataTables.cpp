@@ -16,6 +16,7 @@ std::vector<TankData> InitializeTankData()
 	data[static_cast<int>(TankType::kCamo)].m_rotation_speed = 1.f;
 	data[static_cast<int>(TankType::kCamo)].m_cannon_rotation_speed = 2.0f;
 	data[static_cast<int>(TankType::kCamo)].m_fire_interval = sf::seconds(1);
+	data[static_cast<int>(TankType::kCamo)].m_move_sound_interval = sf::seconds(0.35);
 	data[static_cast<int>(TankType::kCamo)].m_texture = Textures::kCamo;
 	// Set the Tanks Cannon texture
 	data[static_cast<int>(TankType::kCannonCamo)].m_cannon_texture = Textures::kCannonCamo;
@@ -26,6 +27,7 @@ std::vector<TankData> InitializeTankData()
 	data[static_cast<int>(TankType::kSand)].m_rotation_speed = 1.f;
 	data[static_cast<int>(TankType::kSand)].m_cannon_rotation_speed = 2.0f;
 	data[static_cast<int>(TankType::kSand)].m_fire_interval = sf::seconds(1);
+	data[static_cast<int>(TankType::kSand)].m_move_sound_interval = sf::seconds(0.35);
 	data[static_cast<int>(TankType::kSand)].m_texture = Textures::kSand;
 	// Set the Tanks Cannon texture
 	data[static_cast<int>(TankType::kCannonSand)].m_cannon_texture = Textures::kCannonSand;

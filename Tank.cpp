@@ -30,6 +30,7 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	, m_is_firing(false)
 	, m_is_launching_missile(false)
 	, m_fire_countdown(sf::Time::Zero)
+	, m_move_sound_countdown(sf::Time::Zero)
 	, m_is_marked_for_removal(false)
 	, m_fire_rate(1)
 	, m_spread_level(1)
@@ -40,6 +41,7 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	, m_directions_index(0)
 	, m_cannon_rotation(0)
 	, m_played_explosion_sound(false)
+	, m_is_playing_move_sound(false)
 {
 	// Reduce Tank sprite size
 	m_sprite.setScale(0.5f, 0.5f);
@@ -150,8 +152,57 @@ void Tank::UpdateTexts()
 	}
 }
 
+void Tank::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
+{
+
+	// Rate the bullets 
+	if (m_is_firing && m_fire_countdown <= sf::Time::Zero)
+	{
+		// Countdown expired, can fire again
+		std::cout << "Pushing fire command" << std::endl;
+		commands.Push(m_fire_command);
+
+		// Play shoot SFX
+		PlayLocalSound(commands, SoundEffects::kNormalBulletFire);
+
+		m_fire_countdown += Table[static_cast<int>(m_type)].m_fire_interval / (m_fire_rate + 1.f);
+		m_is_firing = false;
+	}
+	else if (m_fire_countdown > sf::Time::Zero)
+	{
+		// Wait, can't fire yet
+		m_fire_countdown -= dt;
+		m_is_firing = false;
+	}
+
+	// Missile launch
+	if (m_is_launching_missile)
+	{
+		PlayLocalSound(commands, SoundEffects::kLaunchGuidedMissile);
+		commands.Push(m_missile_command);
+		m_is_launching_missile = false;
+	}
+}
+
 void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 {
+
+	if (m_is_playing_move_sound && m_move_sound_countdown <= sf::Time::Zero)
+	{
+		// Countdown expired, can play Tank moving sound again
+
+		PlayLocalSound(commands, SoundEffects::kTankMoving);
+
+		m_move_sound_countdown += Table[static_cast<int>(m_type)].m_move_sound_interval;
+		m_is_playing_move_sound = false;
+	}
+	else if (m_move_sound_countdown > sf::Time::Zero)
+	{
+		// Wait, can't play Tank moving sound yet
+		m_move_sound_countdown -= dt;
+		m_is_playing_move_sound = false;
+	}
+
 	UpdateTexts();
 	
 	if (IsDestroyed())
@@ -237,6 +288,15 @@ void Tank::RotateCannon(float angle)
 
 }
 
+void Tank::MoveSoundPlayInterval()
+{
+	// if the Tanks move sound interval is not zero check bool to true so you can play sound again
+	if (Table[static_cast<int>(m_type)].m_move_sound_interval != sf::Time::Zero)
+	{
+		m_is_playing_move_sound = true;
+	}
+}
+
 void Tank::Fire()
 {
 	//Only ships with a non-zero fire interval fire
@@ -255,42 +315,10 @@ void Tank::LaunchMissile()
 	}
 }
 
-void Tank::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
-{
-
-	//Rate the bullets 
-	if (m_is_firing && m_fire_countdown <= sf::Time::Zero)
-	{
-		//Countdown expired, can fire again
-		std::cout << "Pushing fire command" << std::endl;
-		commands.Push(m_fire_command);
-
-		// Play shoot SFX
-		PlayLocalSound(commands, SoundEffects::kNormalBulletFire);
-
-		m_fire_countdown += Table[static_cast<int>(m_type)].m_fire_interval / (m_fire_rate + 1.f);
-		m_is_firing = false;
-	}
-	else if (m_fire_countdown > sf::Time::Zero)
-	{
-		//Wait, can't fire yet
-		m_fire_countdown -= dt;
-		m_is_firing = false;
-	}
-	//Missile launch
-	if (m_is_launching_missile)
-	{
-		PlayLocalSound(commands, SoundEffects::kLaunchGuidedMissile);
-		commands.Push(m_missile_command);
-		m_is_launching_missile = false;
-	}
-}
-
 bool Tank::IsPlayerTank() const
 {
 	return m_type == TankType::kCamo || m_type == TankType::kSand;
 }
-
 
 void Tank::CreateBullets(SceneNode& node, const TextureHolder& textures) const
 {

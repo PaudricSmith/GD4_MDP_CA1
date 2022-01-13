@@ -38,6 +38,9 @@ struct TankMover
 		}
 
 		tank.Accelerate(newTankPosition * tank.GetMaxSpeed());
+
+		// Play Tank moving SFX 
+		tank.MoveSoundPlayInterval();
 	}
 
 	sf::Vector2f velocity;
@@ -51,9 +54,13 @@ struct TankRotator // Rotate Tank
 	void operator()(Tank& tank, sf::Time) const
 	{
 		tank.Rotate(rotation * tank.GetRotationSpeed()); // Rotate Tank by sign and Tank rotation speed
+
+		// Play Tank moving SFX 
+		tank.MoveSoundPlayInterval();
 	}
 
 	float rotation;
+
 };
 
 struct CannonRotator // Rotate Cannon

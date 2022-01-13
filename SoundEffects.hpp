@@ -2,6 +2,8 @@
 
 enum class SoundEffects
 {
+	kTankMoving,
+	kTankMovingFast,
 	kNormalBulletFire,
 	kNormalBulletHit,
 	kEnemyGunfire,

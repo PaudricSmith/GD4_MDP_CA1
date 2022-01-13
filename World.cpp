@@ -51,7 +51,7 @@ void World::Update(sf::Time dt)
 	//Remove all destroyed entities
 	m_scenegraph.RemoveWrecks();
 
-	SpawnEnemies();
+	//SpawnEnemies();
 
 	//Apply movement
 	m_scenegraph.Update(dt, m_command_queue);
@@ -455,8 +455,7 @@ void World::DestroyEntitiesOutsideView()
 }
 
 void World::UpdateSounds()
-{
-	
+{	
 	// Set listener's position to player
     //sf::Vector2f player1SoundPos = sf::Vector2f(500, 500);
 

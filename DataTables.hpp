@@ -35,6 +35,7 @@ struct TankData
 	Textures m_texture;
 	Textures m_cannon_texture;
 	sf::Time m_fire_interval;
+	sf::Time m_move_sound_interval;
 	std::vector<Direction> m_directions;
 };
 
