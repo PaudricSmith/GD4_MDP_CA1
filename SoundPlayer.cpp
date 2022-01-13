@@ -22,6 +22,7 @@ SoundPlayer::SoundPlayer()
 	m_sound_buffers.Load(SoundEffects::kGuidedMissileHit, "Media/Audio/SFX/bomb.wav");
 	m_sound_buffers.Load(SoundEffects::kNormalBulletFire, "Media/Audio/SFX/Shoot1.wav");
 	m_sound_buffers.Load(SoundEffects::kNormalBulletHit, "Media/Audio/SFX/EnemyHit3.wav");
+	m_sound_buffers.Load(SoundEffects::kTankHitTank, "Media/Audio/SFX/EnemyHit1.wav");
 	//m_sound_buffers.Load(SoundEffects::kCollectPickup, "Media/Audio/SFX/CollectPickup.wav");
 	m_sound_buffers.Load(SoundEffects::kButtonSelected, "Media/Audio/SFX/Slide_Sharp_01.wav");
 	m_sound_buffers.Load(SoundEffects::kButtonPressed, "Media/Audio/SFX/Click_Heavy_00.wav");

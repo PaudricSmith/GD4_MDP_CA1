@@ -5,10 +5,9 @@ enum class SoundEffects
 	kNormalBulletFire,
 	kNormalBulletHit,
 	kEnemyGunfire,
-	kExplosion1,
-	kExplosion2,
 	kLaunchGuidedMissile,
 	kGuidedMissileHit,
+	kTankHitTank,
 	kCollectPickup,
 	kButtonSelected,
 	kButtonPressed
