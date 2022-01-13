@@ -71,6 +71,9 @@ struct CannonRotator // Rotate Cannon
 	void operator()(Tank& tank, sf::Time) const
 	{
 		tank.RotateCannon(rotation * tank.GetCannonRotationSpeed()); // Rotate Tank Cannon by sign and cannon speed
+
+		// Play Tank Cannon moving SFX 
+		tank.CannonMoveSoundPlayInterval();
 	}
 
 	float rotation;

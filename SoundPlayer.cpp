@@ -21,6 +21,7 @@ SoundPlayer::SoundPlayer()
 {
 	m_sound_buffers.Load(SoundEffects::kTankMoving, "Media/Audio/SFX/VehicleMove.wav");
 	m_sound_buffers.Load(SoundEffects::kTankMovingFast, "Media/Audio/SFX/car_sound.wav"); // ******* TO BE DONE ******* 
+	m_sound_buffers.Load(SoundEffects::kTankCannonMoving, "Media/Audio/SFX/Random56.wav");
 	m_sound_buffers.Load(SoundEffects::kLaunchGuidedMissile, "Media/Audio/SFX/dive.wav");
 	m_sound_buffers.Load(SoundEffects::kGuidedMissileHit, "Media/Audio/SFX/bomb.wav");
 	m_sound_buffers.Load(SoundEffects::kNormalBulletFire, "Media/Audio/SFX/Shoot1.wav");
@@ -50,9 +51,9 @@ void SoundPlayer::Play(SoundEffects effect, sf::Vector2f position)
 	sound.setAttenuation(Attenuation);
 	sound.setMinDistance(MinDistance3D);
 	
-	if (effect == SoundEffects::kTankMoving)
+	if (effect == SoundEffects::kTankCannonMoving || effect == SoundEffects::kTankMoving)
 	{
-		sound.setVolume(30.0f);
+		sound.setVolume(50.0f);
 	}
 
 	sound.play();

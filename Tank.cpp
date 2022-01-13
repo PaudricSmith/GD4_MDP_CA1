@@ -31,6 +31,7 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	, m_is_launching_missile(false)
 	, m_fire_countdown(sf::Time::Zero)
 	, m_move_sound_countdown(sf::Time::Zero)
+	, m_move_cannon_sound_countdown(sf::Time::Zero)
 	, m_is_marked_for_removal(false)
 	, m_fire_rate(1)
 	, m_spread_level(1)
@@ -42,6 +43,7 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	, m_cannon_rotation(0)
 	, m_played_explosion_sound(false)
 	, m_is_playing_move_sound(false)
+	, m_is_playing_cannon_move_sound(false)
 {
 	// Reduce Tank sprite size
 	m_sprite.setScale(0.5f, 0.5f);
@@ -186,6 +188,10 @@ void Tank::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
 
 void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 {
+	/*if (GetVelocity().x != 0 || GetVelocity().y != 0)
+	{
+		PlayLocalSound(commands, SoundEffects::kTankMoving);
+	}*/
 
 	if (m_is_playing_move_sound && m_move_sound_countdown <= sf::Time::Zero)
 	{
@@ -201,6 +207,22 @@ void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 		// Wait, can't play Tank moving sound yet
 		m_move_sound_countdown -= dt;
 		m_is_playing_move_sound = false;
+	}
+
+	if (m_is_playing_cannon_move_sound && m_move_cannon_sound_countdown <= sf::Time::Zero)
+	{
+		// Countdown expired, can play Tank moving sound again
+
+		PlayLocalSound(commands, SoundEffects::kTankCannonMoving);
+
+		m_move_cannon_sound_countdown += Table[static_cast<int>(m_type)].m_move_cannon_sound_interval;
+		m_is_playing_cannon_move_sound = false;
+	}
+	else if (m_move_cannon_sound_countdown > sf::Time::Zero)
+	{
+		// Wait, can't play Tank moving sound yet
+		m_move_cannon_sound_countdown -= dt;
+		m_is_playing_cannon_move_sound = false;
 	}
 
 	UpdateTexts();
@@ -294,6 +316,15 @@ void Tank::MoveSoundPlayInterval()
 	if (Table[static_cast<int>(m_type)].m_move_sound_interval != sf::Time::Zero)
 	{
 		m_is_playing_move_sound = true;
+	}
+}
+
+void Tank::CannonMoveSoundPlayInterval()
+{
+	// if the Tanks move sound interval is not zero check bool to true so you can play sound again
+	if (Table[static_cast<int>(m_type)].m_move_cannon_sound_interval != sf::Time::Zero)
+	{
+		m_is_playing_cannon_move_sound = true;
 	}
 }
 
