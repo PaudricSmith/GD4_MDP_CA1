@@ -8,7 +8,8 @@ enum class SoundEffects
 	kLaunchGuidedMissile,
 	kGuidedMissileHit,
 	kTankHitTank,
-	kCollectPickup,
+	kCollectGoodPickup,
+	kCollectBadPickup,
 	kButtonSelected,
 	kButtonPressed
 };
