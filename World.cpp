@@ -100,6 +100,23 @@ void World::LoadTextures()
 
 	// Background textures
 	m_textures.Load(Textures::kDesert, "Media/Textures/Desert.png"); // *** IMPORTANT *** ==> TEXTURE TO BE SWAPPED !!!
+	
+	std::cerr << "\n\n*****************************************************************************************************************************" << std::endl;
+	std::cerr << "*****************************************************************************************************************************\n" << std::endl;
+
+	std::cerr << "	*** IMPORTANT *** ==> DESERT BACKGROUND TEXTURE TO BE SWAPPED !!!" << std::endl;
+	std::cerr << "	*** IMPORTANT *** ==> DESERT BACKGROUND TEXTURE TO BE SWAPPED !!!" << std::endl;
+	std::cerr << "	*** IMPORTANT *** ==> DESERT BACKGROUND TEXTURE TO BE SWAPPED !!!" << std::endl;
+
+	std::cerr << "\n********************************************************************************************************************************" << std::endl;
+	std::cerr << "********************************************************************************************************************************\n" << std::endl;
+
+	std::cerr << "	*** IMPORTANT *** ==> WALL TEXTURE TO BE ADDED !!!" << std::endl;
+	std::cerr << "	*** IMPORTANT *** ==> WALL TEXTURE TO BE ADDED !!!" << std::endl;
+	std::cerr << "	*** IMPORTANT *** ==> WALL TEXTURE TO BE ADDED !!!" << std::endl;
+
+	std::cerr << "\n********************************************************************************************************************************" << std::endl;
+	std::cerr << "********************************************************************************************************************************\n" << std::endl;
 
 	// Projectile textures
 	m_textures.Load(Textures::kBullet, "Media/Textures/Bullet.png");
@@ -343,7 +360,8 @@ void World::HandleCollisions()
 			sf::Vector2f player1Pos = player.getPosition();
 			sf::Vector2f player2Pos = player2.getPosition();
 
-			//Collision
+			// Collision based on both Tanks x y positions, if there is a collision
+			// in a certain direction then move the Tank in the opposite direction
 			if (player1Pos.x < player2Pos.x)
 			{
 				m_player_tank->move(-1.0f, 0.0f);
@@ -365,9 +383,13 @@ void World::HandleCollisions()
 				m_player_tank_2->move(0.0f, -1.0f);
 			}
 
-			// Damage Player Tanks 
+			// Damage Player Tanks a small bit when they collide
 			player.Damage(1.0f);
 			player2.Damage(1.0f);
+
+			// Play Tank on Tank Collision SFX
+
+
 
 		}
 		else if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kPickup))
@@ -396,6 +418,21 @@ void World::HandleCollisions()
 
 			//Apply the projectile damage to the tank
 			tank.Damage(projectile.GetDamage());
+
+
+			if (projectile.IsGuided())
+			{
+				// Play Guided Missile hit SFX
+				m_sounds.Play(SoundEffects::kGuidedMissileHit);
+			}
+			else
+			{
+				m_sounds.RemovePlayingSounds();
+				// Play Normal bullet hit SFX
+				m_sounds.Play(SoundEffects::kNormalBulletHit);
+			}
+			
+			
 			projectile.Destroy();
 		}
 	}

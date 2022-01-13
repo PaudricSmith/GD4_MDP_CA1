@@ -22,7 +22,7 @@ SettingsState::SettingsState(StateStack& stack, Context context)
 	AddP1ButtonLabel(PlayerActions::kRotateCannonLeft, 200.0f, 400.f, 120.0f, "Rotate Gun Left", context);
 	AddP1ButtonLabel(PlayerActions::kRotateCannonRight, 200.0f, 450.f, 120.0f, "Rotate Gun Right", context);
 	AddP1ButtonLabel(PlayerActions::kFire, 200.0f, 500.f, 120.0f, "Fire", context);
-	AddP1ButtonLabel(PlayerActions::kLaunchMissile, 200.0f, 550.f, 120.0f, "Missile", context);
+	AddP1ButtonLabel(PlayerActions::kGuidedMissile, 200.0f, 550.f, 120.0f, "Missile", context);
 
 	// Build key binding buttons and labels Player 2
 	AddP2ButtonLabel(PlayerActions::kMoveForwards2, 600.0f, 200.f, 520.0f, "Move Forwards", context);
@@ -32,7 +32,7 @@ SettingsState::SettingsState(StateStack& stack, Context context)
 	AddP2ButtonLabel(PlayerActions::kRotateCannonLeft2, 600.0f, 400.f, 520.0f, "Rotate Gun Left", context);
 	AddP2ButtonLabel(PlayerActions::kRotateCannonRight2, 600.0f, 450.f, 520.0f, "Rotate Gun Right", context);
 	AddP2ButtonLabel(PlayerActions::kFire2, 600.0f, 500.f, 520.0f, "Fire", context);
-	AddP2ButtonLabel(PlayerActions::kLaunchMissile2, 600.0f, 550.f, 520.0f, "Missile", context);
+	AddP2ButtonLabel(PlayerActions::kGuidedMissile2, 600.0f, 550.f, 520.0f, "Missile", context);
 
 	UpdateP1Labels();
 	UpdateP2Labels();

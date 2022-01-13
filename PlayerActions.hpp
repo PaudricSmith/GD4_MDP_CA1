@@ -9,7 +9,7 @@ enum class PlayerActions
 	kRotateCannonLeft,
 	kRotateCannonRight,
 	kFire,
-	kLaunchMissile,
+	kGuidedMissile,
 	kMoveForwards2,
 	kMoveBackwards2,
 	kRotateLeft2,
@@ -17,6 +17,6 @@ enum class PlayerActions
 	kRotateCannonLeft2,
 	kRotateCannonRight2,
 	kFire2,
-	kLaunchMissile2,
+	kGuidedMissile2,
 	kActionCount
 };

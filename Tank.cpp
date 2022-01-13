@@ -257,18 +257,17 @@ void Tank::LaunchMissile()
 
 void Tank::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
 {
-	//Enemies try and fire as often as possible
-	if (!IsPlayerTank())
-	{
-		Fire();
-	}
 
-	//Rate the bullets - default to 2 times a second
+	//Rate the bullets 
 	if (m_is_firing && m_fire_countdown <= sf::Time::Zero)
 	{
 		//Countdown expired, can fire again
 		std::cout << "Pushing fire command" << std::endl;
 		commands.Push(m_fire_command);
+
+		// Play shoot SFX
+		PlayLocalSound(commands, SoundEffects::kNormalBulletFire);
+
 		m_fire_countdown += Table[static_cast<int>(m_type)].m_fire_interval / (m_fire_rate + 1.f);
 		m_is_firing = false;
 	}
@@ -281,7 +280,7 @@ void Tank::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
 	//Missile launch
 	if (m_is_launching_missile)
 	{
-		PlayLocalSound(commands, SoundEffects::kLaunchMissile);
+		PlayLocalSound(commands, SoundEffects::kLaunchGuidedMissile);
 		commands.Push(m_missile_command);
 		m_is_launching_missile = false;
 	}
@@ -328,6 +327,9 @@ void Tank::CreateProjectile(SceneNode& node, ProjectileType type, float x_offset
 	float totalAngle = tankAngle + cannonAngle;
 	float projectileAngle;
 
+	// To get the combined angle of the Tank base and Tank cannon 
+	// we must add the angles together if the sum is less than 180 
+    // else if greater than 180 we add and then take away 360 because we want to always have an angle between 0 and 360
 	if (totalAngle > 180)
 	{
 		projectileAngle = totalAngle - 360;

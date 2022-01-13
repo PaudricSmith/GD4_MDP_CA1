@@ -18,12 +18,11 @@ namespace
 
 SoundPlayer::SoundPlayer()
 {
-	m_sound_buffers.Load(SoundEffects::kLaunchMissile, "Media/Audio/SFX/dive.wav");
-	//m_sound_buffers.Load(SoundEffects::kAlliedGunfire, "Media/Sound/AlliedGunfire.wav");
-	//m_sound_buffers.Load(SoundEffects::kEnemyGunfire, "Media/Sound/EnemyGunfire.wav");
-	//m_sound_buffers.Load(SoundEffects::kExplosion1, "Media/Sound/Explosion1.wav");
-	//m_sound_buffers.Load(SoundEffects::kExplosion2, "Media/Sound/Explosion2.wav");
-	//m_sound_buffers.Load(SoundEffects::kCollectPickup, "Media/Sound/CollectPickup.wav");
+	m_sound_buffers.Load(SoundEffects::kLaunchGuidedMissile, "Media/Audio/SFX/dive.wav");
+	m_sound_buffers.Load(SoundEffects::kGuidedMissileHit, "Media/Audio/SFX/bomb.wav");
+	m_sound_buffers.Load(SoundEffects::kNormalBulletFire, "Media/Audio/SFX/Shoot1.wav");
+	m_sound_buffers.Load(SoundEffects::kNormalBulletHit, "Media/Audio/SFX/EnemyHit3.wav");
+	//m_sound_buffers.Load(SoundEffects::kCollectPickup, "Media/Audio/SFX/CollectPickup.wav");
 	m_sound_buffers.Load(SoundEffects::kButtonSelected, "Media/Audio/SFX/Slide_Sharp_01.wav");
 	m_sound_buffers.Load(SoundEffects::kButtonPressed, "Media/Audio/SFX/Click_Heavy_00.wav");
 
@@ -54,6 +53,14 @@ void SoundPlayer::RemoveStoppedSounds()
 	m_sounds.remove_if([](const sf::Sound& s)
 		{
 			return s.getStatus() == sf::Sound::Stopped;
+		});
+}
+
+void SoundPlayer::RemovePlayingSounds()
+{
+	m_sounds.remove_if([](const sf::Sound& s)
+		{
+			return s.getStatus() == sf::Sound::Playing;
 		});
 }
 

@@ -93,7 +93,7 @@ Player::Player(PlayerNumber playerNumber) : m_current_mission_status(MissionStat
 
 		// Weapons
 		m_key_binding[sf::Keyboard::LShift] = PlayerActions::kFire;
-		m_key_binding[sf::Keyboard::LControl] = PlayerActions::kLaunchMissile;
+		m_key_binding[sf::Keyboard::LControl] = PlayerActions::kGuidedMissile;
 
 	}
 	else if (m_player_number == PlayerNumber::kPlayer2) // Player 2 Initial Key Bindings
@@ -114,7 +114,7 @@ Player::Player(PlayerNumber playerNumber) : m_current_mission_status(MissionStat
 
 		// Weapons
 		m_key_binding[sf::Keyboard::Space] = PlayerActions::kFire2;
-		m_key_binding[sf::Keyboard::Slash] = PlayerActions::kLaunchMissile2;
+		m_key_binding[sf::Keyboard::Slash] = PlayerActions::kGuidedMissile2;
 	}
 	
 
@@ -231,7 +231,7 @@ void Player::InitialiseActions()
 	m_action_binding[PlayerActions::kRotateCannonRight].action = DerivedAction<Tank>(CannonRotator(1.f));
 
 	m_action_binding[PlayerActions::kFire].action = DerivedAction<Tank>([](Tank& a, sf::Time){a.Fire();});
-	m_action_binding[PlayerActions::kLaunchMissile].action = DerivedAction<Tank>([](Tank& a, sf::Time){a.LaunchMissile();});
+	m_action_binding[PlayerActions::kGuidedMissile].action = DerivedAction<Tank>([](Tank& a, sf::Time){a.LaunchMissile();});
 
 
 	// Player 2 Action Bindings
@@ -245,7 +245,7 @@ void Player::InitialiseActions()
 	m_action_binding[PlayerActions::kRotateCannonRight2].action = DerivedAction<Tank>(CannonRotator(1.f));
 
 	m_action_binding[PlayerActions::kFire2].action = DerivedAction<Tank>([](Tank& a, sf::Time) {a.Fire(); });
-	m_action_binding[PlayerActions::kLaunchMissile2].action = DerivedAction<Tank>([](Tank& a, sf::Time) {a.LaunchMissile(); });
+	m_action_binding[PlayerActions::kGuidedMissile2].action = DerivedAction<Tank>([](Tank& a, sf::Time) {a.LaunchMissile(); });
 
 }
 

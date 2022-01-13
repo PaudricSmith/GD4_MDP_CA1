@@ -1,2 +1,20 @@
-﻿  Button.cpp
+﻿  Application.cpp
+  Button.cpp
+  GameOverState.cpp
+  GameState.cpp
+  Main.cpp
+  MenuState.cpp
+  PauseState.cpp
+  SettingsState.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SettingsState.cpp(67,38): warning C4018: '<': signed/unsigned mismatch
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SettingsState.cpp(117,28): warning C4018: '<': signed/unsigned mismatch
+  SoundNode.cpp
+  SoundPlayer.cpp
+  State.cpp
+  StateStack.cpp
+  TitleState.cpp
+  World.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\World.cpp(387,18): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\World.cpp(388,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  Generating Code...
   GD4_MDP_CA1.vcxproj -> D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\Debug\GD4_MDP_CA1.exe
