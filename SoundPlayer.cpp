@@ -33,7 +33,7 @@ SoundPlayer::SoundPlayer()
 	m_sound_buffers.Load(SoundEffects::kButtonPressed, "Media/Audio/SFX/Click_Heavy_00.wav");
 
 	// Listener points towards the screen (default in SFML)
-	sf::Listener::setDirection(0.f, 0.f, -1.f);
+	sf::Listener::setDirection(0.f, 0.f, 0.f);
 }
 
 void SoundPlayer::Play(SoundEffects effect)
@@ -78,6 +78,11 @@ void SoundPlayer::RemovePlayingSounds()
 void SoundPlayer::SetListenerPosition(sf::Vector2f position)
 {
 	sf::Listener::setPosition(position.x, -position.y, ListenerZ);
+}
+
+void SoundPlayer::SetVolume(float volume)
+{
+	m_volume = volume;
 }
 
 sf::Vector2f SoundPlayer::GetListenerPosition() const

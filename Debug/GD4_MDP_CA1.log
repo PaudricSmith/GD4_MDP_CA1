@@ -1,2 +1,21 @@
-﻿  SoundState.cpp
+﻿  Application.cpp
+  Button.cpp
+  GameOverState.cpp
+  GameState.cpp
+  Main.cpp
+  MenuState.cpp
+  MusicPlayer.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\MusicPlayer.cpp(44,13): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\MusicPlayer.cpp(46,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  PauseState.cpp
+  SettingsState.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SettingsState.cpp(67,38): warning C4018: '<': signed/unsigned mismatch
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SettingsState.cpp(117,28): warning C4018: '<': signed/unsigned mismatch
+  SoundState.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SoundState.cpp(72,30): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SoundState.cpp(97,30): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  State.cpp
+  StateStack.cpp
+  TitleState.cpp
+  Generating Code...
   GD4_MDP_CA1.vcxproj -> D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\Debug\GD4_MDP_CA1.exe

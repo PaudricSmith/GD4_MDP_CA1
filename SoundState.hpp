@@ -29,4 +29,7 @@ private:
 	sf::Text m_music_vol_value_text;
 	sf::Text m_sfx_text;
 	sf::Text m_sfx_vol_value_text;
+
+	MusicPlayer& m_music_player;
+	SoundPlayer& m_sfx_player;
 };

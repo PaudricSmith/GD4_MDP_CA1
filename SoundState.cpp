@@ -1,5 +1,6 @@
 #include "SoundState.hpp"
 
+#include <iostream>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -8,7 +9,7 @@
 #include "Utility.hpp"
 #include "Button.hpp"
 
-
+#include "MenuState.hpp"
 
 
 SoundState::SoundState(StateStack& stack, Context context)
@@ -19,10 +20,17 @@ SoundState::SoundState(StateStack& stack, Context context)
 	, m_sfx_text("", context.fonts->Get(Fonts::Main), 24)
 	, m_music_vol_value_text("", context.fonts->Get(Fonts::Main), 20)
 	, m_sfx_vol_value_text("", context.fonts->Get(Fonts::Main), 20)
+	, m_music_player(*context.musicPlayer)
+	, m_sfx_player(*context.sounds)
 {
+	
+
+
+	// SET BACKGROUND SPRITE
 	sf::Texture& texture = context.textures->Get(Textures::kTitleScreen);
 	m_background_sprite.setTexture(texture);
 
+	// SET TEXT
 	m_music_text.setString("Music Volume");
 	m_music_text.setFillColor(sf::Color::Blue);
 	m_music_text.setPosition(420, 250);
@@ -31,14 +39,14 @@ SoundState::SoundState(StateStack& stack, Context context)
 	m_sfx_text.setFillColor(sf::Color::Blue);
 	m_sfx_text.setPosition(430, 400);
 
-	m_music_vol_value_text.setString("100");
+	m_music_vol_value_text.setString(std::to_string(m_music_player.GetVolume()));
 	m_music_vol_value_text.setFillColor(sf::Color::White);
 	m_music_vol_value_text.setPosition(485, 315);
 
 	m_sfx_vol_value_text.setString("100");
 	m_sfx_vol_value_text.setFillColor(sf::Color::White);
 	m_sfx_vol_value_text.setPosition(485, 465);
-	
+
 
 	// MUSIC BUTTONS
 	auto music_button_increase = std::make_shared<GUI::Button>(context);
@@ -46,6 +54,9 @@ SoundState::SoundState(StateStack& stack, Context context)
 	music_button_increase->SetText("+");
 	music_button_increase->SetCallback([this]()
 		{
+			m_music_vol_value = m_music_player.GetVolume();
+			m_music_vol_value_text.setString(std::to_string(m_music_vol_value));
+
 			if (m_music_vol_value < 100)
 			{
 				m_music_vol_value += 10;
@@ -56,6 +67,10 @@ SoundState::SoundState(StateStack& stack, Context context)
 				}
 
 				m_music_vol_value_text.setString(std::to_string(m_music_vol_value));
+
+				// Set Music volume
+				m_music_player.SetVolume(m_music_vol_value);
+
 			}
 		});
 
@@ -64,6 +79,9 @@ SoundState::SoundState(StateStack& stack, Context context)
 	music_button_decrease->SetText("-");
 	music_button_decrease->SetCallback([this]()
 		{
+			m_music_vol_value = m_music_player.GetVolume();
+			m_music_vol_value_text.setString(std::to_string(m_music_vol_value));
+
 			if (m_music_vol_value > 0)
 			{
 				m_music_vol_value -= 10;
@@ -74,6 +92,9 @@ SoundState::SoundState(StateStack& stack, Context context)
 				}
 
 				m_music_vol_value_text.setString(std::to_string(m_music_vol_value));
+
+				// Set Music volume
+				m_music_player.SetVolume(m_music_vol_value);
 			}
 		});
 
@@ -93,6 +114,10 @@ SoundState::SoundState(StateStack& stack, Context context)
 				}
 
 				m_sfx_vol_value_text.setString(std::to_string(m_sfx_vol_value));
+
+				// Set SFX volume
+				//m_sfx_player.SetVolume(m_sfx_vol_value);
+
 			}
 		});
 
@@ -111,6 +136,9 @@ SoundState::SoundState(StateStack& stack, Context context)
 				}
 
 				m_sfx_vol_value_text.setString(std::to_string(m_sfx_vol_value));
+
+				// Set SFX volume
+				//m_sfx_player.SetVolume(m_sfx_vol_value);
 			}
 		});
 
@@ -144,6 +172,11 @@ void SoundState::Draw()
 
 bool SoundState::Update(sf::Time dt)
 {
+	std::cout << "Local music volume value: " << m_music_vol_value << std::endl;
+	std::cout << "\tMusic Player volume value: " << m_music_player.GetVolume() << std::endl;
+
+	
+
 	return true;
 }
 

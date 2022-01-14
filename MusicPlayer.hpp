@@ -20,9 +20,11 @@ public:
 	void SetPaused(bool paused);
 	void SetVolume(float volume);
 
+	int GetVolume();
+
+	int m_volume;
+
 private:
 	sf::Music m_music;
 	std::map<MusicTracks, std::string> m_track_filenames;
-
-	float m_volume;
 };
