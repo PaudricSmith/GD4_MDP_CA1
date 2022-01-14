@@ -31,6 +31,7 @@ SoundPlayer::SoundPlayer() : m_volume(100)
 	m_sound_buffers.Load(SoundEffects::kCollectBadPickup, "Media/Audio/SFX/blackhole.wav");
 	m_sound_buffers.Load(SoundEffects::kButtonSelected, "Media/Audio/SFX/Slide_Sharp_01.wav");
 	m_sound_buffers.Load(SoundEffects::kButtonPressed, "Media/Audio/SFX/Click_Heavy_00.wav");
+	m_sound_buffers.Load(SoundEffects::kWinJingle, "Media/Audio/SFX/win_loud.wav");
 
 	// Listener points towards the screen (default in SFML)
 	sf::Listener::setDirection(0.f, 0.f, 0.f); // SET ALL TO ZERO SO NO 3D SOUND

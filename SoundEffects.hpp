@@ -14,5 +14,6 @@ enum class SoundEffects
 	kCollectGoodPickup,
 	kCollectBadPickup,
 	kButtonSelected,
-	kButtonPressed
+	kButtonPressed,
+	kWinJingle
 };

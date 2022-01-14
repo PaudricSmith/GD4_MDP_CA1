@@ -1,5 +1,2 @@
-﻿  SoundPlayer.cpp
-D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SoundPlayer.cpp(53,18): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SoundPlayer.cpp(57,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SoundPlayer.cpp(90,15): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  GameOverState.cpp
   GD4_MDP_CA1.vcxproj -> D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\Debug\GD4_MDP_CA1.exe
