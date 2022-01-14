@@ -8,6 +8,7 @@
 #include "MenuState.hpp"
 #include "PauseState.hpp"
 #include "SettingsState.hpp"
+#include "SoundState.hpp"
 
 #include <iostream>
 
@@ -23,10 +24,13 @@ Application::Application()
 	m_window.setKeyRepeatEnabled(false);
 
 	m_fonts.Load(Fonts::Main, "Media/Fonts/Sansation.ttf");
-	m_textures.Load(Textures::kTitleScreen, "Media/Textures/TitleScreen.png");
+
+	m_textures.Load(Textures::kTitleScreen, "Media/Textures/TitleScreen.png"); // TITLE SCREEN MUST BE CHANGED!!! IMPORTANT !!! **************************************
+	
 	m_textures.Load(Textures::kButtonNormal, "Media/Textures/ButtonNormal.png");
 	m_textures.Load(Textures::kButtonSelected, "Media/Textures/ButtonSelected.png");
 	m_textures.Load(Textures::kButtonPressed, "Media/Textures/ButtonPressed.png");
+
 
 	m_statistics_text.setFont(m_fonts.Get(Fonts::Main));
 	m_statistics_text.setPosition(5.f, 5.f);
@@ -112,5 +116,6 @@ void Application::RegisterStates()
 	m_stack.RegisterState<GameState>(StateID::kGame);
 	m_stack.RegisterState<PauseState>(StateID::kPause);
 	m_stack.RegisterState<SettingsState>(StateID::kSettings);
+	m_stack.RegisterState<SoundState>(StateID::kSound);
 	m_stack.RegisterState<GameOverState>(StateID::kGameOver);
 }

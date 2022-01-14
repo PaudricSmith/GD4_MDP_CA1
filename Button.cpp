@@ -12,7 +12,7 @@ namespace GUI
 	: m_normal_texture(context.textures->Get(Textures::kButtonNormal))
 	, m_selected_texture(context.textures->Get(Textures::kButtonSelected))
 	, m_pressed_texture(context.textures->Get(Textures::kButtonPressed))
-	, m_text("", context.fonts->Get(Fonts::Main), 16)
+	, m_text("", context.fonts->Get(Fonts::Main), 20)
 	, m_is_toggle(false)
 	, m_sounds(*context.sounds)
 	{

@@ -78,4 +78,6 @@ private:
 	Tank* m_player_tank_2;
 	std::vector<SpawnPoint> m_enemy_spawn_points;
 	std::vector<Tank*>	m_active_enemies;
+
+	Entity m_wall;
 };

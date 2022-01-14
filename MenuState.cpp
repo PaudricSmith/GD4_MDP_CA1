@@ -7,7 +7,6 @@
 #include "Button.hpp"
 
 
-
 MenuState::MenuState(StateStack& stack, Context context)
 : State(stack, context)
 {
@@ -32,8 +31,16 @@ MenuState::MenuState(StateStack& stack, Context context)
 		RequestStackPush(StateID::kSettings);
 	});
 
+	auto sound_button = std::make_shared<GUI::Button>(context);
+	sound_button->setPosition(100, 350);
+	sound_button->SetText("Sound");
+	sound_button->SetCallback([this]()
+	{
+		RequestStackPush(StateID::kSound);
+	});
+
 	auto exit_button = std::make_shared<GUI::Button>(context);
-	exit_button->setPosition(100, 350);
+	exit_button->setPosition(100, 400);
 	exit_button->SetText("Exit");
 	exit_button->SetCallback([this]()
 	{
@@ -42,6 +49,7 @@ MenuState::MenuState(StateStack& stack, Context context)
 
 	m_gui_container.Pack(play_button);
 	m_gui_container.Pack(settings_button);
+	m_gui_container.Pack(sound_button);
 	m_gui_container.Pack(exit_button);
 
 

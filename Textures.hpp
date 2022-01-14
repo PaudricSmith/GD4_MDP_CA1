@@ -10,6 +10,7 @@ enum class Textures
 	kBrown,
 	kCannonBrown,
 	kDesert,
+	kMiddleWall,
 	kBullet,
 	kMissile,
 	kHealthRefill,
