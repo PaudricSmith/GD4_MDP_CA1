@@ -22,7 +22,9 @@ public:
 	void RemoveStoppedSounds();
 	void RemovePlayingSounds();
 	void SetListenerPosition(sf::Vector2f position);
-	void SetVolume(float volume);
+	void SetVolume(int volume);
+
+	int GetVolume();
 	sf::Vector2f GetListenerPosition() const;
 
 
@@ -30,5 +32,5 @@ private:
 	SoundBufferHolder m_sound_buffers;
 	std::list<sf::Sound> m_sounds;
 
-	float m_volume;
+	int m_volume;
 };

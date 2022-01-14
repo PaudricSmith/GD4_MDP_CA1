@@ -17,8 +17,8 @@ void MusicPlayer::Play(MusicTracks track)
 		throw std::runtime_error("Music track " + filename + " could not be loaded.");
 	}
 
-	//m_music.setVolume(m_volume);
-	//m_music.setLoop(true);
+	m_music.setVolume(m_volume);
+	m_music.setLoop(true);
 	m_music.play();
 }
 
@@ -39,7 +39,7 @@ void MusicPlayer::SetPaused(bool paused)
 	}
 }
 
-void MusicPlayer::SetVolume(float volume)
+void MusicPlayer::SetVolume(int volume)
 {
 	m_volume = volume;
 

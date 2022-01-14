@@ -17,7 +17,7 @@ namespace
 	const float MinDistance3D = std::sqrt(MinDistance2D * MinDistance2D + ListenerZ * ListenerZ);
 }
 
-SoundPlayer::SoundPlayer()
+SoundPlayer::SoundPlayer() : m_volume(100)
 {
 	m_sound_buffers.Load(SoundEffects::kTankMoving, "Media/Audio/SFX/VehicleMove.wav");
 	m_sound_buffers.Load(SoundEffects::kTankMovingFast, "Media/Audio/SFX/car_sound.wav"); // ******* TO BE DONE ******* 
@@ -33,7 +33,7 @@ SoundPlayer::SoundPlayer()
 	m_sound_buffers.Load(SoundEffects::kButtonPressed, "Media/Audio/SFX/Click_Heavy_00.wav");
 
 	// Listener points towards the screen (default in SFML)
-	sf::Listener::setDirection(0.f, 0.f, 0.f);
+	sf::Listener::setDirection(0.f, 0.f, 0.f); // SET ALL TO ZERO SO NO 3D SOUND
 }
 
 void SoundPlayer::Play(SoundEffects effect)
@@ -50,12 +50,13 @@ void SoundPlayer::Play(SoundEffects effect, sf::Vector2f position)
 	sound.setPosition(position.x, -position.y, 0.f);
 	sound.setAttenuation(Attenuation);
 	sound.setMinDistance(MinDistance3D);
-	
-	if (effect == SoundEffects::kTankCannonMoving || effect == SoundEffects::kTankMoving)
-	{
-		sound.setVolume(50.0f);
-	}
+	sound.setVolume(m_volume);
 
+	if (effect == SoundEffects::kTankCannonMoving)
+	{
+		sound.setVolume(m_volume / 2); // Keep the Cannon movement SFX half times lower than everything else because its too loud
+	}
+	
 	sound.play();
 }
 
@@ -80,9 +81,19 @@ void SoundPlayer::SetListenerPosition(sf::Vector2f position)
 	sf::Listener::setPosition(position.x, -position.y, ListenerZ);
 }
 
-void SoundPlayer::SetVolume(float volume)
+void SoundPlayer::SetVolume(int volume)
 {
 	m_volume = volume;
+
+	for (auto s : m_sounds)
+	{
+		s.setVolume(m_volume);
+	}
+}
+
+int SoundPlayer::GetVolume()
+{
+	return m_volume;
 }
 
 sf::Vector2f SoundPlayer::GetListenerPosition() const

@@ -24,8 +24,6 @@ SoundState::SoundState(StateStack& stack, Context context)
 	, m_sfx_player(*context.sounds)
 {
 	
-
-
 	// SET BACKGROUND SPRITE
 	sf::Texture& texture = context.textures->Get(Textures::kTitleScreen);
 	m_background_sprite.setTexture(texture);
@@ -43,7 +41,7 @@ SoundState::SoundState(StateStack& stack, Context context)
 	m_music_vol_value_text.setFillColor(sf::Color::White);
 	m_music_vol_value_text.setPosition(485, 315);
 
-	m_sfx_vol_value_text.setString("100");
+	m_sfx_vol_value_text.setString(std::to_string(m_sfx_player.GetVolume()));
 	m_sfx_vol_value_text.setFillColor(sf::Color::White);
 	m_sfx_vol_value_text.setPosition(485, 465);
 
@@ -70,7 +68,6 @@ SoundState::SoundState(StateStack& stack, Context context)
 
 				// Set Music volume
 				m_music_player.SetVolume(m_music_vol_value);
-
 			}
 		});
 
@@ -104,6 +101,9 @@ SoundState::SoundState(StateStack& stack, Context context)
 	sfx_button_increase->SetText("+");
 	sfx_button_increase->SetCallback([this]()
 		{
+			m_sfx_vol_value = m_sfx_player.GetVolume();
+			m_sfx_vol_value_text.setString(std::to_string(m_sfx_vol_value));
+
 			if (m_sfx_vol_value < 100)
 			{
 				m_sfx_vol_value += 10;
@@ -116,8 +116,7 @@ SoundState::SoundState(StateStack& stack, Context context)
 				m_sfx_vol_value_text.setString(std::to_string(m_sfx_vol_value));
 
 				// Set SFX volume
-				//m_sfx_player.SetVolume(m_sfx_vol_value);
-
+				m_sfx_player.SetVolume(m_sfx_vol_value);
 			}
 		});
 
@@ -126,6 +125,9 @@ SoundState::SoundState(StateStack& stack, Context context)
 	sfx_button_decrease->SetText("-");
 	sfx_button_decrease->SetCallback([this]()
 		{
+			m_sfx_vol_value = m_sfx_player.GetVolume();
+			m_sfx_vol_value_text.setString(std::to_string(m_sfx_vol_value));
+
 			if (m_sfx_vol_value > 0)
 			{
 				m_sfx_vol_value -= 10;
@@ -138,7 +140,7 @@ SoundState::SoundState(StateStack& stack, Context context)
 				m_sfx_vol_value_text.setString(std::to_string(m_sfx_vol_value));
 
 				// Set SFX volume
-				//m_sfx_player.SetVolume(m_sfx_vol_value);
+				m_sfx_player.SetVolume(m_sfx_vol_value);
 			}
 		});
 
@@ -174,8 +176,6 @@ bool SoundState::Update(sf::Time dt)
 {
 	std::cout << "Local music volume value: " << m_music_vol_value << std::endl;
 	std::cout << "\tMusic Player volume value: " << m_music_player.GetVolume() << std::endl;
-
-	
 
 	return true;
 }
