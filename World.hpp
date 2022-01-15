@@ -24,7 +24,7 @@
 class World : private sf::NonCopyable
 {
 public:
-	explicit World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds);
+	explicit World(sf::RenderTarget& output_target, const TextureHolder& textures, FontHolder& font, SoundPlayer& sounds);
 	void Update(sf::Time dt);
 	void Draw();
 	CommandQueue& getCommandQueue();
@@ -47,6 +47,8 @@ private:
 	void HandleCollisions();
 	void DestroyEntitiesOutsideView();
 	void UpdateSounds();
+
+	void CreatePickups(SceneNode& node, const TextureHolder& textures) const;
 
 private:
 	struct SpawnPoint
@@ -71,6 +73,8 @@ private:
 	std::array<SceneNode*, static_cast<int>(Layers::kLayerCount)> m_scene_layers;
 	CommandQueue m_command_queue;
 
+	Command m_drop_pickup_command;
+
 	sf::FloatRect m_world_bounds;
 	sf::Vector2f m_spawn_position;
 	float m_scrollspeed;
@@ -78,6 +82,8 @@ private:
 	Tank* m_player_tank_2;
 	std::vector<SpawnPoint> m_enemy_spawn_points;
 	std::vector<Tank*>	m_active_enemies;
+
+	bool m_is_pickups_spawned;
 
 	Entity m_wall;
 };

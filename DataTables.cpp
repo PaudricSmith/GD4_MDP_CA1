@@ -11,8 +11,8 @@ std::vector<TankData> InitializeTankData()
 	std::vector<TankData> data(static_cast<int>(TankType::kTankCount));
 
 	// Player 1 Tank
-	data[static_cast<int>(TankType::kCamo)].m_hitpoints = 100;
-	data[static_cast<int>(TankType::kCamo)].m_speed = 100.f;
+	data[static_cast<int>(TankType::kCamo)].m_hitpoints = 300;
+	data[static_cast<int>(TankType::kCamo)].m_speed = 120.f;
 	data[static_cast<int>(TankType::kCamo)].m_rotation_speed = 1.f;
 	data[static_cast<int>(TankType::kCamo)].m_cannon_rotation_speed = 2.0f;
 	data[static_cast<int>(TankType::kCamo)].m_fire_interval = sf::seconds(1);
@@ -23,8 +23,8 @@ std::vector<TankData> InitializeTankData()
 	data[static_cast<int>(TankType::kCannonCamo)].m_cannon_texture = Textures::kCannonCamo;
 
 	// Player 2 Tank
-	data[static_cast<int>(TankType::kSand)].m_hitpoints = 100;
-	data[static_cast<int>(TankType::kSand)].m_speed = 100.f;
+	data[static_cast<int>(TankType::kSand)].m_hitpoints = 300;
+	data[static_cast<int>(TankType::kSand)].m_speed = 120.f;
 	data[static_cast<int>(TankType::kSand)].m_rotation_speed = 1.f;
 	data[static_cast<int>(TankType::kSand)].m_cannon_rotation_speed = 2.0f;
 	data[static_cast<int>(TankType::kSand)].m_fire_interval = sf::seconds(1);
@@ -61,7 +61,7 @@ std::vector<PickupData> InitializePickupData()
 	std::vector<PickupData> data(static_cast<int>(PickupType::kPickupCount));
 
 	data[static_cast<int>(PickupType::kHealthRefill)].m_texture = Textures::kHealthRefill;
-	data[static_cast<int>(PickupType::kHealthRefill)].m_action = [](Tank& a) {a.Repair(25); };
+	data[static_cast<int>(PickupType::kHealthRefill)].m_action = [](Tank& a) {a.Repair(100); };
 
 	data[static_cast<int>(PickupType::kMissileRefill)].m_texture = Textures::kMissileRefill;
 	data[static_cast<int>(PickupType::kMissileRefill)].m_action = std::bind(&Tank::CollectMissiles, std::placeholders::_1, 3);

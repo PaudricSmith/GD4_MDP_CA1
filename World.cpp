@@ -9,7 +9,7 @@
 #include "Utility.hpp"
 #include "SoundNode.hpp"
 
-World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds)
+World::World(sf::RenderTarget& output_target, const TextureHolder& textures, FontHolder& font, SoundPlayer& sounds)
 	: m_target(output_target)
 	, m_camera(output_target.getDefaultView())
 	, m_textures()
@@ -23,14 +23,71 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 	, m_player_tank(nullptr)
 	, m_player_tank_2(nullptr)
 	, m_wall(1000)
+	, m_is_pickups_spawned(false)
 {
 	LoadTextures();
 	BuildScene();
 	m_camera.setCenter(m_spawn_position);
+
+	// Pickup Node
+	m_drop_pickup_command.category = static_cast<int>(Category::Type::kScene);
+	m_drop_pickup_command.action = [this, &textures](SceneNode& node, sf::Time)
+	{
+		CreatePickups(node, textures);
+	};
+}
+
+void World::CreatePickups(SceneNode& node, const TextureHolder& textures) const
+{
+	sf::Vector2f topLeftCorner = sf::Vector2f(100, 100);
+	sf::Vector2f topRightCorner = sf::Vector2f(924, 100);
+	sf::Vector2f bottomLeftCorner = sf::Vector2f(100, 668);
+	sf::Vector2f bottomRightCorner = sf::Vector2f(924, 668);
+	sf::Vector2f middle = sf::Vector2f(512, 385);
+
+
+	auto randType1 = static_cast<PickupType>(Utility::RandomInt(static_cast<int>(PickupType::kPickupCount)));
+	std::unique_ptr<Pickup> pickup1(new Pickup(randType1, m_textures));
+	pickup1->setPosition(topLeftCorner);
+	pickup1->SetVelocity(-2.0f, -2.0f);
+	node.AttachChild(std::move(pickup1));
+
+	auto randType2 = static_cast<PickupType>(Utility::RandomInt(static_cast<int>(PickupType::kPickupCount)));
+	std::unique_ptr<Pickup> pickup2(new Pickup(randType2, m_textures));
+	pickup2->setPosition(topRightCorner);
+	pickup2->SetVelocity(2.0f, -2.0f);
+	node.AttachChild(std::move(pickup2));
+
+	auto randType3 = static_cast<PickupType>(Utility::RandomInt(static_cast<int>(PickupType::kPickupCount)));
+	std::unique_ptr<Pickup> pickup3(new Pickup(randType3, m_textures));
+	pickup3->setPosition(bottomLeftCorner);
+	pickup3->SetVelocity(-2.0f, 2.0f);
+	node.AttachChild(std::move(pickup3));
+
+	auto randType4 = static_cast<PickupType>(Utility::RandomInt(static_cast<int>(PickupType::kPickupCount)));
+	std::unique_ptr<Pickup> pickup4(new Pickup(randType4, m_textures));
+	pickup4->setPosition(bottomRightCorner);
+	pickup4->SetVelocity(2.0f, 2.0f);
+	node.AttachChild(std::move(pickup4));
+
+	auto randType5 = static_cast<PickupType>(Utility::RandomInt(static_cast<int>(PickupType::kPickupCount)));
+	std::unique_ptr<Pickup> pickup5(new Pickup(randType5, m_textures));
+	pickup5->setPosition(middle);
+	pickup5->SetVelocity(0.0f, 0.0f);
+	node.AttachChild(std::move(pickup5));
 }
 
 void World::Update(sf::Time dt)
 {
+
+	// Spawn Pickups at start of game
+	if (m_is_pickups_spawned == false)
+	{
+		CommandQueue& commands = getCommandQueue();
+		commands.Push(m_drop_pickup_command);
+
+		m_is_pickups_spawned = true;
+	}
 
 	//Scroll the world
 	m_camera.move(0, m_scrollspeed * dt.asSeconds());
@@ -190,17 +247,6 @@ void World::BuildScene()
 	m_player_tank_2->setPosition(m_spawn_position.x + 200.0f, m_spawn_position.y);
 	m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(leader2));
 
-
-	// //Add two escorts
-	// std::unique_ptr<Tank> leftEscort(new Tank(TankType::kSand, m_textures, m_fonts));
-	// leftEscort->setPosition(-80.f, 50.f);
-	// m_player_tank->AttachChild(std::move(leftEscort));
-	//
-	// std::unique_ptr<Tank> rightEscort(new Tank(TankType::kSand, m_textures, m_fonts));
-	// rightEscort->setPosition(80.f, 50.f);
-	// m_player_tank->AttachChild(std::move(rightEscort));
-
-	AddEnemies();
 }
 
 CommandQueue& World::getCommandQueue()

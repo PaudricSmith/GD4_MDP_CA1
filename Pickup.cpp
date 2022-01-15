@@ -12,7 +12,7 @@ namespace
 }
 
 Pickup::Pickup(PickupType type, const TextureHolder& textures)
-	: Entity(1)
+	: Entity(100)
 	, m_type(type)
 	, m_sprite(textures.Get(Table[static_cast<int>(type)].m_texture))
 {
