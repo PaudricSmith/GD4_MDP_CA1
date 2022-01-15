@@ -38,6 +38,9 @@ struct TankMover
 		}
 
 		tank.Accelerate(newTankPosition * tank.GetMaxSpeed());
+
+		// Play Tank moving SFX 
+		tank.MoveSoundPlayInterval();
 	}
 
 	sf::Vector2f velocity;
@@ -51,9 +54,13 @@ struct TankRotator // Rotate Tank
 	void operator()(Tank& tank, sf::Time) const
 	{
 		tank.Rotate(rotation * tank.GetRotationSpeed()); // Rotate Tank by sign and Tank rotation speed
+
+		// Play Tank moving SFX 
+		tank.MoveSoundPlayInterval();
 	}
 
 	float rotation;
+
 };
 
 struct CannonRotator // Rotate Cannon
@@ -64,6 +71,9 @@ struct CannonRotator // Rotate Cannon
 	void operator()(Tank& tank, sf::Time) const
 	{
 		tank.RotateCannon(rotation * tank.GetCannonRotationSpeed()); // Rotate Tank Cannon by sign and cannon speed
+
+		// Play Tank Cannon moving SFX 
+		tank.CannonMoveSoundPlayInterval();
 	}
 
 	float rotation;
@@ -93,7 +103,7 @@ Player::Player(PlayerNumber playerNumber) : m_current_mission_status(MissionStat
 
 		// Weapons
 		m_key_binding[sf::Keyboard::LShift] = PlayerActions::kFire;
-		m_key_binding[sf::Keyboard::LControl] = PlayerActions::kLaunchMissile;
+		m_key_binding[sf::Keyboard::LControl] = PlayerActions::kGuidedMissile;
 
 	}
 	else if (m_player_number == PlayerNumber::kPlayer2) // Player 2 Initial Key Bindings
@@ -114,7 +124,7 @@ Player::Player(PlayerNumber playerNumber) : m_current_mission_status(MissionStat
 
 		// Weapons
 		m_key_binding[sf::Keyboard::Space] = PlayerActions::kFire2;
-		m_key_binding[sf::Keyboard::Slash] = PlayerActions::kLaunchMissile2;
+		m_key_binding[sf::Keyboard::Slash] = PlayerActions::kGuidedMissile2;
 	}
 	
 
@@ -231,7 +241,7 @@ void Player::InitialiseActions()
 	m_action_binding[PlayerActions::kRotateCannonRight].action = DerivedAction<Tank>(CannonRotator(1.f));
 
 	m_action_binding[PlayerActions::kFire].action = DerivedAction<Tank>([](Tank& a, sf::Time){a.Fire();});
-	m_action_binding[PlayerActions::kLaunchMissile].action = DerivedAction<Tank>([](Tank& a, sf::Time){a.LaunchMissile();});
+	m_action_binding[PlayerActions::kGuidedMissile].action = DerivedAction<Tank>([](Tank& a, sf::Time){a.LaunchMissile();});
 
 
 	// Player 2 Action Bindings
@@ -245,7 +255,7 @@ void Player::InitialiseActions()
 	m_action_binding[PlayerActions::kRotateCannonRight2].action = DerivedAction<Tank>(CannonRotator(1.f));
 
 	m_action_binding[PlayerActions::kFire2].action = DerivedAction<Tank>([](Tank& a, sf::Time) {a.Fire(); });
-	m_action_binding[PlayerActions::kLaunchMissile2].action = DerivedAction<Tank>([](Tank& a, sf::Time) {a.LaunchMissile(); });
+	m_action_binding[PlayerActions::kGuidedMissile2].action = DerivedAction<Tank>([](Tank& a, sf::Time) {a.LaunchMissile(); });
 
 }
 

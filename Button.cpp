@@ -8,12 +8,13 @@
 
 namespace GUI
 {
-	Button::Button(const FontHolder& fonts, const TextureHolder& textures)
-	: m_normal_texture(textures.Get(Textures::kButtonNormal))
-	, m_selected_texture(textures.Get(Textures::kButtonSelected))
-	, m_pressed_texture(textures.Get(Textures::kButtonPressed))
-	, m_text("", fonts.Get(Fonts::Main), 16)
+	Button::Button(State::Context context)
+	: m_normal_texture(context.textures->Get(Textures::kButtonNormal))
+	, m_selected_texture(context.textures->Get(Textures::kButtonSelected))
+	, m_pressed_texture(context.textures->Get(Textures::kButtonPressed))
+	, m_text("", context.fonts->Get(Fonts::Main), 20)
 	, m_is_toggle(false)
+	, m_sounds(*context.sounds)
 	{
 		m_sprite.setTexture(m_normal_texture);
 		sf::FloatRect bounds = m_sprite.getLocalBounds();
@@ -46,6 +47,8 @@ namespace GUI
 	{
 		Component::Select();
 		m_sprite.setTexture(m_selected_texture);
+
+		m_sounds.Play(SoundEffects::kButtonSelected);
 	}
 
 	void Button::Deselect()
@@ -70,6 +73,9 @@ namespace GUI
 		{
 			Deactivate();
 		}
+
+		// Play SFX 
+		m_sounds.Play(SoundEffects::kButtonPressed);
 	}
 
 	void Button::Deactivate()
@@ -86,6 +92,9 @@ namespace GUI
 				m_sprite.setTexture(m_normal_texture);
 			}
 		}
+
+		// Play SFX
+		m_sounds.Play(SoundEffects::kButtonPressed);
 	}
 
 	void Button::HandleEvent(const sf::Event& event)

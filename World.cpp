@@ -7,12 +7,14 @@
 #include "Pickup.hpp"
 #include "Projectile.hpp"
 #include "Utility.hpp"
+#include "SoundNode.hpp"
 
-World::World(sf::RenderWindow& window, FontHolder& font)
-	: m_window(window)
-	, m_camera(window.getDefaultView())
+World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds)
+	: m_target(output_target)
+	, m_camera(output_target.getDefaultView())
 	, m_textures()
 	, m_fonts(font)
+	, m_sounds(sounds)
 	, m_scenegraph()
 	, m_scene_layers()
 	, m_world_bounds(0.f, 0.f, m_camera.getSize().x, m_camera.getSize().y)
@@ -20,10 +22,10 @@ World::World(sf::RenderWindow& window, FontHolder& font)
 	, m_scrollspeed(0.f)
 	, m_player_tank(nullptr)
 	, m_player_tank_2(nullptr)
+	, m_wall(1000)
 {
 	LoadTextures();
 	BuildScene();
-	//std::cout << m_camera.getSize().x << m_camera.getSize().y << std::endl;
 	m_camera.setCenter(m_spawn_position);
 }
 
@@ -50,17 +52,19 @@ void World::Update(sf::Time dt)
 	//Remove all destroyed entities
 	m_scenegraph.RemoveWrecks();
 
-	SpawnEnemies();
+	//SpawnEnemies();
 
 	//Apply movement
 	m_scenegraph.Update(dt, m_command_queue);
 	AdaptPlayerPosition();
+
+	UpdateSounds();
 }
 
 void World::Draw()
 {
-	m_window.setView(m_camera);
-	m_window.draw(m_scenegraph);
+	m_target.setView(m_camera);
+	m_target.draw(m_scenegraph);
 }
 
 bool World::HasAlivePlayer1() const
@@ -97,6 +101,28 @@ void World::LoadTextures()
 
 	// Background textures
 	m_textures.Load(Textures::kDesert, "Media/Textures/Desert.png"); // *** IMPORTANT *** ==> TEXTURE TO BE SWAPPED !!!
+	
+	std::cerr << "\n\n*****************************************************************************************************************************" << std::endl;
+	std::cerr << "*****************************************************************************************************************************\n" << std::endl;
+
+	std::cerr << "	*** IMPORTANT *** ==> DESERT BACKGROUND TEXTURE TO BE SWAPPED !!!" << std::endl;
+	std::cerr << "	*** IMPORTANT *** ==> DESERT BACKGROUND TEXTURE TO BE SWAPPED !!!" << std::endl;
+	std::cerr << "	*** IMPORTANT *** ==> DESERT BACKGROUND TEXTURE TO BE SWAPPED !!!" << std::endl;
+
+	std::cerr << "\n********************************************************************************************************************************" << std::endl;
+	std::cerr << "********************************************************************************************************************************\n" << std::endl;
+
+	std::cerr << "	*** IMPORTANT *** ==> WALL TEXTURE TO BE ADDED !!!" << std::endl;
+	std::cerr << "	*** IMPORTANT *** ==> WALL TEXTURE TO BE ADDED !!!" << std::endl;
+	std::cerr << "	*** IMPORTANT *** ==> WALL TEXTURE TO BE ADDED !!!" << std::endl;
+
+	std::cerr << "\n********************************************************************************************************************************" << std::endl;
+	std::cerr << "********************************************************************************************************************************\n" << std::endl;
+
+
+	// Middle Wall
+	m_textures.Load(Textures::kMiddleWall, "Media/Textures/WallGraySepia.jpg");
+
 
 	// Projectile textures
 	m_textures.Load(Textures::kBullet, "Media/Textures/Bullet.png");
@@ -128,6 +154,29 @@ void World::BuildScene()
 	std::unique_ptr<SpriteNode> background_sprite(new SpriteNode(texture, textureRect));
 	background_sprite->setPosition(m_world_bounds.left, m_world_bounds.top);
 	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(background_sprite));
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	////Prepare the Wall
+	//sf::Texture& textureMiddleWall = m_textures.Get(Textures::kMiddleWall);
+	//sf::IntRect textureWallRect(0, 0, 200, 200);
+	////Tile the texture to cover our world
+	//textureMiddleWall.setRepeated(true);
+
+	////Add the Wall sprite to our scene
+	//std::unique_ptr<SpriteNode> middle_wall_sprite(new SpriteNode(textureMiddleWall, textureWallRect));
+	//middle_wall_sprite->setPosition(500, 500);
+	//m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(middle_wall_sprite));
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	// Add sound effect node for Players
+	std::unique_ptr<SoundNode> soundNode(new SoundNode(m_sounds));
+	m_scenegraph.AttachChild(std::move(soundNode));
+
 
 	//Add Player 1 Tank
 	std::unique_ptr<Tank> leader(new Tank(TankType::kCamo, TankType::kCannonCamo, m_textures, m_fonts));
@@ -325,6 +374,7 @@ void World::HandleCollisions()
 {
 	std::set<SceneNode::Pair> collision_pairs;
 	m_scenegraph.CheckSceneCollision(m_scenegraph, collision_pairs);
+
 	for (SceneNode::Pair pair : collision_pairs)
 	{
 		if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kPlayer2Tank))
@@ -335,7 +385,8 @@ void World::HandleCollisions()
 			sf::Vector2f player1Pos = player.getPosition();
 			sf::Vector2f player2Pos = player2.getPosition();
 
-			//Collision
+			// Collision based on both Tanks x y positions, if there is a collision
+			// in a certain direction then move the Tank in the opposite direction
 			if (player1Pos.x < player2Pos.x)
 			{
 				m_player_tank->move(-1.0f, 0.0f);
@@ -357,9 +408,13 @@ void World::HandleCollisions()
 				m_player_tank_2->move(0.0f, -1.0f);
 			}
 
-			// Damage Player Tanks 
+			// Damage Player Tanks a small bit when they collide
 			player.Damage(1.0f);
 			player2.Damage(1.0f);
+
+			// Play Tank on Tank Collision SFX
+			m_sounds.Play(SoundEffects::kTankHitTank);
+
 
 		}
 		else if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kPickup))
@@ -388,6 +443,21 @@ void World::HandleCollisions()
 
 			//Apply the projectile damage to the tank
 			tank.Damage(projectile.GetDamage());
+
+
+			if (projectile.IsGuided())
+			{
+				// Play Guided Missile hit SFX
+				m_sounds.Play(SoundEffects::kGuidedMissileHit);
+			}
+			else
+			{
+				m_sounds.RemovePlayingSounds();
+				// Play Normal bullet hit SFX
+				m_sounds.Play(SoundEffects::kNormalBulletHit);
+			}
+			
+			
 			projectile.Destroy();
 		}
 	}
@@ -407,4 +477,17 @@ void World::DestroyEntitiesOutsideView()
 			}
 		});
 	m_command_queue.Push(command);
+}
+
+void World::UpdateSounds()
+{	
+	// Set listener's position to player
+    //sf::Vector2f player1SoundPos = sf::Vector2f(500, 500);
+
+	//m_sounds_2.SetListenerPosition(player2SoundPos);
+	m_sounds.SetListenerPosition(m_spawn_position);
+	
+	// Remove unused sounds
+	m_sounds.RemoveStoppedSounds();
+	
 }

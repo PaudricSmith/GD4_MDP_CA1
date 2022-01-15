@@ -29,6 +29,9 @@ GameOverState::GameOverState(StateStack& stack, Context context)
 	m_game_over_text.setCharacterSize(70);
 	Utility::CentreOrigin(m_game_over_text);
 	m_game_over_text.setPosition(0.5f * windowSize.x, 0.4f * windowSize.y);
+
+	context.musicPlayer->Stop();
+	context.sounds->Play(SoundEffects::kWinJingle);
 }
 
 void GameOverState::Draw()

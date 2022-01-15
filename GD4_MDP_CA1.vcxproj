@@ -94,7 +94,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)\SFML-2.5.1\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;opengl32.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;sfml-network-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;openal32.lib;opengl32.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;sfml-network-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -113,7 +113,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)\SFML-2.5.1\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;opengl32.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;openal32.lib;opengl32.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -146,6 +146,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="MusicPlayer.cpp" />
+    <ClCompile Include="SoundNode.cpp" />
+    <ClCompile Include="SoundPlayer.cpp" />
+    <ClCompile Include="SoundState.cpp" />
     <ClCompile Include="Tank.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Button.cpp" />
@@ -178,6 +181,10 @@
     <ClInclude Include="MusicPlayer.hpp" />
     <ClInclude Include="MusicTracks.hpp" />
     <ClInclude Include="PlayerNumber.hpp" />
+    <ClInclude Include="SoundEffects.hpp" />
+    <ClInclude Include="SoundNode.hpp" />
+    <ClInclude Include="SoundPlayer.hpp" />
+    <ClInclude Include="SoundState.hpp" />
     <ClInclude Include="Tank.hpp" />
     <ClInclude Include="TankType.hpp" />
     <ClInclude Include="Application.hpp" />

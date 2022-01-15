@@ -18,11 +18,14 @@ public:
 	void Play(MusicTracks track);
 	void Stop();
 	void SetPaused(bool paused);
-	void SetVolume(float volume);
+	void SetVolume(int volume);
+
+	int GetVolume();
+
 
 private:
 	sf::Music m_music;
 	std::map<MusicTracks, std::string> m_track_filenames;
-
-	float m_volume;
+	
+	int m_volume;
 };

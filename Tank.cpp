@@ -12,6 +12,7 @@
 #include "DataTables.hpp"
 #include "Pickup.hpp"
 #include "PickupType.hpp"
+#include "SoundNode.hpp"
 
 
 namespace
@@ -29,6 +30,8 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	, m_is_firing(false)
 	, m_is_launching_missile(false)
 	, m_fire_countdown(sf::Time::Zero)
+	, m_move_sound_countdown(sf::Time::Zero)
+	, m_move_cannon_sound_countdown(sf::Time::Zero)
 	, m_is_marked_for_removal(false)
 	, m_fire_rate(1)
 	, m_spread_level(1)
@@ -38,6 +41,9 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	, m_travelled_distance(0.f)
 	, m_directions_index(0)
 	, m_cannon_rotation(0)
+	, m_played_explosion_sound(false)
+	, m_is_playing_move_sound(false)
+	, m_is_playing_cannon_move_sound(false)
 {
 	// Reduce Tank sprite size
 	m_sprite.setScale(0.5f, 0.5f);
@@ -148,8 +154,79 @@ void Tank::UpdateTexts()
 	}
 }
 
+void Tank::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
+{
+
+	// Rate the bullets 
+	if (m_is_firing && m_fire_countdown <= sf::Time::Zero)
+	{
+		// Countdown expired, can fire again
+		std::cout << "Pushing fire command" << std::endl;
+		commands.Push(m_fire_command);
+
+		// Play shoot SFX
+		PlayLocalSound(commands, SoundEffects::kNormalBulletFire);
+
+		m_fire_countdown += Table[static_cast<int>(m_type)].m_fire_interval / (m_fire_rate + 1.f);
+		m_is_firing = false;
+	}
+	else if (m_fire_countdown > sf::Time::Zero)
+	{
+		// Wait, can't fire yet
+		m_fire_countdown -= dt;
+		m_is_firing = false;
+	}
+
+	// Missile launch
+	if (m_is_launching_missile)
+	{
+		PlayLocalSound(commands, SoundEffects::kLaunchGuidedMissile);
+		commands.Push(m_missile_command);
+		m_is_launching_missile = false;
+	}
+}
+
 void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 {
+	/*if (GetVelocity().x != 0 || GetVelocity().y != 0)
+	{
+		PlayLocalSound(commands, SoundEffects::kTankMoving);
+	}*/
+
+	if (m_is_playing_move_sound && m_move_sound_countdown <= sf::Time::Zero)
+	{
+		// Countdown expired, can play Tank moving sound again
+
+		PlayLocalSound(commands, SoundEffects::kTankMoving);
+
+		m_move_sound_countdown += Table[static_cast<int>(m_type)].m_move_sound_interval;
+		m_is_playing_move_sound = false;
+	}
+	else if (m_move_sound_countdown > sf::Time::Zero)
+	{
+		// Wait, can't play Tank moving sound yet
+		m_move_sound_countdown -= dt;
+		m_is_playing_move_sound = false;
+	}
+
+	if (m_is_playing_cannon_move_sound && m_move_cannon_sound_countdown <= sf::Time::Zero)
+	{
+		// Countdown expired, can play Tank moving sound again
+
+		PlayLocalSound(commands, SoundEffects::kTankCannonMoving);
+
+		m_move_cannon_sound_countdown += Table[static_cast<int>(m_type)].m_move_cannon_sound_interval;
+		m_is_playing_cannon_move_sound = false;
+	}
+	else if (m_move_cannon_sound_countdown > sf::Time::Zero)
+	{
+		// Wait, can't play Tank moving sound yet
+		m_move_cannon_sound_countdown -= dt;
+		m_is_playing_cannon_move_sound = false;
+	}
+
+	UpdateTexts();
+	
 	if (IsDestroyed())
 	{
 		CheckPickupDrop(commands);
@@ -164,8 +241,6 @@ void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 	UpdateMovementPattern(dt);
 
 	Entity::UpdateCurrent(dt, commands);
-
-	UpdateTexts();
 	
 }
 
@@ -235,6 +310,24 @@ void Tank::RotateCannon(float angle)
 
 }
 
+void Tank::MoveSoundPlayInterval()
+{
+	// if the Tanks move sound interval is not zero check bool to true so you can play sound again
+	if (Table[static_cast<int>(m_type)].m_move_sound_interval != sf::Time::Zero)
+	{
+		m_is_playing_move_sound = true;
+	}
+}
+
+void Tank::CannonMoveSoundPlayInterval()
+{
+	// if the Tanks move sound interval is not zero check bool to true so you can play sound again
+	if (Table[static_cast<int>(m_type)].m_move_cannon_sound_interval != sf::Time::Zero)
+	{
+		m_is_playing_cannon_move_sound = true;
+	}
+}
+
 void Tank::Fire()
 {
 	//Only ships with a non-zero fire interval fire
@@ -253,42 +346,10 @@ void Tank::LaunchMissile()
 	}
 }
 
-void Tank::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
-{
-	//Enemies try and fire as often as possible
-	if (!IsPlayerTank())
-	{
-		Fire();
-	}
-
-	//Rate the bullets - default to 2 times a second
-	if (m_is_firing && m_fire_countdown <= sf::Time::Zero)
-	{
-		//Countdown expired, can fire again
-		std::cout << "Pushing fire command" << std::endl;
-		commands.Push(m_fire_command);
-		m_fire_countdown += Table[static_cast<int>(m_type)].m_fire_interval / (m_fire_rate + 1.f);
-		m_is_firing = false;
-	}
-	else if (m_fire_countdown > sf::Time::Zero)
-	{
-		//Wait, can't fire yet
-		m_fire_countdown -= dt;
-		m_is_firing = false;
-	}
-	//Missile launch
-	if (m_is_launching_missile)
-	{
-		commands.Push(m_missile_command);
-		m_is_launching_missile = false;
-	}
-}
-
 bool Tank::IsPlayerTank() const
 {
 	return m_type == TankType::kCamo || m_type == TankType::kSand;
 }
-
 
 void Tank::CreateBullets(SceneNode& node, const TextureHolder& textures) const
 {
@@ -325,6 +386,9 @@ void Tank::CreateProjectile(SceneNode& node, ProjectileType type, float x_offset
 	float totalAngle = tankAngle + cannonAngle;
 	float projectileAngle;
 
+	// To get the combined angle of the Tank base and Tank cannon 
+	// we must add the angles together if the sum is less than 180 
+    // else if greater than 180 we add and then take away 360 because we want to always have an angle between 0 and 360
 	if (totalAngle > 180)
 	{
 		projectileAngle = totalAngle - 360;
@@ -372,4 +436,19 @@ void Tank::CreatePickup(SceneNode& node, const TextureHolder& textures) const
 	pickup->setPosition(GetWorldPosition());
 	pickup->SetVelocity(0.f, 1.f);
 	node.AttachChild(std::move(pickup));
+}
+
+void Tank::PlayLocalSound(CommandQueue& commands, SoundEffects effect)
+{
+	sf::Vector2f world_position = GetWorldPosition();
+
+	Command command;
+	command.category = Category::kSoundEffect;
+	command.action = DerivedAction<SoundNode>(
+		[effect, world_position](SoundNode& node, sf::Time)
+		{
+			node.PlaySound(effect, world_position);
+		});
+
+	commands.Push(command);
 }

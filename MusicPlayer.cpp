@@ -1,10 +1,11 @@
 #include "MusicPlayer.hpp"
 
 
-MusicPlayer::MusicPlayer() : m_volume(100.0f)
+MusicPlayer::MusicPlayer() : m_volume(100)
 {
 	m_track_filenames[MusicTracks::kMenuTrack] = "Media/Audio/Music/DynamicFight_2.ogg";
 	m_track_filenames[MusicTracks::kLevel1Track] = "Media/Audio/Music/Music_BG.wav";
+	
 }
 
 void MusicPlayer::Play(MusicTracks track)
@@ -26,11 +27,6 @@ void MusicPlayer::Stop()
 	m_music.stop();
 }
 
-void MusicPlayer::SetVolume(float volume)
-{
-	m_volume = volume;
-}
-
 void MusicPlayer::SetPaused(bool paused)
 {
 	if (paused)
@@ -41,4 +37,16 @@ void MusicPlayer::SetPaused(bool paused)
 	{
 		m_music.play();
 	}
+}
+
+void MusicPlayer::SetVolume(int volume)
+{
+	m_volume = volume;
+
+	m_music.setVolume(m_volume);
+}
+
+int MusicPlayer::GetVolume()
+{
+	return m_volume;
 }

@@ -22,6 +22,8 @@ public:
 	void UpdateTexts();
 	void UpdateMovementPattern(sf::Time dt);
 	void RotateCannon(float angle);
+	void MoveSoundPlayInterval();
+	void CannonMoveSoundPlayInterval();
 	void Fire();
 	void LaunchMissile();
 	void CreateBullets(SceneNode& node, const TextureHolder& textures) const;
@@ -35,6 +37,7 @@ public:
 
 	sf::FloatRect GetBoundingRect() const override;
 	bool IsMarkedForRemoval() const override;
+	void PlayLocalSound(CommandQueue& commands, SoundEffects effect);
 
 
 private:
@@ -54,6 +57,8 @@ private:
 	sf::Sprite m_sprite;
 	sf::Sprite m_cannon_sprite;
 	sf::Time m_fire_countdown;
+	sf::Time m_move_sound_countdown;
+	sf::Time m_move_cannon_sound_countdown;
 
 	TextNode* m_health_display;
 	TextNode* m_missile_display;
@@ -61,6 +66,9 @@ private:
 	bool m_is_firing;
 	bool m_is_launching_missile;
 	bool m_is_marked_for_removal;
+	bool m_played_explosion_sound;
+	bool m_is_playing_move_sound;
+	bool m_is_playing_cannon_move_sound;
 
 	float m_travelled_distance;
 	float m_cannon_rotation;

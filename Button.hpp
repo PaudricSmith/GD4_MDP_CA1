@@ -9,6 +9,10 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 
+#include "SoundPlayer.hpp"
+#include "State.hpp"
+
+
 namespace GUI
 {
 	class Button : public Component
@@ -18,7 +22,7 @@ namespace GUI
 		typedef std::function<void()> Callback;
 
 	public:
-		Button(const FontHolder& fonts, const TextureHolder& textures);
+		Button(State::Context context);
 		void SetCallback(Callback callback);
 		void SetText(const std::string& text);
 		void SetToggle(bool flag);
@@ -41,6 +45,7 @@ namespace GUI
 		sf::Sprite m_sprite;
 		sf::Text m_text;
 		bool m_is_toggle;
+		SoundPlayer& m_sounds;
 	};
 }
 
