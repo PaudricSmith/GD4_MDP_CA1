@@ -40,9 +40,6 @@ private:
 
 	sf::FloatRect GetViewBounds() const;
 	sf::FloatRect GetBattlefieldBounds() const;
-	void SpawnEnemies();
-	void AddEnemy(TankType type, float relX, float relY);
-	void AddEnemies();
 	void GuideMissiles();
 	void HandleCollisions();
 	void DestroyEntitiesOutsideView();
@@ -68,7 +65,7 @@ private:
 	sf::View m_camera;
 	TextureHolder m_textures;
 	FontHolder& m_fonts;
-	SoundPlayer& m_sounds;
+	SoundPlayer& m_sfx_player;
 	SceneNode m_scenegraph;
 	std::array<SceneNode*, static_cast<int>(Layers::kLayerCount)> m_scene_layers;
 	CommandQueue m_command_queue;

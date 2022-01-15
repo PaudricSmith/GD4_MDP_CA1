@@ -18,6 +18,8 @@ public:
 
 private:
 	World m_world;
+
+	SoundPlayer& m_sfx_player;
 	
 	sf::Sprite m_background_sprite;
 
@@ -26,7 +28,6 @@ private:
 	sf::Text m_go_text;
 	sf::Time m_elapsed_time;
 
-	bool m_draw_text_1;
-	bool m_draw_text_2;
-	bool m_draw_text_3;
+	bool m_beep_1_played;
+	bool m_beep_2_played;
 };

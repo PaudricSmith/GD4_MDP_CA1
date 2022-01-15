@@ -14,7 +14,7 @@ World::World(sf::RenderTarget& output_target, const TextureHolder& textures, Fon
 	, m_camera(output_target.getDefaultView())
 	, m_textures()
 	, m_fonts(font)
-	, m_sounds(sounds)
+	, m_sfx_player(sounds)
 	, m_scenegraph()
 	, m_scene_layers()
 	, m_world_bounds(0.f, 0.f, m_camera.getSize().x, m_camera.getSize().y)
@@ -35,6 +35,8 @@ World::World(sf::RenderTarget& output_target, const TextureHolder& textures, Fon
 	{
 		CreatePickups(node, textures);
 	};
+
+	m_sfx_player.Play(SoundEffects::kToastBeep2);
 }
 
 void World::CreatePickups(SceneNode& node, const TextureHolder& textures) const
@@ -231,7 +233,7 @@ void World::BuildScene()
 
 
 	// Add sound effect node for Players
-	std::unique_ptr<SoundNode> soundNode(new SoundNode(m_sounds));
+	std::unique_ptr<SoundNode> soundNode(new SoundNode(m_sfx_player));
 	m_scenegraph.AttachChild(std::move(soundNode));
 
 
@@ -419,7 +421,7 @@ void World::HandleCollisions()
 			player2.Damage(1.0f);
 
 			// Play Tank on Tank Collision SFX
-			m_sounds.Play(SoundEffects::kTankHitTank);
+			m_sfx_player.Play(SoundEffects::kTankHitTank);
 
 		}
 		else if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kPickup))
@@ -432,7 +434,7 @@ void World::HandleCollisions()
 			pickup.Destroy();
 
 			// Play Good Pickup SFX
-			m_sounds.Play(SoundEffects::kCollectGoodPickup);
+			m_sfx_player.Play(SoundEffects::kCollectGoodPickup);
 
 		}
 		else if (MatchesCategories(pair, Category::Type::kPlayer2Tank, Category::Type::kPickup))
@@ -445,7 +447,7 @@ void World::HandleCollisions()
 			pickup.Destroy();
 
 			// Play Good Pickup SFX
-			m_sounds.Play(SoundEffects::kCollectGoodPickup);
+			m_sfx_player.Play(SoundEffects::kCollectGoodPickup);
 
 		}
 		else if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kAlliedProjectile) 
@@ -461,14 +463,14 @@ void World::HandleCollisions()
 			if (projectile.IsGuided())
 			{
 				// Play Guided Missile hit SFX
-				m_sounds.Play(SoundEffects::kGuidedMissileHit);
+				m_sfx_player.Play(SoundEffects::kGuidedMissileHit);
 			}
 			else
 			{
 				//m_sounds.RemovePlayingSounds();
 				
 				// Play Normal bullet hit SFX
-				m_sounds.Play(SoundEffects::kNormalBulletHit);
+				m_sfx_player.Play(SoundEffects::kNormalBulletHit);
 			}
 			
 			
@@ -499,9 +501,8 @@ void World::UpdateSounds()
     //sf::Vector2f player1SoundPos = sf::Vector2f(500, 500);
 
 	//m_sounds_2.SetListenerPosition(player2SoundPos);
-	m_sounds.SetListenerPosition(m_spawn_position);
+	m_sfx_player.SetListenerPosition(m_spawn_position);
 	
 	// Remove unused sounds
-	m_sounds.RemoveStoppedSounds();
-	
+	m_sfx_player.RemoveStoppedSounds();	
 }

@@ -31,6 +31,8 @@ GameOverState::GameOverState(StateStack& stack, Context context)
 	m_game_over_text.setPosition(0.5f * windowSize.x, 0.4f * windowSize.y);
 
 	context.musicPlayer->Stop();
+
+	// Play music
 	context.sounds->Play(SoundEffects::kWinJingle);
 }
 

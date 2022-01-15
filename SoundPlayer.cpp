@@ -32,6 +32,8 @@ SoundPlayer::SoundPlayer() : m_volume(100)
 	m_sound_buffers.Load(SoundEffects::kButtonSelected, "Media/Audio/SFX/Slide_Sharp_01.wav");
 	m_sound_buffers.Load(SoundEffects::kButtonPressed, "Media/Audio/SFX/Click_Heavy_00.wav");
 	m_sound_buffers.Load(SoundEffects::kWinJingle, "Media/Audio/SFX/win_loud.wav");
+	m_sound_buffers.Load(SoundEffects::kToastBeep1, "Media/Audio/SFX/unitready2.wav");
+	m_sound_buffers.Load(SoundEffects::kToastBeep2, "Media/Audio/SFX/unitready3.wav");
 
 	// Listener points towards the screen (default in SFML)
 	sf::Listener::setDirection(0.f, 0.f, 0.f); // SET ALL TO ZERO SO NO 3D SOUND

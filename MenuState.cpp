@@ -19,6 +19,7 @@ MenuState::MenuState(StateStack& stack, Context context)
 	play_button->SetCallback([this]()
 	{
 		RequestStackPop();
+		RequestStackClear();
 		RequestStackPush(StateID::kToast);
 	});
 

@@ -8,13 +8,13 @@
 ToastState::ToastState(StateStack& stack, Context context)
 	: State(stack, context)
 	, m_world(*context.window, *context.textures, *context.fonts, *context.sounds)
+	, m_sfx_player(*context.sounds)
 	, m_ready_text()
 	, m_steady_text()
 	, m_go_text()
 	, m_elapsed_time(sf::Time::Zero)
-	, m_draw_text_1(false)
-	, m_draw_text_2(false)
-	, m_draw_text_3(false)
+	, m_beep_1_played(false)
+	, m_beep_2_played(false)
 {
 
 	sf::Font& font = context.fonts->Get(Fonts::Main);
@@ -28,20 +28,15 @@ ToastState::ToastState(StateStack& stack, Context context)
 
 	m_steady_text.setFont(font);
 	m_steady_text.setString("Steady!");
-	m_steady_text.setCharacterSize(70);
+	m_steady_text.setCharacterSize(90);
 	Utility::CentreOrigin(m_steady_text);
 	m_steady_text.setPosition(0.5f * windowSize.x, 0.5f * windowSize.y);
 
-	m_go_text.setFont(font);
-	m_go_text.setString("Go!");
-	m_go_text.setCharacterSize(70);
-	Utility::CentreOrigin(m_go_text);
-	m_go_text.setPosition(0.5f * windowSize.x, 0.6f * windowSize.y);
-
-
 	// Stop currently playing music
 	context.musicPlayer->Stop();
-	
+
+	// Stop currently playing SFX
+	m_sfx_player.RemovePlayingSounds();
 }
 
 void ToastState::Draw()
@@ -58,43 +53,39 @@ void ToastState::Draw()
 
 	window.draw(backgroundShape);
 
-	if (m_draw_text_1 && m_draw_text_2 && m_draw_text_3)
-	{
-		window.draw(m_go_text);
-	}
-	else if (m_draw_text_1 && m_draw_text_2)
+	if (m_beep_2_played)
 	{
 		window.draw(m_steady_text);
 	}
-	else if (m_draw_text_1)
+	if (m_beep_1_played)
 	{
 		window.draw(m_ready_text);
 	}
-    
 }
 
 bool ToastState::Update(sf::Time dt)
 {
-
-	// Show state for 4 seconds and screen toast, after return to game
+	// Show state for 3 seconds and screen toast, after, start game
 	m_elapsed_time += dt;
 	
-	if (m_elapsed_time > sf::seconds(4))
+	if (m_elapsed_time > sf::seconds(3))
 	{
 		RequestStackPop();
 		RequestStackPush(StateID::kGame);
 	}
-	else if (m_elapsed_time > sf::seconds(3))
+	else if (m_elapsed_time > sf::seconds(2) && m_beep_2_played == false)
 	{
-		m_draw_text_3 = true;
+		// Play beep SFX
+		m_sfx_player.Play(SoundEffects::kToastBeep1);
+
+		m_beep_2_played = true;
 	}
-	else if (m_elapsed_time > sf::seconds(2))
+	else if (m_elapsed_time > sf::seconds(1) && m_beep_1_played == false)
 	{
-		m_draw_text_2 = true;
-	}
-	else if (m_elapsed_time > sf::seconds(1))
-	{
-		m_draw_text_1 = true;
+		// Play beep SFX
+		m_sfx_player.Play(SoundEffects::kToastBeep1);
+
+		m_beep_1_played = true;
 	}
 	
 	return false;
