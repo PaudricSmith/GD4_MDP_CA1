@@ -33,6 +33,11 @@ namespace GUI
 		Utility::CentreOrigin(m_text);
 	}
 
+	void Button::SetColour(const sf::Color& colour)
+	{
+		m_text.setFillColor(colour);
+	}
+
 	void Button::SetToggle(bool flag)
 	{
 		m_is_toggle = flag;

@@ -105,13 +105,13 @@ void World::Update(sf::Time dt)
 	{
 		m_scenegraph.OnCommand(m_command_queue.Pop(), dt);
 	}
+
 	AdaptPlayerVelocity();
 
 	HandleCollisions();
 	//Remove all destroyed entities
 	m_scenegraph.RemoveWrecks();
 
-	//SpawnEnemies();
 
 	//Apply movement
 	m_scenegraph.Update(dt, m_command_queue);
@@ -160,24 +160,6 @@ void World::LoadTextures()
 
 	// Background textures
 	m_textures.Load(Textures::kDesert, "Media/Textures/Desert.png"); // *** IMPORTANT *** ==> TEXTURE TO BE SWAPPED !!!
-	
-	std::cerr << "\n\n*****************************************************************************************************************************" << std::endl;
-	std::cerr << "*****************************************************************************************************************************\n" << std::endl;
-
-	std::cerr << "	*** IMPORTANT *** ==> DESERT BACKGROUND TEXTURE TO BE SWAPPED !!!" << std::endl;
-	std::cerr << "	*** IMPORTANT *** ==> DESERT BACKGROUND TEXTURE TO BE SWAPPED !!!" << std::endl;
-	std::cerr << "	*** IMPORTANT *** ==> DESERT BACKGROUND TEXTURE TO BE SWAPPED !!!" << std::endl;
-
-	std::cerr << "\n********************************************************************************************************************************" << std::endl;
-	std::cerr << "********************************************************************************************************************************\n" << std::endl;
-
-	std::cerr << "	*** IMPORTANT *** ==> WALL TEXTURE TO BE ADDED !!!" << std::endl;
-	std::cerr << "	*** IMPORTANT *** ==> WALL TEXTURE TO BE ADDED !!!" << std::endl;
-	std::cerr << "	*** IMPORTANT *** ==> WALL TEXTURE TO BE ADDED !!!" << std::endl;
-
-	std::cerr << "\n********************************************************************************************************************************" << std::endl;
-	std::cerr << "********************************************************************************************************************************\n" << std::endl;
-
 
 	// Middle Wall
 	m_textures.Load(Textures::kMiddleWall, "Media/Textures/WallGraySepia.jpg");
@@ -213,23 +195,6 @@ void World::BuildScene()
 	std::unique_ptr<SpriteNode> background_sprite(new SpriteNode(texture, textureRect));
 	background_sprite->setPosition(m_world_bounds.left, m_world_bounds.top);
 	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(background_sprite));
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	////Prepare the Wall
-	//sf::Texture& textureMiddleWall = m_textures.Get(Textures::kMiddleWall);
-	//sf::IntRect textureWallRect(0, 0, 200, 200);
-	////Tile the texture to cover our world
-	//textureMiddleWall.setRepeated(true);
-
-	////Add the Wall sprite to our scene
-	//std::unique_ptr<SpriteNode> middle_wall_sprite(new SpriteNode(textureMiddleWall, textureWallRect));
-	//middle_wall_sprite->setPosition(500, 500);
-	//m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(middle_wall_sprite));
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 	// Add sound effect node for Players

@@ -26,7 +26,9 @@ Application::Application()
 
 	m_fonts.Load(Fonts::Main, "Media/Fonts/Sansation.ttf");
 
-	m_textures.Load(Textures::kTitleScreen, "Media/Textures/TitleScreen.png"); // TITLE SCREEN MUST BE CHANGED!!! IMPORTANT !!! **************************************
+	m_textures.Load(Textures::kTitleScreen, "Media/Textures/TitleScreen.png"); 
+	m_textures.Load(Textures::kBaseMenuScreen, "Media/Textures/BaseMenuScreen.png"); 
+	m_textures.Load(Textures::kKeyBingingsScreen, "Media/Textures/KeyBindingsScreen.png"); 
 	
 	m_textures.Load(Textures::kButtonNormal, "Media/Textures/ButtonNormal.png");
 	m_textures.Load(Textures::kButtonSelected, "Media/Textures/ButtonSelected.png");

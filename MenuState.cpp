@@ -14,8 +14,9 @@ MenuState::MenuState(StateStack& stack, Context context)
 	m_background_sprite.setTexture(texture);
 
 	auto play_button = std::make_shared<GUI::Button>(context);
-	play_button->setPosition(100, 250);
+	play_button->setPosition(400, 350);
 	play_button->SetText("Play");
+	play_button->SetColour(sf::Color::Yellow);
 	play_button->SetCallback([this]()
 	{
 		RequestStackPop();
@@ -24,23 +25,26 @@ MenuState::MenuState(StateStack& stack, Context context)
 	});
 
 	auto settings_button = std::make_shared<GUI::Button>(context);
-	settings_button->setPosition(100, 300);
-	settings_button->SetText("Settings");
+	settings_button->setPosition(400, 400);
+	settings_button->SetText("Key Bindings");
+	settings_button->SetColour(sf::Color::Yellow);
 	settings_button->SetCallback([this]()
 	{
 		RequestStackPush(StateID::kSettings);
 	});
 
 	auto sound_button = std::make_shared<GUI::Button>(context);
-	sound_button->setPosition(100, 350);
+	sound_button->setPosition(400, 450);
 	sound_button->SetText("Sound");
+	sound_button->SetColour(sf::Color::Yellow);
 	sound_button->SetCallback([this]()
 	{
 		RequestStackPush(StateID::kSound);
 	});
 
 	auto exit_button = std::make_shared<GUI::Button>(context);
-	exit_button->setPosition(100, 400);
+	exit_button->setPosition(400, 500);
+	exit_button->SetColour(sf::Color::Red);
 	exit_button->SetText("Exit");
 	exit_button->SetCallback([this]()
 	{

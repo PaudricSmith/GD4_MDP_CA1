@@ -25,31 +25,32 @@ SoundState::SoundState(StateStack& stack, Context context)
 {
 	
 	// SET BACKGROUND SPRITE
-	sf::Texture& texture = context.textures->Get(Textures::kTitleScreen);
+	sf::Texture& texture = context.textures->Get(Textures::kKeyBingingsScreen);
 	m_background_sprite.setTexture(texture);
 
 	// SET TEXT
 	m_music_text.setString("Music Volume");
-	m_music_text.setFillColor(sf::Color::Blue);
-	m_music_text.setPosition(420, 250);
+	m_music_text.setFillColor(sf::Color::Yellow);
+	m_music_text.setPosition(420, 200);
 
 	m_sfx_text.setString("SFX Volume");
-	m_sfx_text.setFillColor(sf::Color::Blue);
-	m_sfx_text.setPosition(430, 400);
+	m_sfx_text.setFillColor(sf::Color::Yellow);
+	m_sfx_text.setPosition(430, 350);
 
 	m_music_vol_value_text.setString(std::to_string(m_music_player.GetVolume()));
-	m_music_vol_value_text.setFillColor(sf::Color::White);
-	m_music_vol_value_text.setPosition(485, 315);
+	m_music_vol_value_text.setFillColor(sf::Color::Yellow);
+	m_music_vol_value_text.setPosition(485, 265);
 
 	m_sfx_vol_value_text.setString(std::to_string(m_sfx_player.GetVolume()));
-	m_sfx_vol_value_text.setFillColor(sf::Color::White);
-	m_sfx_vol_value_text.setPosition(485, 465);
+	m_sfx_vol_value_text.setFillColor(sf::Color::Yellow);
+	m_sfx_vol_value_text.setPosition(485, 415);
 
 
 	// MUSIC BUTTONS
 	auto music_button_increase = std::make_shared<GUI::Button>(context);
-	music_button_increase->setPosition(550, 300);
+	music_button_increase->setPosition(550, 250);
 	music_button_increase->SetText("+");
+	music_button_increase->SetColour(sf::Color::Yellow);
 	music_button_increase->SetCallback([this]()
 		{
 			m_music_vol_value = m_music_player.GetVolume();
@@ -72,8 +73,9 @@ SoundState::SoundState(StateStack& stack, Context context)
 		});
 
 	auto music_button_decrease = std::make_shared<GUI::Button>(context);
-	music_button_decrease->setPosition(250, 300);
+	music_button_decrease->setPosition(250, 250);
 	music_button_decrease->SetText("-");
+	music_button_decrease->SetColour(sf::Color::Yellow);
 	music_button_decrease->SetCallback([this]()
 		{
 			m_music_vol_value = m_music_player.GetVolume();
@@ -97,8 +99,9 @@ SoundState::SoundState(StateStack& stack, Context context)
 
 	// SFX BUTTONS
 	auto sfx_button_increase = std::make_shared<GUI::Button>(context);
-	sfx_button_increase->setPosition(550, 450);
+	sfx_button_increase->setPosition(550, 400);
 	sfx_button_increase->SetText("+");
+	sfx_button_increase->SetColour(sf::Color::Yellow);
 	sfx_button_increase->SetCallback([this]()
 		{
 			m_sfx_vol_value = m_sfx_player.GetVolume();
@@ -121,8 +124,9 @@ SoundState::SoundState(StateStack& stack, Context context)
 		});
 
 	auto sfx_button_decrease = std::make_shared<GUI::Button>(context);
-	sfx_button_decrease->setPosition(250, 450);
+	sfx_button_decrease->setPosition(250, 400);
 	sfx_button_decrease->SetText("-");
+	sfx_button_decrease->SetColour(sf::Color::Yellow);
 	sfx_button_decrease->SetCallback([this]()
 		{
 			m_sfx_vol_value = m_sfx_player.GetVolume();
@@ -148,6 +152,7 @@ SoundState::SoundState(StateStack& stack, Context context)
 	auto back_button = std::make_shared<GUI::Button>(context);
 	back_button->setPosition(400.f, 620.f);
 	back_button->SetText("Back");
+	back_button->SetColour(sf::Color::Red);
 	back_button->SetCallback(std::bind(&SoundState::RequestStackPop, this));
 
 

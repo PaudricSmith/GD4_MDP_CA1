@@ -24,6 +24,7 @@ namespace GUI
 		void SelectPrevious();
 		void SelectRight();
 		void SelectLeft();
+		void SelectBackButton();
 
 	private:
 		std::vector<Component::Ptr> m_children;

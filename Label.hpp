@@ -14,6 +14,7 @@ namespace GUI
 		Label(const std::string& text, const FontHolder& fonts);
 		virtual bool IsSelectable() const override;
 		void SetText(const std::string& text);
+		void SetColour(const sf::Color& colour);
 		void HandleEvent(const sf::Event& event) override;
 
 	private:

@@ -25,6 +25,7 @@ namespace GUI
 		Button(State::Context context);
 		void SetCallback(Callback callback);
 		void SetText(const std::string& text);
+		void SetColour(const sf::Color& colour);
 		void SetToggle(bool flag);
 
 		virtual bool IsSelectable() const override;

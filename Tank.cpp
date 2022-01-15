@@ -188,10 +188,6 @@ void Tank::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
 
 void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 {
-	/*if (GetVelocity().x != 0 || GetVelocity().y != 0)
-	{
-		PlayLocalSound(commands, SoundEffects::kTankMoving);
-	}*/
 
 	if (m_is_playing_move_sound && m_move_sound_countdown <= sf::Time::Zero)
 	{

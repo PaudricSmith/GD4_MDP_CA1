@@ -50,6 +50,10 @@ namespace GUI
 			{
 				SelectLeft();
 			}
+			else if (event.key.code == sf::Keyboard::BackSpace || event.key.code == sf::Keyboard::Escape)
+			{
+				SelectBackButton();
+			}
 			else if(event.key.code == sf::Keyboard::Return || event.key.code == sf::Keyboard::Space)
 			{
 				if(HasSelection())
@@ -183,5 +187,19 @@ namespace GUI
 		} while (!m_children[left]->IsSelectable());
 
 		Select(left);
+	}
+
+	void Container::SelectBackButton()
+	{
+		if (!HasSelection())
+		{
+			return;
+		}
+		//Search for the next component that is selectable and wrap around if necessary
+		int backButton = m_children.size() - 1;
+		
+		Select(backButton);
+		
+		m_children[m_selected_child]->Activate();
 	}
 }
