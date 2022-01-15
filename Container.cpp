@@ -3,6 +3,7 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <iostream>
 
 namespace GUI
 {
@@ -40,6 +41,14 @@ namespace GUI
 			else if(event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::Down)
 			{
 				SelectNext();
+			}
+			else if (event.key.code == sf::Keyboard::D || event.key.code == sf::Keyboard::Right)
+			{
+				SelectRight();
+			}
+			else if(event.key.code == sf::Keyboard::A || event.key.code == sf::Keyboard::Left)
+			{
+				SelectLeft();
 			}
 			else if(event.key.code == sf::Keyboard::Return || event.key.code == sf::Keyboard::Space)
 			{
@@ -90,7 +99,22 @@ namespace GUI
 		int next = m_selected_child;
 		do
 		{
-			next = (next + 1) % m_children.size();
+			if (m_children.size() > 4) // If we are in a menu not the main menu
+			{
+				if (next == (m_children.size() / 2) - 1)
+				{
+					next = m_children.size() - 1;
+				}
+				else
+				{
+					next = (next + 1) % m_children.size();
+				}
+			}
+			else
+			{
+				next = (next + 1) % m_children.size();
+			}
+			
 		} while (!m_children[next]->IsSelectable());
 
 		Select(next);
@@ -106,9 +130,58 @@ namespace GUI
 		int prev = m_selected_child;
 		do
 		{
-			prev = (prev + m_children.size() - 1) % m_children.size();
+			if (m_children.size() > 4) // If we are in a menu not the main menu
+			{
+				if (prev == (m_children.size() / 2))
+				{
+					prev = m_children.size() - 1;
+				}
+				else
+				{
+					prev = (prev + m_children.size() - 1) % m_children.size();
+				}
+			}
+			else
+			{
+				prev = (prev + m_children.size() - 1) % m_children.size();
+			}
+			
 		} while (!m_children[prev]->IsSelectable());
 
 		Select(prev);
+	}
+
+	void Container::SelectRight()
+	{
+		if (!HasSelection())
+		{
+			return;
+		}
+		//Search for the next component that is selectable and wrap around if necessary
+		int right = m_selected_child;
+		do
+		{
+			right = (right + m_children.size() / 2) % (m_children.size() - 1);
+
+		} while (!m_children[right]->IsSelectable());
+
+		Select(right);
+	}
+
+	void Container::SelectLeft()
+	{
+		if (!HasSelection())
+		{
+			return;
+		}
+		//Search for the next component that is selectable and wrap around if necessary
+		int left = m_selected_child;
+		do
+		{
+			left = (left - m_children.size() / 2) % (m_children.size() - 1);
+
+		} while (!m_children[left]->IsSelectable());
+
+		Select(left);
 	}
 }

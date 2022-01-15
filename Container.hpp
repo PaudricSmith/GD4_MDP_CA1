@@ -22,6 +22,8 @@ namespace GUI
 		void Select(std::size_t index);
 		void SelectNext();
 		void SelectPrevious();
+		void SelectRight();
+		void SelectLeft();
 
 	private:
 		std::vector<Component::Ptr> m_children;

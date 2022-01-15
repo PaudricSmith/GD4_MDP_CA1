@@ -153,8 +153,8 @@ SoundState::SoundState(StateStack& stack, Context context)
 
 	// PACK BUTTONS TO GUI
 	m_gui_container.Pack(music_button_decrease);
-	m_gui_container.Pack(music_button_increase);
 	m_gui_container.Pack(sfx_button_decrease);
+	m_gui_container.Pack(music_button_increase);
 	m_gui_container.Pack(sfx_button_increase);
 	m_gui_container.Pack(back_button);
 
@@ -174,9 +174,6 @@ void SoundState::Draw()
 
 bool SoundState::Update(sf::Time dt)
 {
-	std::cout << "Local music volume value: " << m_music_vol_value << std::endl;
-	std::cout << "\tMusic Player volume value: " << m_music_player.GetVolume() << std::endl;
-
 	return true;
 }
 
