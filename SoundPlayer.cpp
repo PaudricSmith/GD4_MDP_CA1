@@ -55,7 +55,11 @@ void SoundPlayer::Play(SoundEffects effect, sf::Vector2f position)
 
 	if (effect == SoundEffects::kTankCannonMoving)
 	{
-		sound.setVolume(m_volume / 2); // Keep the Cannon movement SFX half times lower than everything else because its too loud
+		sound.setVolume(m_volume / 7); // Keep the Cannon movement 1/7th times lower than everything else because its too loud
+	}
+	else if (effect == SoundEffects::kTankMoving)
+	{
+		sound.setVolume(m_volume / 2); // Keep the Tank movement SFX half times lower than everything else because its too loud
 	}
 	
 	sound.play();

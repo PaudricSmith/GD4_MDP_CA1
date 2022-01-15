@@ -310,46 +310,6 @@ sf::FloatRect World::GetBattlefieldBounds() const
 	return bounds;
 }
 
-void World::SpawnEnemies()
-{
-	//Spawn an enemy when they are relevant - they are relevant when they enter the battlefield bounds
-	while (!m_enemy_spawn_points.empty() && m_enemy_spawn_points.back().m_y > GetBattlefieldBounds().top)
-	{
-		SpawnPoint spawn = m_enemy_spawn_points.back();
-		std::unique_ptr<Tank> enemy(new Tank(spawn.m_type, TankType::kCannonCamo, m_textures, m_fonts));
-		enemy->setPosition(spawn.m_x, spawn.m_y);
-		enemy->setRotation(180.f);
-		m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(enemy));
-
-		m_enemy_spawn_points.pop_back();
-
-	}
-}
-
-void World::AddEnemy(TankType type, float relX, float relY)
-{
-	SpawnPoint spawn(type, m_spawn_position.x + relX, m_spawn_position.y - relY);
-	m_enemy_spawn_points.emplace_back(spawn);
-}
-
-void World::AddEnemies()
-{
-	////Add all enemies
-	//AddEnemy(TankType::kSand, 0.f, 500.f);
-	//AddEnemy(TankType::kSand, 0.f, 1000.f);
-	//AddEnemy(TankType::kSand, 100.f, 1100.f);
-	//AddEnemy(TankType::kSand, -100.f, 1100.f);
-	//AddEnemy(TankType::kGreen, -70.f, 1400.f);
-	//AddEnemy(TankType::kGreen, 70.f, 1400.f);
-	//AddEnemy(TankType::kGreen, 70.f, 1600.f);
-
-	////Sort according to y value so that lower enemies are checked first
-	//std::sort(m_enemy_spawn_points.begin(), m_enemy_spawn_points.end(), [](SpawnPoint lhs, SpawnPoint rhs)
-	//	{
-	//		return lhs.m_y < rhs.m_y;
-	//	});
-}
-
 void World::GuideMissiles()
 {
 	// Setup command that stores all enemies in mActiveEnemies
@@ -461,7 +421,6 @@ void World::HandleCollisions()
 			// Play Tank on Tank Collision SFX
 			m_sounds.Play(SoundEffects::kTankHitTank);
 
-
 		}
 		else if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kPickup))
 		{
@@ -471,6 +430,10 @@ void World::HandleCollisions()
 			//Apply the pickup effect
 			pickup.Apply(player);
 			pickup.Destroy();
+
+			// Play Good Pickup SFX
+			m_sounds.Play(SoundEffects::kCollectGoodPickup);
+
 		}
 		else if (MatchesCategories(pair, Category::Type::kPlayer2Tank, Category::Type::kPickup))
 		{
@@ -480,6 +443,10 @@ void World::HandleCollisions()
 			//Apply the pickup effect
 			pickup.Apply(player2);
 			pickup.Destroy();
+
+			// Play Good Pickup SFX
+			m_sounds.Play(SoundEffects::kCollectGoodPickup);
+
 		}
 		else if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kAlliedProjectile) 
 			|| MatchesCategories(pair, Category::Type::kPlayer2Tank, Category::Type::kAlliedProjectile))
