@@ -1,6 +1,84 @@
-﻿  Source.cpp
+﻿  MusicPlayer.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\MusicPlayer.cpp(20,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\MusicPlayer.cpp(46,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  SoundNode.cpp
+  SoundPlayer.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SoundPlayer.cpp(54,18): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SoundPlayer.cpp(58,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SoundPlayer.cpp(62,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SoundPlayer.cpp(95,15): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  SoundState.cpp
+  Tank.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(261,78): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(262,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(263,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(401,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(401,48): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(402,50): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(402,49): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Application.cpp
+  Button.cpp
+  Command.cpp
+  CommandQueue.cpp
+  Component.cpp
+  Container.cpp
+  DataTables.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\DataTables.cpp(19,82): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\DataTables.cpp(20,89): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\DataTables.cpp(31,82): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\DataTables.cpp(32,89): warning C4305: 'argument': truncation from 'double' to 'float'
+  Entity.cpp
+  GameOverState.cpp
+  GameState.cpp
+  Label.cpp
+  Main.cpp
+  MenuState.cpp
+  PauseState.cpp
+  Pickup.cpp
+  Compiling...
+  Player.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Player.cpp(31,48): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Player.cpp(31,24): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Player.cpp(32,47): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Player.cpp(32,27): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Player.cpp(36,47): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Player.cpp(36,27): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Player.cpp(37,48): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Player.cpp(37,24): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  Projectile.cpp
+  SceneNode.cpp
+  SettingsState.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SettingsState.cpp(67,38): warning C4018: '<': signed/unsigned mismatch
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\SettingsState.cpp(117,28): warning C4018: '<': signed/unsigned mismatch
+  SpriteNode.cpp
+  State.cpp
+  StateStack.cpp
+  TextNode.cpp
+  TitleState.cpp
+  ToastState.cpp
+  Utility.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Utility.cpp(169,26): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  World.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\World.cpp(418,18): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\World.cpp(419,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   Generating code
-  Compiler switch has changed, fall back to full compilation.
-  All 4 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Previous IPDB not found, fall back to full compilation.
+  All 3135 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
   GD4_MDP_CA1.vcxproj -> D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\Release\GD4_MDP_CA1.exe

@@ -44,6 +44,7 @@ bool GameState::Update(sf::Time dt)
 		m_player_2.SetMissionStatus(MissionStatus::kMissionSuccess);
 		RequestStackPush(StateID::kGameOver);
 	}
+
 	CommandQueue& commands = m_world.getCommandQueue();
 	m_player.HandleRealtimeInput(commands);
 	m_player_2.HandleRealtimeInput(commands);

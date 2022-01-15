@@ -108,6 +108,9 @@
     <ClCompile Include="SoundState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ToastState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tank.hpp">
@@ -243,6 +246,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SoundState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ToastState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -465,7 +465,8 @@ void World::HandleCollisions()
 			}
 			else
 			{
-				m_sounds.RemovePlayingSounds();
+				//m_sounds.RemovePlayingSounds();
+				
 				// Play Normal bullet hit SFX
 				m_sounds.Play(SoundEffects::kNormalBulletHit);
 			}

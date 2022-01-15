@@ -1,6 +1,7 @@
 #pragma once
 
 #include "State.hpp"
+
 #include "Container.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
@@ -20,4 +21,3 @@ private:
 	sf::Sprite m_background_sprite;
 	GUI::Container m_gui_container;
 };
-

@@ -4,6 +4,7 @@
 #include "State.hpp"
 #include "StateID.hpp"
 #include "TitleState.hpp"
+#include "ToastState.hpp"
 #include "GameState.hpp"
 #include "MenuState.hpp"
 #include "PauseState.hpp"
@@ -12,7 +13,7 @@
 
 #include <iostream>
 
-const sf::Time Application::kTimePerFrame = sf::seconds(1.f / 60.f);
+const sf::Time Application::kTimePerFrame = sf::seconds(1.0f / 60.f);
 
 Application::Application()
 	:m_window(sf::VideoMode(1024, 768), "Tank-Like", sf::Style::Close)
@@ -21,7 +22,7 @@ Application::Application()
 	, m_stack(State::Context(m_window, m_textures, m_fonts, m_player, m_player_2, m_music_player, m_sounds))
 	, m_statistics_numframes(0)
 {
-	m_window.setKeyRepeatEnabled(false);
+	m_window.setKeyRepeatEnabled(true);
 
 	m_fonts.Load(Fonts::Main, "Media/Fonts/Sansation.ttf");
 
@@ -113,9 +114,10 @@ void Application::RegisterStates()
 {
 	m_stack.RegisterState<TitleState>(StateID::kTitle);
 	m_stack.RegisterState<MenuState>(StateID::kMenu);
-	m_stack.RegisterState<GameState>(StateID::kGame);
-	m_stack.RegisterState<PauseState>(StateID::kPause);
 	m_stack.RegisterState<SettingsState>(StateID::kSettings);
 	m_stack.RegisterState<SoundState>(StateID::kSound);
+	m_stack.RegisterState<ToastState>(StateID::kToast);
+	m_stack.RegisterState<GameState>(StateID::kGame);
+	m_stack.RegisterState<PauseState>(StateID::kPause);
 	m_stack.RegisterState<GameOverState>(StateID::kGameOver);
 }
