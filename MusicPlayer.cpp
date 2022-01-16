@@ -3,6 +3,8 @@
 
 MusicPlayer::MusicPlayer() : m_volume(100)
 {
+	// Music below came from ultimate-space-game-mega-asset-package below
+	// https://gamesupply.itch.io/ultimate-space-game-mega-asset-package
 	m_track_filenames[MusicTracks::kMenuTrack] = "Media/Audio/Music/DynamicFight_2.ogg";
 	m_track_filenames[MusicTracks::kLevel1Track] = "Media/Audio/Music/Music_BG.wav";
 	

@@ -19,6 +19,9 @@ namespace
 
 SoundPlayer::SoundPlayer() : m_volume(100)
 {
+	// SFX below came from ultimate-space-game-mega-asset-package below
+	// https://gamesupply.itch.io/ultimate-space-game-mega-asset-package
+
 	m_sound_buffers.Load(SoundEffects::kTankMoving, "Media/Audio/SFX/VehicleMove.wav");
 	m_sound_buffers.Load(SoundEffects::kTankMovingFast, "Media/Audio/SFX/car_sound.wav"); // ******* TO BE DONE ******* 
 	m_sound_buffers.Load(SoundEffects::kTankCannonMoving, "Media/Audio/SFX/Random56.wav");
