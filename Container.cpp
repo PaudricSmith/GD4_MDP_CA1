@@ -189,13 +189,18 @@ namespace GUI
 		Select(left);
 	}
 
+	/// Paudric Smith, D00215637
+	/// <summary>
+	/// Selects the last child which is always the back button
+	/// then activates it
+	/// </summary>
 	void Container::SelectBackButton()
 	{
 		if (!HasSelection())
 		{
 			return;
 		}
-		//Search for the next component that is selectable and wrap around if necessary
+		
 		int backButton = m_children.size() - 1;
 		
 		Select(backButton);

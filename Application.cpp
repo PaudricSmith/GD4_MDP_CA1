@@ -24,12 +24,15 @@ Application::Application()
 {
 	m_window.setKeyRepeatEnabled(true);
 
-	m_fonts.Load(Fonts::Main, "Media/Fonts/Sansation.ttf");
-
-	m_textures.Load(Textures::kTitleScreen, "Media/Textures/TitleScreen.png"); 
-	m_textures.Load(Textures::kBaseMenuScreen, "Media/Textures/BaseMenuScreen.png"); 
+	// Images below were made from an image using this package
+	// https://gamesupply.itch.io/ultimate-space-game-mega-asset-package
 	m_textures.Load(Textures::kKeyBingingsScreen, "Media/Textures/KeyBindingsScreen.png"); 
+	m_textures.Load(Textures::kBaseMenuScreen, "Media/Textures/BaseMenuScreen.png"); 
 	
+	// Images and fonts below came from SFML Game Development book Github
+	// https://github.com/SFML/SFML-Game-Development-Book
+	m_fonts.Load(Fonts::Main, "Media/Fonts/Sansation.ttf");
+	m_textures.Load(Textures::kTitleScreen, "Media/Textures/TitleScreen.png"); 
 	m_textures.Load(Textures::kButtonNormal, "Media/Textures/ButtonNormal.png");
 	m_textures.Load(Textures::kButtonSelected, "Media/Textures/ButtonSelected.png");
 	m_textures.Load(Textures::kButtonPressed, "Media/Textures/ButtonPressed.png");

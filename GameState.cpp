@@ -38,12 +38,6 @@ bool GameState::Update(sf::Time dt)
 	
 		RequestStackPush(StateID::kGameOver);
 	}
-	else if (m_world.HasPlayerReachedEnd()) 
-	{
-		m_player.SetMissionStatus(MissionStatus::kMissionSuccess);
-		m_player_2.SetMissionStatus(MissionStatus::kMissionSuccess);
-		RequestStackPush(StateID::kGameOver);
-	}
 
 	CommandQueue& commands = m_world.getCommandQueue();
 	m_player.HandleRealtimeInput(commands);

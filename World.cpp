@@ -22,7 +22,6 @@ World::World(sf::RenderTarget& output_target, const TextureHolder& textures, Fon
 	, m_scrollspeed(0.f)
 	, m_player_tank(nullptr)
 	, m_player_tank_2(nullptr)
-	, m_wall(1000)
 	, m_is_pickups_spawned(false)
 {
 	LoadTextures();
@@ -39,6 +38,15 @@ World::World(sf::RenderTarget& output_target, const TextureHolder& textures, Fon
 	m_sfx_player.Play(SoundEffects::kToastBeep2);
 }
 
+///
+/// Paudric Smith, D00215637
+/// <summary>
+/// Creates 5 Random Pickups at the start of the game.
+/// 4 in each corner and 1 in the middle.
+/// The 4 corner pickups gradually move off screen towards their corner.
+/// </summary>
+/// <param name="node"></param>
+/// <param name="textures"></param>
 void World::CreatePickups(SceneNode& node, const TextureHolder& textures) const
 {
 	sf::Vector2f topLeftCorner = sf::Vector2f(100, 100);
@@ -46,7 +54,6 @@ void World::CreatePickups(SceneNode& node, const TextureHolder& textures) const
 	sf::Vector2f bottomLeftCorner = sf::Vector2f(100, 668);
 	sf::Vector2f bottomRightCorner = sf::Vector2f(924, 668);
 	sf::Vector2f middle = sf::Vector2f(512, 385);
-
 
 	auto randType1 = static_cast<PickupType>(Utility::RandomInt(static_cast<int>(PickupType::kPickupCount)));
 	std::unique_ptr<Pickup> pickup1(new Pickup(randType1, m_textures));
@@ -91,16 +98,12 @@ void World::Update(sf::Time dt)
 		m_is_pickups_spawned = true;
 	}
 
-	//Scroll the world
-	m_camera.move(0, m_scrollspeed * dt.asSeconds());
-
 	m_player_tank->SetVelocity(0.f, 0.f);
 	m_player_tank_2->SetVelocity(0.f, 0.f);
 
 	DestroyEntitiesOutsideView();
-	GuideMissiles();
 
-	//Forward commands to the scenegraph until the command queue is empty
+	//Forward commands to the scenegraph until the command queue is empty-
 	while (!m_command_queue.IsEmpty())
 	{
 		m_scenegraph.OnCommand(m_command_queue.Pop(), dt);
@@ -138,14 +141,10 @@ bool World::HasAlivePlayer2() const
 	return !m_player_tank_2->IsMarkedForRemoval();
 }
 
-bool World::HasPlayerReachedEnd() const
-{
-	// If a Player Tank is not inside the screen / bounds.
-	return !m_world_bounds.contains(m_player_tank->getPosition()) || !m_world_bounds.contains(m_player_tank_2->getPosition());
-}
-
 void World::LoadTextures()
-{
+{	
+	// Tank images from Game Supply
+	// https://gamesupply.itch.io/huge-universal-game-asset
 	// Player 1 textures
 	m_textures.Load(Textures::kCamo, "Media/Textures/Tank/Camo Tank/Camo Tank Base.png"); // Tank base
 	m_textures.Load(Textures::kCannonCamo, "Media/Textures/Tank/Camo Tank/Camo Tank Turret.png"); // Tank cannon
@@ -158,13 +157,17 @@ void World::LoadTextures()
 	m_textures.Load(Textures::kGreen, "Media/Textures/Tank/green/Tank_B_Big_Green_2_128x194.png"); // base and cannon combined
 	m_textures.Load(Textures::kBrown, "Media/Textures/Tank/brown/Tank_Big_Brown_128x194.png"); // base and cannon combined
 
+	// Level1BG.png was made from an image using this package
+	// https://gamesupply.itch.io/ultimate-space-game-mega-asset-package
 	// Background textures
 	m_textures.Load(Textures::kLevel1BG, "Media/Textures/Level1BG.png");
 
+	// // https://gamesupply.itch.io/ultimate-space-game-mega-asset-package
 	// Middle Wall
 	m_textures.Load(Textures::kMiddleWall, "Media/Textures/WallGraySepia.jpg");
 
-
+	// Images below came from SFML Game Development book Github
+	// https://github.com/SFML/SFML-Game-Development-Book
 	// Projectile textures
 	m_textures.Load(Textures::kBullet, "Media/Textures/Bullet.png");
 	m_textures.Load(Textures::kMissile, "Media/Textures/Missile.png");
@@ -259,7 +262,6 @@ void World::AdaptPlayerVelocity()
 	{
 		m_player_tank_2->SetVelocity(player2Vel / std::sqrt(2.f));
 	}
-
 }
 
 sf::FloatRect World::GetViewBounds() const
@@ -277,56 +279,10 @@ sf::FloatRect World::GetBattlefieldBounds() const
 	return bounds;
 }
 
-void World::GuideMissiles()
-{
-	// Setup command that stores all enemies in mActiveEnemies
-	Command enemyCollector;
-	enemyCollector.category = Category::kEnemyTank;
-	enemyCollector.action = DerivedAction<Tank>([this](Tank& enemy, sf::Time)
-		{
-			if (!enemy.IsDestroyed())
-				m_active_enemies.push_back(&enemy);
-		});
-
-	// Setup command that guides all missiles to the enemy which is currently closest to the player
-	Command missileGuider;
-	missileGuider.category = Category::kAlliedProjectile;
-	missileGuider.action = DerivedAction<Projectile>([this](Projectile& missile, sf::Time)
-		{
-			// Ignore unguided bullets
-			if (!missile.IsGuided())
-				return;
-
-			float minDistance = std::numeric_limits<float>::max();
-			Tank* closestEnemy = nullptr;
-
-			// Find closest enemy
-			for (Tank* enemy : m_active_enemies)
-			{
-				float enemyDistance = Distance(missile, *enemy);
-
-				if (enemyDistance < minDistance)
-				{
-					closestEnemy = enemy;
-					minDistance = enemyDistance;
-				}
-			}
-
-			if (closestEnemy)
-				missile.GuideTowards(closestEnemy->GetWorldPosition());
-		});
-
-	// Push commands, reset active enemies
-	m_command_queue.Push(enemyCollector);
-	m_command_queue.Push(missileGuider);
-	m_active_enemies.clear();
-}
-
 bool MatchesCategories(SceneNode::Pair& colliders, Category::Type type1, Category::Type type2)
 {
 	unsigned int category1 = colliders.first->GetCategory();
 	unsigned int category2 = colliders.second->GetCategory();
-	//std::cout << category1 << category2 << std::endl;
 
 	if (type1 & category1 && type2 & category2)
 	{
@@ -350,6 +306,7 @@ void World::HandleCollisions()
 
 	for (SceneNode::Pair pair : collision_pairs)
 	{
+		// If Player 1 Tank and Player 2 Tank collide
 		if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kPlayer2Tank))
 		{
 			auto& player = static_cast<Tank&>(*pair.first);
@@ -389,6 +346,7 @@ void World::HandleCollisions()
 			m_sfx_player.Play(SoundEffects::kTankHitTank);
 
 		}
+		// If Player 1 Tank collides with a PickUp
 		else if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kPickup))
 		{
 			auto& player = static_cast<Tank&>(*pair.first);
@@ -402,6 +360,7 @@ void World::HandleCollisions()
 			m_sfx_player.Play(SoundEffects::kCollectGoodPickup);
 
 		}
+		// If Player 2 Tank collides with a PickUp
 		else if (MatchesCategories(pair, Category::Type::kPlayer2Tank, Category::Type::kPickup))
 		{
 			auto& player2 = static_cast<Tank&>(*pair.first);
@@ -415,6 +374,7 @@ void World::HandleCollisions()
 			m_sfx_player.Play(SoundEffects::kCollectGoodPickup);
 
 		}
+		// If either Tank 1 or Tank 2 collide with a projectile
 		else if (MatchesCategories(pair, Category::Type::kPlayerTank, Category::Type::kAlliedProjectile) 
 			|| MatchesCategories(pair, Category::Type::kPlayer2Tank, Category::Type::kAlliedProjectile))
 		{
@@ -431,9 +391,7 @@ void World::HandleCollisions()
 				m_sfx_player.Play(SoundEffects::kGuidedMissileHit);
 			}
 			else
-			{
-				//m_sounds.RemovePlayingSounds();
-				
+			{				
 				// Play Normal bullet hit SFX
 				m_sfx_player.Play(SoundEffects::kNormalBulletHit);
 			}
@@ -453,7 +411,6 @@ void World::DestroyEntitiesOutsideView()
 			//Does the object intersect with the battlefield
 			if (!GetBattlefieldBounds().intersects(e.GetBoundingRect()))
 			{
-				std::cout << "Destroying the entity" << std::endl;
 				e.Destroy();
 			}
 		});

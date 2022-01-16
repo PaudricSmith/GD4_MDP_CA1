@@ -1,3 +1,9 @@
+/////////////////////////
+// DkIT
+// Paudric Smith
+// D00215637
+///////////////////////
+
 #pragma once
 
 enum class SoundEffects

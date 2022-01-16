@@ -1,3 +1,11 @@
+/////////////////////////
+// DkIT
+// Paudric Smith
+// D00215637
+/////////////////////////
+// A Class handles the sound menu
+/////////////////////////////////////
+
 #include "SoundState.hpp"
 
 #include <iostream>

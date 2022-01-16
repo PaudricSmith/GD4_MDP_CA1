@@ -30,7 +30,6 @@ public:
 	CommandQueue& getCommandQueue();
 	bool HasAlivePlayer1() const;
 	bool HasAlivePlayer2() const;
-	bool HasPlayerReachedEnd() const;
 
 private:
 	void LoadTextures();
@@ -40,7 +39,6 @@ private:
 
 	sf::FloatRect GetViewBounds() const;
 	sf::FloatRect GetBattlefieldBounds() const;
-	void GuideMissiles();
 	void HandleCollisions();
 	void DestroyEntitiesOutsideView();
 	void UpdateSounds();
@@ -82,5 +80,4 @@ private:
 
 	bool m_is_pickups_spawned;
 
-	Entity m_wall;
 };

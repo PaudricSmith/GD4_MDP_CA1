@@ -1,3 +1,11 @@
+/////////////////////////
+// DkIT
+// Paudric Smith
+// D00215637
+/////////////////////////
+// A Class that handles the toast scene just before the game starts
+/////////////////////////////////////////////////////////////////////
+
 #include "ToastState.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -39,6 +47,11 @@ ToastState::ToastState(StateStack& stack, Context context)
 	m_sfx_player.RemovePlayingSounds();
 }
 
+/// <summary>
+/// Draws the game screen with a dark transparent rectange shape over it 
+/// to see the toast better and know the game didn't start yet.
+/// Draws the toast word depending on a boolean
+/// </summary>
 void ToastState::Draw()
 {
 	sf::RenderWindow& window = *GetContext().window;
@@ -63,6 +76,12 @@ void ToastState::Draw()
 	}
 }
 
+/// <summary>
+/// Updates a timer to trigger booleans 
+/// and play a sound each second then change state to the game
+/// </summary>
+/// <param name="dt"></param>
+/// <returns></returns>
 bool ToastState::Update(sf::Time dt)
 {
 	// Show state for 3 seconds and screen toast, after, start game

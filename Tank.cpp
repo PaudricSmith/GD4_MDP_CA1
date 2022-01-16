@@ -161,7 +161,6 @@ void Tank::CheckProjectileLaunch(sf::Time dt, CommandQueue& commands)
 	if (m_is_firing && m_fire_countdown <= sf::Time::Zero)
 	{
 		// Countdown expired, can fire again
-		std::cout << "Pushing fire command" << std::endl;
 		commands.Push(m_fire_command);
 
 		// Play shoot SFX
@@ -371,7 +370,6 @@ void Tank::CreateBullets(SceneNode& node, const TextureHolder& textures) const
 void Tank::CreateProjectile(SceneNode& node, ProjectileType type, float x_offset, float y_offset,
 	const TextureHolder& textures) const
 {
-	std::cout << "Creating projectile " << static_cast<int>(type) << std::endl;
 
 	std::unique_ptr<Projectile> projectile(new Projectile(type, textures));
 	sf::Vector2f offset(x_offset * m_sprite.getGlobalBounds().width, y_offset * m_sprite.getGlobalBounds().height);
