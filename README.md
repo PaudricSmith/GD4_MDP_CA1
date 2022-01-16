@@ -2,7 +2,7 @@
 
 ### Description
 Multiplayer Distributed Programming assignment video game made using SFML/C++.
-A 2 local 2 player top down video game based on the classic Tanks game.
+A local 2 player top down video game based on the classic Tanks game.
 
 ### Git-Rules
 - **Create new branch for new feature**
