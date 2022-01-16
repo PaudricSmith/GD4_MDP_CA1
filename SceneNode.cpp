@@ -69,7 +69,7 @@ void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	DrawCurrent(target, states);
 	DrawChildren(target, states);
 	sf::FloatRect rect = GetBoundingRect();
-	//DrawBoundingRect(target, states, rect);
+	DrawBoundingRect(target, states, rect);
 }
 
 void SceneNode::DrawCurrent(sf::RenderTarget&, sf::RenderStates states) const
@@ -122,7 +122,22 @@ void SceneNode::DrawBoundingRect(sf::RenderTarget& target, sf::RenderStates stat
 	shape.setFillColor(sf::Color::Transparent);
 	shape.setOutlineColor(sf::Color::Green);
 	shape.setOutlineThickness(1.f);
-	target.draw(shape);
+
+	// TRIED TO ROTATE THE COLLISION BOX 
+
+	/*for (const SceneNode* node = this; node != nullptr; node = node->m_parent)
+	{
+		float rotation;
+		rotation = node->getRotation();
+		shape.setRotation(rotation);
+	}*/
+
+	/*for (const Ptr& child : m_children)
+	{
+		shape.setRotation(child->getRotation());
+	}*/
+	
+	//target.draw(shape);
 }
 
 bool Collision(const SceneNode& lhs, const SceneNode& rhs)

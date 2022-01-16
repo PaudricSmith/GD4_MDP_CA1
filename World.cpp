@@ -159,7 +159,7 @@ void World::LoadTextures()
 	m_textures.Load(Textures::kBrown, "Media/Textures/Tank/brown/Tank_Big_Brown_128x194.png"); // base and cannon combined
 
 	// Background textures
-	m_textures.Load(Textures::kDesert, "Media/Textures/Desert.png"); // *** IMPORTANT *** ==> TEXTURE TO BE SWAPPED !!!
+	m_textures.Load(Textures::kLevel1BG, "Media/Textures/Level1BG.png");
 
 	// Middle Wall
 	m_textures.Load(Textures::kMiddleWall, "Media/Textures/WallGraySepia.jpg");
@@ -186,7 +186,7 @@ void World::BuildScene()
 	}
 
 	//Prepare the background
-	sf::Texture& texture = m_textures.Get(Textures::kDesert);
+	sf::Texture& texture = m_textures.Get(Textures::kLevel1BG);
 	sf::IntRect textureRect(m_world_bounds);
 	//Tile the texture to cover our world
 	texture.setRepeated(true);
