@@ -152,7 +152,7 @@ void Player::HandleEvent(const sf::Event& event, CommandQueue& commands)
 		}
 	}
 
-	// Joystick support
+	
 	else if (event.type == sf::Event::JoystickButtonPressed)
 	{
 		std::cout << "joystick 'A' button pressed: " << event.joystickButton.button << std::endl;
