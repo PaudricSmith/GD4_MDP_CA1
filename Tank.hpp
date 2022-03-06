@@ -16,6 +16,12 @@ public:
 	Tank(TankType type, TankType cannonType, const TextureHolder& textures, const FontHolder& fonts);
 	unsigned int GetCategory() const override;
 
+	void DisablePickups();
+	int GetIdentifier();
+	void SetIdentifier(int identifier);
+	int GetMissileAmmo() const;
+	void SetMissileAmmo(int ammo);
+
 	void IncreaseFireRate();
 	void IncreaseSpread();
 	void CollectMissiles(unsigned int count);
@@ -65,6 +71,7 @@ private:
 
 	bool m_is_firing;
 	bool m_is_launching_missile;
+	bool m_pickups_enabled;
 	bool m_is_marked_for_removal;
 	bool m_played_explosion_sound;
 	bool m_is_playing_move_sound;
@@ -74,6 +81,7 @@ private:
 	float m_cannon_rotation;
 
 	int m_directions_index;
+	int m_identifier;
 
 	unsigned int m_fire_rate;
 	unsigned int m_spread_level;

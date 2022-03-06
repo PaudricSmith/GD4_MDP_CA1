@@ -14,6 +14,7 @@ public:
 	sf::Vector2f GetVelocity() const;
 
 	int GetHitPoints() const;
+	void SetHitPoints(int points);
 	void Repair(unsigned int points);
 	void Damage(int points);
 	void Destroy();

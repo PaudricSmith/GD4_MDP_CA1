@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Time.hpp>
 
+#include "Keybinding.hpp"
 #include "Player.hpp"
 #include "ResourceHolder.hpp"
 #include "ResourceIdentifiers.hpp"
@@ -25,8 +26,8 @@ private:
 
 private:
 	sf::RenderWindow m_window;
-	Player m_player;
-	Player m_player_2;
+	KeyBinding m_key_binding_1;
+	KeyBinding m_key_binding_2;
 
 	MusicPlayer m_music_player;
 	SoundPlayer m_sounds;

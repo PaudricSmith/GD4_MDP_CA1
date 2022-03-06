@@ -13,6 +13,7 @@
 #include "Pickup.hpp"
 #include "PickupType.hpp"
 #include "SoundNode.hpp"
+#include "NetworkNode.hpp"
 
 
 namespace
@@ -44,6 +45,7 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	, m_played_explosion_sound(false)
 	, m_is_playing_move_sound(false)
 	, m_is_playing_cannon_move_sound(false)
+	, m_identifier(0)
 {
 	// Reduce Tank sprite size
 	m_sprite.setScale(0.5f, 0.5f);
@@ -92,10 +94,25 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	UpdateTexts();
 }
 
+int Tank::GetMissileAmmo() const
+{
+	return m_missile_ammo;
+}
+
+void Tank::SetMissileAmmo(int ammo)
+{
+	m_missile_ammo = ammo;
+}
+
 void Tank::DrawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(m_sprite, states);
 	target.draw(m_cannon_sprite, states);
+}
+
+void Tank::DisablePickups()
+{
+	m_pickups_enabled = false;
 }
 
 unsigned int Tank::GetCategory() const
@@ -206,7 +223,7 @@ void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 
 	if (m_is_playing_cannon_move_sound && m_move_cannon_sound_countdown <= sf::Time::Zero)
 	{
-		// Countdown expired, can play Tank moving sound again
+		// Countdown expired, can play Tank cannon moving sound again
 
 		PlayLocalSound(commands, SoundEffects::kTankCannonMoving);
 
@@ -215,7 +232,7 @@ void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 	}
 	else if (m_move_cannon_sound_countdown > sf::Time::Zero)
 	{
-		// Wait, can't play Tank moving sound yet
+		// Wait, can't play Tank cannon moving sound yet
 		m_move_cannon_sound_countdown -= dt;
 		m_is_playing_cannon_move_sound = false;
 	}
@@ -237,6 +254,17 @@ void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 
 	Entity::UpdateCurrent(dt, commands);
 	
+}
+
+
+int	Tank::GetIdentifier()
+{
+	return m_identifier;
+}
+
+void Tank::SetIdentifier(int identifier)
+{
+	m_identifier = identifier;
 }
 
 void Tank::UpdateMovementPattern(sf::Time dt)
