@@ -16,6 +16,7 @@ namespace Category
 		kEnemyProjectile = 1 << 7,
 		kSoundEffect = 1 << 8,
 		kWall = 1 << 9,
+		kNetwork = 1 << 10,
 
 		kTank = kPlayerTank | kPlayer2Tank| kAlliedTank | kEnemyTank,
 		kProjectile = kAlliedProjectile | kEnemyProjectile,
