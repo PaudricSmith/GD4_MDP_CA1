@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameServer.cpp" />
     <ClCompile Include="MusicPlayer.cpp" />
     <ClCompile Include="NetworkNode.cpp" />
     <ClCompile Include="SoundNode.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameServer.hpp" />
     <ClInclude Include="MusicPlayer.hpp" />
     <ClInclude Include="MusicTracks.hpp" />
     <ClInclude Include="NetworkNode.hpp" />
