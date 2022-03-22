@@ -5,11 +5,11 @@
 #include <SFML/System/Time.hpp>
 
 #include "Keybinding.hpp"
+#include "MusicPlayer.hpp"
 #include "Player.hpp"
 #include "ResourceHolder.hpp"
 #include "ResourceIdentifiers.hpp"
 #include "StateStack.hpp"
-#include "MusicPlayer.hpp"
 
 class Application
 {
@@ -26,19 +26,20 @@ private:
 
 private:
 	sf::RenderWindow m_window;
-	KeyBinding m_key_binding_1;
-	KeyBinding m_key_binding_2;
-
-	MusicPlayer m_music_player;
-	SoundPlayer m_sounds;
 	TextureHolder m_textures;
 	FontHolder m_fonts;
+	
+	MusicPlayer m_music_player;
+	SoundPlayer m_sounds;
+	
+	KeyBinding m_key_binding_1;
+	KeyBinding m_key_binding_2;
 
 	StateStack m_stack;
 
 	sf::Text m_statistics_text;
 	sf::Time m_statistics_updatetime;
-	std::size_t m_statistics_numframes;
 
+	std::size_t m_statistics_numframes;
 	static const sf::Time kTimePerFrame;
 };

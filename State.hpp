@@ -2,13 +2,15 @@
 
 #include "StateID.hpp"
 #include "ResourceIdentifiers.hpp"
-#include "MusicPlayer.hpp"
-#include "SoundPlayer.hpp"
 
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 
 #include <memory>
+
+#include "MusicPlayer.hpp"
+#include "SoundPlayer.hpp"
+
 
 namespace sf
 {

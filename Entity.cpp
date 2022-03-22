@@ -54,7 +54,7 @@ int Entity::GetHitPoints() const
 
 void Entity::SetHitPoints(int points)
 {
-	assert(points > 0);
+	//assert(points > 0);
 	m_hitpoints = points;
 }
 
@@ -83,4 +83,9 @@ void Entity::Destroy()
 bool Entity::IsDestroyed() const
 {
 	return m_hitpoints <= 0;
+}
+
+void Entity::Remove()
+{
+	Destroy();
 }

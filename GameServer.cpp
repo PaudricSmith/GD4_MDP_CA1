@@ -523,9 +523,9 @@ void GameServer::UpdateClientState()
 	update_client_state_packet << static_cast<float>(m_battlefield_rect.top + m_battlefield_rect.height);
 	update_client_state_packet << static_cast<sf::Int32>(m_tank_count);
 
-	for (const auto& aircraft : m_tank_info)
+	for (const auto& tank : m_tank_info)
 	{
-		update_client_state_packet << aircraft.first << aircraft.second.m_position.x << aircraft.second.m_position.y;
+		update_client_state_packet << tank.first << tank.second.m_position.x << tank.second.m_position.y << tank.second.m_hitpoints << tank.second.m_missile_ammo;
 	}
 
 	SendToAll(update_client_state_packet);

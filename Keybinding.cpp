@@ -93,12 +93,12 @@ bool IsRealtimeAction(PlayerActions action)
 {
 	switch (action)
 	{
-	case PlayerActions::kRotateLeft:
-	case PlayerActions::kRotateRight:
-	case PlayerActions::kRotateCannonLeft:
-	case PlayerActions::kRotateCannonRight:
 	case PlayerActions::kMoveForwards:
 	case PlayerActions::kMoveBackwards:
+	case PlayerActions::kRotateRight:
+	case PlayerActions::kRotateLeft:
+	case PlayerActions::kRotateCannonRight:
+	case PlayerActions::kRotateCannonLeft:
 	case PlayerActions::kFire:
 		return true;
 

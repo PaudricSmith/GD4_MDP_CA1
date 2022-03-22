@@ -9,7 +9,7 @@
 #include "Utility.hpp"
 #include "SoundNode.hpp"
 
-World::World(sf::RenderTarget& output_target, const TextureHolder& textures, FontHolder& font, SoundPlayer& sounds)
+World::World(sf::RenderTarget& output_target, const TextureHolder& textures, FontHolder& font, SoundPlayer& sounds, bool networked)
 	: m_target(output_target)
 	, m_camera(output_target.getDefaultView())
 	, m_textures()
@@ -20,9 +20,14 @@ World::World(sf::RenderTarget& output_target, const TextureHolder& textures, Fon
 	, m_world_bounds(0.f, 0.f, m_camera.getSize().x, m_camera.getSize().y)
 	, m_spawn_position(m_camera.getSize().x / 2.f, m_world_bounds.height - m_camera.getSize().y / 2.f)
 	, m_scrollspeed(0.f)
-	, m_player_tank(nullptr)
-	, m_player_tank_2(nullptr)
+	, m_scrollspeed_compensation(1.f)
+	, m_player_tank()
 	, m_is_pickups_spawned(false)
+	, m_enemy_spawn_points()
+	, m_active_enemies()
+	, m_networked_world(networked)
+	, m_network_node(nullptr)
+	, m_finish_sprite(nullptr)
 {
 	LoadTextures();
 	BuildScene();
@@ -86,20 +91,24 @@ void World::CreatePickups(SceneNode& node, const TextureHolder& textures) const
 	node.AttachChild(std::move(pickup5));
 }
 
+void World::SetWorldScrollCompensation(float compensation)
+{
+	m_scrollspeed_compensation = compensation;
+}
+
 void World::Update(sf::Time dt)
 {
 
 	// Spawn Pickups at start of game
 	if (m_is_pickups_spawned == false)
 	{
-		CommandQueue& commands = getCommandQueue();
+		CommandQueue& commands = GetCommandQueue();
 		commands.Push(m_drop_pickup_command);
 
 		m_is_pickups_spawned = true;
 	}
 
-	m_player_tank->SetVelocity(0.f, 0.f);
-	m_player_tank_2->SetVelocity(0.f, 0.f);
+	//m_player_tank->SetVelocity(0.f, 0.f);
 
 	DestroyEntitiesOutsideView();
 
@@ -112,7 +121,9 @@ void World::Update(sf::Time dt)
 	AdaptPlayerVelocity();
 
 	HandleCollisions();
-	//Remove all destroyed entities
+	//RemoveWrecks() only destroys the entities, not the pointers in m_player_aircraft
+	auto first_to_remove = std::remove_if(m_player_tank.begin(), m_player_tank.end(), std::mem_fn(&Tank::IsMarkedForRemoval));
+	m_player_tank.erase(first_to_remove, m_player_tank.end());
 	m_scenegraph.RemoveWrecks();
 
 
@@ -129,17 +140,74 @@ void World::Draw()
 	m_target.draw(m_scenegraph);
 }
 
+Tank* World::GetTank(int identifier) const
+{
+	for (Tank* a : m_player_tank)
+	{
+		if (a->GetIdentifier() == identifier)
+		{
+			return a;
+		}
+	}
+	return nullptr;
+}
+
+void World::RemoveTank(int identifier)
+{
+	Tank* tank = GetTank(identifier);
+	if (tank)
+	{
+		tank->Destroy();
+		m_player_tank.erase(std::find(m_player_tank.begin(), m_player_tank.end(), tank));
+	}
+}
+
+Tank* World::AddTank(int identifier)
+{
+	std::unique_ptr<Tank> player(new Tank(TankType::kCamo, TankType::kCamo, m_textures, m_fonts));
+	player->setPosition(m_camera.getCenter());
+	player->SetIdentifier(identifier);
+
+	m_player_tank.emplace_back(player.get());
+	m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(player));
+	return m_player_tank.back();
+}
+
+void World::CreatePickup(sf::Vector2f position, PickupType type)
+{
+	std::unique_ptr<Pickup> pickup(new Pickup(type, m_textures));
+	pickup->setPosition(position);
+	pickup->SetVelocity(0.f, 1.f);
+	m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(pickup));
+}
+
+bool World::PollGameAction(GameActions::Action& out)
+{
+	return m_network_node->PollGameAction(out);
+}
+
+void World::SetCurrentBattleFieldPosition(float lineY)
+{
+	m_camera.setCenter(m_camera.getCenter().x, lineY - m_camera.getSize().y / 2);
+	m_spawn_position.y = m_world_bounds.height;
+}
+
+void World::SetWorldHeight(float height)
+{
+	m_world_bounds.height = height;
+}
+
 bool World::HasAlivePlayer1() const
 {
 	// If a Player 1 Tank is not destroyed, hence Player 1 is still alive
-	return !m_player_tank->IsMarkedForRemoval();
+	return !m_player_tank.empty();
 }
-
-bool World::HasAlivePlayer2() const
-{
-	// If a Player 2 Tank is not destroyed, hence Player 2 is still alive
-	return !m_player_tank_2->IsMarkedForRemoval();
-}
+//
+//bool World::HasAlivePlayer2() const
+//{
+//	// If a Player 2 Tank is not destroyed, hence Player 2 is still alive
+//	return !m_player_tank_2->IsMarkedForRemoval();
+//}
 
 void World::LoadTextures()
 {	
@@ -205,21 +273,28 @@ void World::BuildScene()
 	m_scenegraph.AttachChild(std::move(soundNode));
 
 
-	//Add Player 1 Tank
-	std::unique_ptr<Tank> leader(new Tank(TankType::kCamo, TankType::kCannonCamo, m_textures, m_fonts));
-	m_player_tank = leader.get();
-	m_player_tank->setPosition(m_spawn_position.x - 200.0f, m_spawn_position.y);
-	m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(leader));
+	////Add Player 1 Tank
+	//std::unique_ptr<Tank> leader(new Tank(TankType::kCamo, TankType::kCannonCamo, m_textures, m_fonts));
+	//m_player_tank = leader.get();
+	//m_player_tank->setPosition(m_spawn_position.x - 200.0f, m_spawn_position.y);
+	//m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(leader));
 
-	//Add Player 2 Tank
-	std::unique_ptr<Tank> leader2(new Tank(TankType::kSand, TankType::kCannonSand, m_textures, m_fonts));
-	m_player_tank_2 = leader2.get();
-	m_player_tank_2->setPosition(m_spawn_position.x + 200.0f, m_spawn_position.y);
-	m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(leader2));
+	////Add Player 2 Tank
+	//std::unique_ptr<Tank> leader2(new Tank(TankType::kSand, TankType::kCannonSand, m_textures, m_fonts));
+	//m_player_tank_2 = leader2.get();
+	//m_player_tank_2->setPosition(m_spawn_position.x + 200.0f, m_spawn_position.y);
+	//m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(leader2));
+
+	if (m_networked_world)
+	{
+		std::unique_ptr<NetworkNode> network_node(new NetworkNode());
+		m_network_node = network_node.get();
+		m_scenegraph.AttachChild(std::move(network_node));
+	}
 
 }
 
-CommandQueue& World::getCommandQueue()
+CommandQueue& World::GetCommandQueue()
 {
 	return m_command_queue;
 }
@@ -229,38 +304,46 @@ void World::AdaptPlayerPosition()
 	sf::FloatRect view_bounds = GetViewBounds();
 	const float border_distance = 40.f;
 
-	// Keep Player 1 Tank inside the screen / bounds
-	sf::Vector2f player1Pos = m_player_tank->getPosition();
-	player1Pos.x = std::max(player1Pos.x, view_bounds.left + border_distance);
-	player1Pos.x = std::min(player1Pos.x, view_bounds.left + view_bounds.width - border_distance);
-	player1Pos.y = std::max(player1Pos.y, view_bounds.top + border_distance);
-	player1Pos.y = std::min(player1Pos.y, view_bounds.top + view_bounds.height - border_distance);
-	m_player_tank->setPosition(player1Pos);
-	   
-	// Keep Player 2 Tank inside the screen / bounds
-	sf::Vector2f player2Pos = m_player_tank_2->getPosition();
-	player2Pos.x = std::max(player2Pos.x, view_bounds.left + border_distance);
-	player2Pos.x = std::min(player2Pos.x, view_bounds.left + view_bounds.width - border_distance);
-	player2Pos.y = std::max(player2Pos.y, view_bounds.top + border_distance);
-	player2Pos.y = std::min(player2Pos.y, view_bounds.top + view_bounds.height - border_distance);
-	m_player_tank_2->setPosition(player2Pos);
+	// Keep Tanks inside the screen / bounds
+	for (Tank* tank : m_player_tank)
+	{
+		sf::Vector2f position = tank->getPosition();
+		position.x = std::max(position.x, view_bounds.left + border_distance);
+		position.x = std::min(position.x, view_bounds.left + view_bounds.width - border_distance);
+		position.y = std::max(position.y, view_bounds.top + border_distance);
+		position.y = std::min(position.y, view_bounds.top + view_bounds.height - border_distance);
+		tank->setPosition(position);
+	}
+
 }
 
 void World::AdaptPlayerVelocity()
 {
-	sf::Vector2f player1Vel = m_player_tank->GetVelocity();
-	sf::Vector2f player2Vel = m_player_tank_2->GetVelocity();
+	/*sf::Vector2f player1Vel = m_player_tank->GetVelocity();
+	sf::Vector2f player2Vel = m_player_tank_2->GetVelocity();*/
 
-	// If Player 1 moving diagonally then reduce velocity
-	if (player1Vel.x != 0.f && player1Vel.y != 0.f)
-	{
-		m_player_tank->SetVelocity(player1Vel / std::sqrt(2.f));
-	}
+	//// If Player 1 moving diagonally then reduce velocity
+	//if (player1Vel.x != 0.f && player1Vel.y != 0.f)
+	//{
+	//	m_player_tank->SetVelocity(player1Vel / std::sqrt(2.f));
+	//}
 
-	// If Player 2 moving diagonally then reduce velocity
-	if (player2Vel.x != 0.f && player2Vel.y != 0.f)
+	//// If Player 2 moving diagonally then reduce velocity
+	//if (player2Vel.x != 0.f && player2Vel.y != 0.f)
+	//{
+	//	m_player_tank_2->SetVelocity(player2Vel / std::sqrt(2.f));
+	//}
+
+	for (Tank* tank : m_player_tank)
 	{
-		m_player_tank_2->SetVelocity(player2Vel / std::sqrt(2.f));
+		sf::Vector2f velocity = tank->GetVelocity();
+		//if moving diagonally then reduce velocity
+		if (velocity.x != 0.f && velocity.y != 0.f)
+		{
+			tank->SetVelocity(velocity / std::sqrt(2.f));
+		}
+		//Add scrolling velocity
+		tank->Accelerate(0.f, m_scrollspeed);
 	}
 }
 
@@ -317,7 +400,7 @@ void World::HandleCollisions()
 
 			// Collision based on both Tanks x y positions, if there is a collision
 			// in a certain direction then move the Tank in the opposite direction
-			if (player1Pos.x < player2Pos.x)
+			/*if (player1Pos.x < player2Pos.x)
 			{
 				m_player_tank->move(-1.0f, 0.0f);
 				m_player_tank_2->move(1.0f, 0.0f);
@@ -336,7 +419,7 @@ void World::HandleCollisions()
 			{
 				m_player_tank->move(0.0f, 1.0f);
 				m_player_tank_2->move(0.0f, -1.0f);
-			}
+			}*/
 
 			// Damage Player Tanks a small bit when they collide
 			player.Damage(1.0f);

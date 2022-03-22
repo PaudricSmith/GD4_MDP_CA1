@@ -10,6 +10,7 @@
 #include "PauseState.hpp"
 #include "SettingsState.hpp"
 #include "SoundState.hpp"
+#include "MultiplayerGameState.hpp"
 
 #include <iostream>
 
@@ -119,10 +120,14 @@ void Application::RegisterStates()
 {
 	m_stack.RegisterState<TitleState>(StateID::kTitle);
 	m_stack.RegisterState<MenuState>(StateID::kMenu);
+	m_stack.RegisterState<GameState>(StateID::kGame);
+	m_stack.RegisterState<MultiplayerGameState>(StateID::kHostGame, true);
+	m_stack.RegisterState<MultiplayerGameState>(StateID::kJoinGame, false);
+	m_stack.RegisterState<PauseState>(StateID::kPause);
+	m_stack.RegisterState<PauseState>(StateID::kNetworkPause, true);
 	m_stack.RegisterState<SettingsState>(StateID::kSettings);
 	m_stack.RegisterState<SoundState>(StateID::kSound);
 	m_stack.RegisterState<ToastState>(StateID::kToast);
-	m_stack.RegisterState<GameState>(StateID::kGame);
-	m_stack.RegisterState<PauseState>(StateID::kPause);
-	m_stack.RegisterState<GameOverState>(StateID::kGameOver);
+	m_stack.RegisterState<GameOverState>(StateID::kGameOver, "Mission Failed!");
+	m_stack.RegisterState<GameOverState>(StateID::kMissionSuccess, "Mission Successful!");
 }

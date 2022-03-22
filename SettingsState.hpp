@@ -1,7 +1,6 @@
 #pragma once
 #include "State.hpp"
 
-#include "State.hpp"
 #include "Player.hpp"
 #include "Container.hpp"
 #include "Button.hpp"
@@ -24,10 +23,11 @@ public:
 
 
 private:
-	void UpdateP1Labels();
-	void UpdateP2Labels();
-	void AddP1ButtonLabel(PlayerActions action, float x_offset, float y_offset, float x_label_offset, const std::string& text, Context context);
-	void AddP2ButtonLabel(PlayerActions action, float x_offset, float y_offset, float x_label_offset, const std::string& text, Context context);
+	void UpdateLabels();
+	//void UpdateP1Labels();
+	//void UpdateP2Labels();
+	void AddButtonLabel(std::size_t index, std::size_t x, std::size_t y, const std::string& text, Context context);
+	//void AddP2ButtonLabel(PlayerActions action, float x_offset, float y_offset, float x_label_offset, const std::string& text, Context context);
 
 
 private:
@@ -35,8 +35,12 @@ private:
 
 	sf::Sprite m_background_sprite;
 	GUI::Container m_gui_container;
-	std::array<GUI::Button::Ptr, static_cast<int>(PlayerActions::kActionCount)> m_binding_buttons;
+
+	std::array<GUI::Button::Ptr, 2 * (static_cast<int>(PlayerActions::kActionCount))> m_binding_buttons;
+	std::array<GUI::Label::Ptr, 2 * (static_cast<int>(PlayerActions::kActionCount))> m_binding_labels;
+
+	/*std::array<GUI::Button::Ptr, static_cast<int>(PlayerActions::kActionCount)> m_binding_buttons;
 	std::array<GUI::Button::Ptr, static_cast<int>(PlayerActions::kActionCount)> m_binding_buttons_2;
 	std::array<GUI::Label::Ptr, static_cast<int>(PlayerActions::kActionCount)> m_binding_labels;
-	std::array<GUI::Label::Ptr, static_cast<int>(PlayerActions::kActionCount)> m_binding_labels_2;
+	std::array<GUI::Label::Ptr, static_cast<int>(PlayerActions::kActionCount)> m_binding_labels_2;*/
 };

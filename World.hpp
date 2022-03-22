@@ -7,6 +7,7 @@
 #include "Tank.hpp"
 #include "Layers.hpp"
 #include "TankType.hpp"
+#include "NetworkNode.hpp"
 
 #include <SFML/System/NonCopyable.hpp>
 #include <SFML/Graphics/View.hpp>
@@ -20,25 +21,47 @@
 #include "CommandQueue.hpp"
 #include "SoundPlayer.hpp"
 
+#include "NetworkProtocol.hpp"
+#include "PickupType.hpp"
+#include "PlayerActions.hpp"
+
+namespace sf
+{
+	class RenderTarget;
+}
+
 
 class World : private sf::NonCopyable
 {
 public:
-	explicit World(sf::RenderTarget& output_target, const TextureHolder& textures, FontHolder& font, SoundPlayer& sounds);
+	explicit World(sf::RenderTarget& output_target, const TextureHolder& textures, FontHolder& font, SoundPlayer& sounds, bool networked = false);
 	void Update(sf::Time dt);
 	void Draw();
-	CommandQueue& getCommandQueue();
+	
+	sf::FloatRect GetViewBounds() const;
+	CommandQueue& GetCommandQueue();
+
+	Tank* AddTank(int identifier);
+	void RemoveTank(int identifier);
+	void SetCurrentBattleFieldPosition(float line_y);
+	void SetWorldHeight(float height);
+
+	//void AddEnemy(TankType type, float rel_x, float rel_y);
+	//void SortEnemies();
 	bool HasAlivePlayer1() const;
-	bool HasAlivePlayer2() const;
+	//bool HasAlivePlayer2() const;
+
+	void SetWorldScrollCompensation(float compensation);
+	Tank* GetTank(int identifier) const;
+	sf::FloatRect GetBattlefieldBounds() const;
+	void CreatePickup(sf::Vector2f position, PickupType type);
+	bool PollGameAction(GameActions::Action& out);
 
 private:
 	void LoadTextures();
 	void BuildScene();
 	void AdaptPlayerPosition();
 	void AdaptPlayerVelocity();
-
-	sf::FloatRect GetViewBounds() const;
-	sf::FloatRect GetBattlefieldBounds() const;
 	void HandleCollisions();
 	void DestroyEntitiesOutsideView();
 	void UpdateSounds();
@@ -73,11 +96,15 @@ private:
 	sf::FloatRect m_world_bounds;
 	sf::Vector2f m_spawn_position;
 	float m_scrollspeed;
-	Tank* m_player_tank;
-	Tank* m_player_tank_2;
+	float m_scrollspeed_compensation;
+	std::vector<Tank*> m_player_tank;
 	std::vector<SpawnPoint> m_enemy_spawn_points;
 	std::vector<Tank*>	m_active_enemies;
 
 	bool m_is_pickups_spawned;
+
+	bool m_networked_world;
+	NetworkNode* m_network_node;
+	SpriteNode* m_finish_sprite;
 
 };
