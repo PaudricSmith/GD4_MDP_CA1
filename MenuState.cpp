@@ -14,14 +14,32 @@ MenuState::MenuState(StateStack& stack, Context context)
 	m_background_sprite.setTexture(texture);
 
 	auto play_button = std::make_shared<GUI::Button>(context);
-	play_button->setPosition(400, 350);
-	play_button->SetText("Play");
+	play_button->setPosition(400, 250);
+	play_button->SetText("Local");
 	play_button->SetColour(sf::Color::Yellow);
 	play_button->SetCallback([this]()
 	{
 		RequestStackPop();
 		RequestStackClear();
 		RequestStackPush(StateID::kToast);
+	});
+
+	auto host_play_button = std::make_shared<GUI::Button>(context);
+	host_play_button->setPosition(400, 300);
+	host_play_button->SetText("Host");
+	host_play_button->SetCallback([this]()
+	{
+		RequestStackPop();
+		RequestStackPush(StateID::kHostGame);
+	});
+
+	auto join_play_button = std::make_shared<GUI::Button>(context);
+	join_play_button->setPosition(400, 350);
+	join_play_button->SetText("Join");
+	join_play_button->SetCallback([this]()
+	{
+		RequestStackPop();
+		RequestStackPush(StateID::kJoinGame);
 	});
 
 	auto settings_button = std::make_shared<GUI::Button>(context);
@@ -52,6 +70,8 @@ MenuState::MenuState(StateStack& stack, Context context)
 	});
 
 	m_gui_container.Pack(play_button);
+	m_gui_container.Pack(host_play_button);
+	m_gui_container.Pack(join_play_button);
 	m_gui_container.Pack(settings_button);
 	m_gui_container.Pack(sound_button);
 	m_gui_container.Pack(exit_button);
@@ -68,7 +88,6 @@ void MenuState::Draw()
 	window.setView(window.getDefaultView());
 	window.draw(m_background_sprite);
 	window.draw(m_gui_container);
-	
 }
 
 bool MenuState::Update(sf::Time dt)
@@ -81,4 +100,3 @@ bool MenuState::HandleEvent(const sf::Event& event)
 	m_gui_container.HandleEvent(event);
 	return false;
 }
-

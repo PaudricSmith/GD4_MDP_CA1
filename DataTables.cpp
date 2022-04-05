@@ -12,7 +12,7 @@ std::vector<TankData> InitializeTankData()
 
 	// Player 1 Tank
 	data[static_cast<int>(TankType::kCamo)].m_hitpoints = 300;
-	data[static_cast<int>(TankType::kCamo)].m_speed = 120.f;
+	data[static_cast<int>(TankType::kCamo)].m_speed = 50.f;
 	data[static_cast<int>(TankType::kCamo)].m_rotation_speed = 1.f;
 	data[static_cast<int>(TankType::kCamo)].m_cannon_rotation_speed = 2.0f;
 	data[static_cast<int>(TankType::kCamo)].m_fire_interval = sf::seconds(1);
@@ -24,7 +24,7 @@ std::vector<TankData> InitializeTankData()
 
 	// Player 2 Tank
 	data[static_cast<int>(TankType::kSand)].m_hitpoints = 300;
-	data[static_cast<int>(TankType::kSand)].m_speed = 120.f;
+	data[static_cast<int>(TankType::kSand)].m_speed = 50.f;
 	data[static_cast<int>(TankType::kSand)].m_rotation_speed = 1.f;
 	data[static_cast<int>(TankType::kSand)].m_cannon_rotation_speed = 2.0f;
 	data[static_cast<int>(TankType::kSand)].m_fire_interval = sf::seconds(1);
@@ -73,16 +73,3 @@ std::vector<PickupData> InitializePickupData()
 	data[static_cast<int>(PickupType::kFireRate)].m_action = std::bind(&Tank::IncreaseFireRate, std::placeholders::_1);
 	return data;
 }
-
-//std::vector<PlayerData> InitializePlayerData()
-//{
-//	std::vector<PlayerData> data(static_cast<int>(PlayerNumber::kPlayerCount));
-//
-//	// Player 1 
-//	data[static_cast<int>(PlayerNumber::kPlayer1)].playerCategory = Category::kPlayerTank;
-//
-//	// Player 2 
-//	data[static_cast<int>(PlayerNumber::kPlayer2)].playerCategory = Category::kPlayer2Tank;
-//
-//	return data;
-//}

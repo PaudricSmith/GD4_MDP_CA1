@@ -252,16 +252,13 @@ MissionStatus Player::GetMissionStatus() const
 }
 
 void Player::InitialiseActions()
-{
-	const float speed_multiplier = 0.5f;
-	
-	m_action_binding[PlayerActions::kMoveForwards].action = DerivedAction<Tank>(TankMover(0.0f, -1.0f * speed_multiplier, m_identifier));
-	m_action_binding[PlayerActions::kMoveBackwards].action = DerivedAction<Tank>(TankMover(0.0f, 1.0f * speed_multiplier, m_identifier));
+{	
+	m_action_binding[PlayerActions::kMoveForwards].action = DerivedAction<Tank>(TankMover(0.0f, -1.0f, m_identifier));
+	m_action_binding[PlayerActions::kMoveBackwards].action = DerivedAction<Tank>(TankMover(0.0f, 1.0f, m_identifier));
 	m_action_binding[PlayerActions::kRotateRight].action = DerivedAction<Tank>(TankRotator(1.0f, m_identifier));
 	m_action_binding[PlayerActions::kRotateLeft].action = DerivedAction<Tank>(TankRotator(-1.0f, m_identifier));
 	m_action_binding[PlayerActions::kRotateCannonRight].action = DerivedAction<Tank>(CannonRotator(1.0f, m_identifier));
 	m_action_binding[PlayerActions::kRotateCannonLeft].action = DerivedAction<Tank>(CannonRotator(-1.0f, m_identifier));
 	m_action_binding[PlayerActions::kFire].action = DerivedAction<Tank>(TankFireTrigger(m_identifier));
 	m_action_binding[PlayerActions::kGuidedMissile].action = DerivedAction<Tank>(TankMissileTrigger(m_identifier));
-
 }
