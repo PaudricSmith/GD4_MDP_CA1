@@ -53,14 +53,14 @@ struct PickupData
 	Textures m_texture;
 };
 
-struct PlayerData
-{
-	Category::Type playerCategory;
-
-	std::map<sf::Keyboard::Key, PlayerActions> m_key_binding;
-};
+//struct PlayerData
+//{
+//	Category::Type playerCategory;
+//
+//	std::map<sf::Keyboard::Key, PlayerActions> m_key_binding;
+//};
 
 std::vector<TankData> InitializeTankData();
 std::vector<ProjectileData> InitializeProjectileData();
 std::vector<PickupData> InitializePickupData();
-std::vector<PlayerData> InitializePlayerData();
+//std::vector<PlayerData> InitializePlayerData();

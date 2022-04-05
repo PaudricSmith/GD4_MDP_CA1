@@ -9,10 +9,10 @@
 #include "DataTables.hpp"
 
 
-namespace
-{
-	const std::vector<PlayerData> Table = InitializePlayerData();
-}
+//namespace
+//{
+//	const std::vector<PlayerData> Table = InitializePlayerData();
+//}
 
 struct TankMover
 {

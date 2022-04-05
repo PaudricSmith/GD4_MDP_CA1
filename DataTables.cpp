@@ -74,15 +74,15 @@ std::vector<PickupData> InitializePickupData()
 	return data;
 }
 
-std::vector<PlayerData> InitializePlayerData()
-{
-	std::vector<PlayerData> data(static_cast<int>(PlayerNumber::kPlayerCount));
-
-	// Player 1 
-	data[static_cast<int>(PlayerNumber::kPlayer1)].playerCategory = Category::kPlayerTank;
-
-	// Player 2 
-	data[static_cast<int>(PlayerNumber::kPlayer2)].playerCategory = Category::kPlayer2Tank;
-
-	return data;
-}
+//std::vector<PlayerData> InitializePlayerData()
+//{
+//	std::vector<PlayerData> data(static_cast<int>(PlayerNumber::kPlayerCount));
+//
+//	// Player 1 
+//	data[static_cast<int>(PlayerNumber::kPlayer1)].playerCategory = Category::kPlayerTank;
+//
+//	// Player 2 
+//	data[static_cast<int>(PlayerNumber::kPlayer2)].playerCategory = Category::kPlayer2Tank;
+//
+//	return data;
+//}
