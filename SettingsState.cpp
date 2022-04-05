@@ -44,7 +44,7 @@ SettingsState::SettingsState(StateStack& stack, Context context)
 	UpdateLabels();
 
 	auto back_button = std::make_shared<GUI::Button>(context);
-	back_button->setPosition(400.f, 620.f);
+	back_button->setPosition(420.f, 600.f);
 	back_button->SetText("Back");
 	back_button->SetColour(sf::Color::Red);
 	back_button->SetCallback(std::bind(&SettingsState::RequestStackPop, this));
@@ -93,7 +93,6 @@ bool SettingsState::HandleEvent(const sf::Event& event)
 	}
 
 	// If pressed button changed key bindings, update labels; otherwise consider other buttons in container
-
 	if (is_key_binding)
 		UpdateLabels();
 	else
@@ -125,12 +124,12 @@ void SettingsState::AddButtonLabel(std::size_t index, std::size_t x, std::size_t
 	index += static_cast<int>(PlayerActions::kActionCount) * x;
 
 	m_binding_buttons[index] = std::make_shared<GUI::Button>(context);
-	m_binding_buttons[index]->setPosition(400.f * x + 80.f, 50.f * y + 300.f);
+	m_binding_buttons[index]->setPosition(380.f * x + 210.f, 50.f * y + 160.f);
 	m_binding_buttons[index]->SetText(text);
 	m_binding_buttons[index]->SetToggle(true);
 
 	m_binding_labels[index] = std::make_shared<GUI::Label>("", *context.fonts);
-	m_binding_labels[index]->setPosition(400.f * x + 300.f, 50.f * y + 315.f);
+	m_binding_labels[index]->setPosition(110.f * x + 420.f, 50.f * y + 175.f);
 
 	m_gui_container.Pack(m_binding_buttons[index]);
 	m_gui_container.Pack(m_binding_labels[index]);
