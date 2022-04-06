@@ -43,14 +43,14 @@ GameServer::~GameServer()
 	m_thread.wait();
 }
 
-//This is the same as SpawnSelf but indicate that an aircraft from a different client is entering the world
+//This is the same as SpawnSelf but indicate that an Tank from a different client is entering the world
 
-void GameServer::NotifyPlayerSpawn(sf::Int32 aircraft_identifier)
+void GameServer::NotifyPlayerSpawn(sf::Int32 tank_identifier)
 {
 	sf::Packet packet;
 	//First thing for every packet is what type of packet it is
 	packet << static_cast<sf::Int32>(Server::PacketType::PlayerConnect);
-	packet << aircraft_identifier << m_tank_info[aircraft_identifier].m_position.x << m_tank_info[aircraft_identifier].m_position.y;
+	packet << tank_identifier << m_tank_info[tank_identifier].m_position.x << m_tank_info[tank_identifier].m_position.y;
 	for (std::size_t i = 0; i < m_connected_players; ++i)
 	{
 		if (m_peers[i]->m_ready)
@@ -62,12 +62,12 @@ void GameServer::NotifyPlayerSpawn(sf::Int32 aircraft_identifier)
 
 //This is the same as PlayerEvent, but for real-time actions. This means that we are changing an ongoing state to either true or false, so we add a Boolean value to the parameters
 
-void GameServer::NotifyPlayerRealtimeChange(sf::Int32 aircraft_identifier, sf::Int32 action, bool action_enabled)
+void GameServer::NotifyPlayerRealtimeChange(sf::Int32 tank_identifier, sf::Int32 action, bool action_enabled)
 {
 	sf::Packet packet;
 	//First thing for every packet is what type of packet it is
 	packet << static_cast<sf::Int32>(Server::PacketType::PlayerRealtimeChange);
-	packet << aircraft_identifier;
+	packet << tank_identifier;
 	packet << action;
 	packet << action_enabled;
 
@@ -80,16 +80,16 @@ void GameServer::NotifyPlayerRealtimeChange(sf::Int32 aircraft_identifier, sf::I
 	}
 }
 
-//This takes two sf::Int32 variables, the aircraft identifier and the action identifier
+//This takes two sf::Int32 variables, the Tank identifier and the action identifier
 //as declared in the Player class. This is used to inform all peers that plane X has
 //triggered an action
 
-void GameServer::NotifyPlayerEvent(sf::Int32 aircraft_identifier, sf::Int32 action)
+void GameServer::NotifyPlayerEvent(sf::Int32 tank_identifier, sf::Int32 action)
 {
 	sf::Packet packet;
 	//First thing for every packet is what type of packet it is
 	packet << static_cast<sf::Int32>(Server::PacketType::PlayerEvent);
-	packet << aircraft_identifier;
+	packet << tank_identifier;
 	packet << action;
 
 	for (std::size_t i = 0; i < m_connected_players; ++i)
@@ -165,17 +165,17 @@ void GameServer::Tick()
 	UpdateClientState();
 
 	//Check if the game is over = all Tanks position.y < offset
-	bool all_aircraft_done = true;
+	bool all_tank_done = true;
 	for (const auto& current : m_tank_info)
 	{
 		//As long one player has not crossed the finish line game on
 		if (current.second.m_position.y > 0.f)
 		{
-			all_aircraft_done = false;
+			all_tank_done = false;
 		}
 	}
 
-	if (all_aircraft_done)
+	if (all_tank_done)
 	{
 		sf::Packet mission_success_packet;
 		mission_success_packet << static_cast<sf::Int32>(Server::PacketType::MissionSuccess);
@@ -290,20 +290,20 @@ void GameServer::HandleIncomingPacket(sf::Packet& packet, RemotePeer& receiving_
 
 	case Client::PacketType::PlayerEvent:
 	{
-		sf::Int32 aircraft_identifier;
+		sf::Int32 tank_identifier;
 		sf::Int32 action;
-		packet >> aircraft_identifier >> action;
-		NotifyPlayerEvent(aircraft_identifier, action);
+		packet >> tank_identifier >> action;
+		NotifyPlayerEvent(tank_identifier, action);
 	}
 	break;
 
 	case Client::PacketType::PlayerRealtimeChange:
 	{
-		sf::Int32 aircraft_identifier;
+		sf::Int32 tank_identifier;
 		sf::Int32 action;
 		bool action_enabled;
-		packet >> aircraft_identifier >> action >> action_enabled;
-		NotifyPlayerRealtimeChange(aircraft_identifier, action, action_enabled);
+		packet >> tank_identifier >> action >> action_enabled;
+		NotifyPlayerRealtimeChange(tank_identifier, action, action_enabled);
 	}
 	break;
 
@@ -345,19 +345,19 @@ void GameServer::HandleIncomingPacket(sf::Packet& packet, RemotePeer& receiving_
 
 	case Client::PacketType::PositionUpdate:
 	{
-		sf::Int32 num_aircraft;
-		packet >> num_aircraft;
+		sf::Int32 num_tank;
+		packet >> num_tank;
 
-		for (sf::Int32 i = 0; i < num_aircraft; ++i)
+		for (sf::Int32 i = 0; i < num_tank; ++i)
 		{
-			sf::Int32 aircraft_identifier;
-			sf::Int32 aircraft_hitpoints;
+			sf::Int32 tank_identifier;
+			sf::Int32 tank_hitpoints;
 			sf::Int32 missile_ammo;
-			sf::Vector2f aircraft_position;
-			packet >> aircraft_identifier >> aircraft_position.x >> aircraft_position.y >> aircraft_hitpoints >> missile_ammo;
-			m_tank_info[aircraft_identifier].m_position = aircraft_position;
-			m_tank_info[aircraft_identifier].m_hitpoints = aircraft_hitpoints;
-			m_tank_info[aircraft_identifier].m_missile_ammo = missile_ammo;
+			sf::Vector2f tank_position;
+			packet >> tank_identifier >> tank_position.x >> tank_position.y >> tank_hitpoints >> missile_ammo;
+			m_tank_info[tank_identifier].m_position = tank_position;
+			m_tank_info[tank_identifier].m_hitpoints = tank_hitpoints;
+			m_tank_info[tank_identifier].m_missile_ammo = missile_ammo;
 		}
 	}
 	break;

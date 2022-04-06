@@ -103,7 +103,7 @@ namespace GUI
 		int next = m_selected_child;
 		do
 		{
-			if (m_children.size() > 4) // If we are in a menu not the main menu
+			if (m_children.size() > 6) // If we are in a menu not the main menu, there are 6 buttons in main menu
 			{
 				if (next == (m_children.size() / 2) - 1)
 				{
@@ -134,7 +134,7 @@ namespace GUI
 		int prev = m_selected_child;
 		do
 		{
-			if (m_children.size() > 4) // If we are in a menu not the main menu
+			if (m_children.size() > 6) // If we are in a menu not the main menu, there are 6 buttons in main menu
 			{
 				if (prev == (m_children.size() / 2))
 				{

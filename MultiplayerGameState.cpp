@@ -62,7 +62,7 @@ MultiplayerGameState::MultiplayerGameState(StateStack& stack, Context context, b
 	m_failed_connection_text.setPosition(m_window.getSize().x / 2.f, m_window.getSize().y / 2.f);
 
 	//Render an "establishing connection" frame for user feedback
-	//m_window.clear(sf::Color::Black);
+	m_window.clear(sf::Color::Black);
 	m_window.draw(m_failed_connection_text);
 	m_window.display();
 	m_failed_connection_text.setString("Could not connect to the remote server");
@@ -126,7 +126,7 @@ bool MultiplayerGameState::Update(sf::Time dt)
 	{
 		m_world.Update(dt);
 
-		//Remove players whose aircraft were destroyed
+		//Remove players whose Tank was destroyed
 		bool found_local_plane = false;
 		for (auto itr = m_players.begin(); itr != m_players.end();)
 		{

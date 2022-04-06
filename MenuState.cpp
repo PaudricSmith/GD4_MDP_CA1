@@ -14,7 +14,7 @@ MenuState::MenuState(StateStack& stack, Context context)
 	m_background_sprite.setTexture(texture);
 
 	auto play_button = std::make_shared<GUI::Button>(context);
-	play_button->setPosition(400, 250);
+	play_button->setPosition(400, 310);
 	play_button->SetText("Local");
 	play_button->SetColour(sf::Color::Yellow);
 	play_button->SetCallback([this]()
@@ -25,8 +25,9 @@ MenuState::MenuState(StateStack& stack, Context context)
 	});
 
 	auto host_play_button = std::make_shared<GUI::Button>(context);
-	host_play_button->setPosition(400, 300);
+	host_play_button->setPosition(400, 360);
 	host_play_button->SetText("Host");
+	host_play_button->SetColour(sf::Color::Yellow);
 	host_play_button->SetCallback([this]()
 	{
 		RequestStackPop();
@@ -34,8 +35,9 @@ MenuState::MenuState(StateStack& stack, Context context)
 	});
 
 	auto join_play_button = std::make_shared<GUI::Button>(context);
-	join_play_button->setPosition(400, 350);
+	join_play_button->setPosition(400, 410);
 	join_play_button->SetText("Join");
+	join_play_button->SetColour(sf::Color::Yellow);
 	join_play_button->SetCallback([this]()
 	{
 		RequestStackPop();
@@ -43,7 +45,7 @@ MenuState::MenuState(StateStack& stack, Context context)
 	});
 
 	auto settings_button = std::make_shared<GUI::Button>(context);
-	settings_button->setPosition(400, 400);
+	settings_button->setPosition(400, 460);
 	settings_button->SetText("Key Bindings");
 	settings_button->SetColour(sf::Color::Yellow);
 	settings_button->SetCallback([this]()
@@ -52,7 +54,7 @@ MenuState::MenuState(StateStack& stack, Context context)
 	});
 
 	auto sound_button = std::make_shared<GUI::Button>(context);
-	sound_button->setPosition(400, 450);
+	sound_button->setPosition(400, 510);
 	sound_button->SetText("Sound");
 	sound_button->SetColour(sf::Color::Yellow);
 	sound_button->SetCallback([this]()
@@ -61,7 +63,7 @@ MenuState::MenuState(StateStack& stack, Context context)
 	});
 
 	auto exit_button = std::make_shared<GUI::Button>(context);
-	exit_button->setPosition(400, 500);
+	exit_button->setPosition(400, 560);
 	exit_button->SetColour(sf::Color::Red);
 	exit_button->SetText("Exit");
 	exit_button->SetCallback([this]()

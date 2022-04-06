@@ -121,7 +121,7 @@ void World::Update(sf::Time dt)
 	AdaptPlayerVelocity();
 
 	HandleCollisions();
-	//RemoveWrecks() only destroys the entities, not the pointers in m_player_aircraft
+	//RemoveWrecks() only destroys the entities, not the pointers in m_player_tank
 	auto first_to_remove = std::remove_if(m_player_tank.begin(), m_player_tank.end(), std::mem_fn(&Tank::IsMarkedForRemoval));
 	m_player_tank.erase(first_to_remove, m_player_tank.end());
 	m_scenegraph.RemoveWrecks();
