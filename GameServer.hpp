@@ -78,6 +78,7 @@ private:
 	std::vector<PeerPtr> m_peers;
 	sf::Int32 m_tank_identifier_counter;
 	bool m_waiting_thread_end;
+	bool m_can_succeed;
 
 	sf::Time m_last_spawn_time;
 	sf::Time m_time_for_next_spawn;

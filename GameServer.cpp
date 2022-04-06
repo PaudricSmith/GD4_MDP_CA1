@@ -7,6 +7,7 @@
 #include "Tank.hpp"
 #include "PickupType.hpp"
 #include "Utility.hpp"
+#include <iostream>
 
 //It is essential to set the sockets to non-blocking - m_socket.setBlocking(false)
 //otherwise the server will hang waiting to read input from a connection
@@ -24,13 +25,14 @@ GameServer::GameServer(sf::Vector2f battlefield_size)
 	, m_connected_players(0)
 	, m_world_height(5000.f)
 	, m_battlefield_rect(0.f, m_world_height - battlefield_size.y, battlefield_size.x, battlefield_size.y)
-	, m_battlefield_scrollspeed(-50.f)
+	, m_battlefield_scrollspeed(0.f)
 	, m_tank_count(0)
 	, m_peers(1)
 	, m_tank_identifier_counter(1)
 	, m_waiting_thread_end(false)
 	, m_last_spawn_time(sf::Time::Zero)
 	, m_time_for_next_spawn(sf::seconds(5.f))
+	, m_can_succeed(false)
 {
 	m_listener_socket.setBlocking(false);
 	m_peers[0].reset(new RemotePeer());
@@ -162,6 +164,15 @@ void GameServer::ExecutionThread()
 
 void GameServer::Tick()
 {
+	std::cout << "Connected players = " << m_connected_players << std::endl;
+	std::cout << "Tank Count = " << m_tank_count << std::endl;
+	std::cout << "Peer Size = " << m_peers.size() << std::endl;
+
+	if (m_tank_count == 2)
+	{
+		m_can_succeed = true;
+	}
+
 	UpdateClientState();
 
 	//Check if the game is over = all Tanks position.y < offset
@@ -173,6 +184,11 @@ void GameServer::Tick()
 		{
 			all_tank_done = false;
 		}
+
+		if (m_tank_count == 1 && m_can_succeed)
+		{
+			all_tank_done = true;
+		}
 	}
 
 	if (all_tank_done)
@@ -180,6 +196,7 @@ void GameServer::Tick()
 		sf::Packet mission_success_packet;
 		mission_success_packet << static_cast<sf::Int32>(Server::PacketType::MissionSuccess);
 		SendToAll(mission_success_packet);
+		all_tank_done = false;
 	}
 
 	//Remove Tank that have been destroyed

@@ -20,8 +20,8 @@ MenuState::MenuState(StateStack& stack, Context context)
 	play_button->SetCallback([this]()
 	{
 		RequestStackPop();
-		RequestStackClear();
-		RequestStackPush(StateID::kToast);
+		//RequestStackClear();
+		RequestStackPush(StateID::kGame);
 	});
 
 	auto host_play_button = std::make_shared<GUI::Button>(context);
@@ -31,7 +31,6 @@ MenuState::MenuState(StateStack& stack, Context context)
 	host_play_button->SetCallback([this]()
 	{
 		RequestStackPop();
-		RequestStackClear();
 		RequestStackPush(StateID::kHostGame);
 	});
 
@@ -42,7 +41,6 @@ MenuState::MenuState(StateStack& stack, Context context)
 	join_play_button->SetCallback([this]()
 	{
 		RequestStackPop();
-		RequestStackClear();
 		RequestStackPush(StateID::kJoinGame);
 	});
 

@@ -166,13 +166,27 @@ void World::RemoveTank(int identifier)
 
 Tank* World::AddTank(int identifier)
 {
-	std::unique_ptr<Tank> player(new Tank(TankType::kCamo, TankType::kCannonCamo, m_textures, m_fonts));
-	player->setPosition(m_camera.getCenter());
-	player->SetIdentifier(identifier);
+	
 
+	std::cout << "idenifier " << identifier << std::endl;
+
+	TankType tankBaseType = TankType::kCamo;
+	TankType tankCannonType = TankType::kCannonCamo;
+
+	/*if (identifier % 2 == 0)
+	{
+		tankBaseType = TankType::kSand;
+		tankCannonType = TankType::kCannonSand;
+	}*/
+
+	std::unique_ptr<Tank> player(new Tank(tankBaseType, tankCannonType, m_textures, m_fonts));
+	player->setPosition(m_camera.getCenter() - sf::Vector2f(200, 0));
+	player->SetIdentifier(identifier);
 	m_player_tank.emplace_back(player.get());
 	m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(player));
+
 	return m_player_tank.back();
+
 }
 
 void World::CreatePickup(sf::Vector2f position, PickupType type)
@@ -490,7 +504,7 @@ void World::HandleCollisions()
 void World::DestroyEntitiesOutsideView()
 {
 	Command command;
-	command.category = Category::Type::kEnemyTank | Category::Type::kProjectile;
+	command.category = Category::Type::kPlayerTank | Category::Type::kPlayer2Tank | Category::Type::kProjectile;
 	command.action = DerivedAction<Entity>([this](Entity& e, sf::Time)
 		{
 			//Does the object intersect with the battlefield

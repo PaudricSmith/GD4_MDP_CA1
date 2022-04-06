@@ -9,6 +9,9 @@ GameState::GameState(StateStack& stack, Context context)
 	, m_player(nullptr, 1, context.keys1)
 {
 	m_world.AddTank(1);
+	
+	std::cout << "New Tank = " << m_world.GetTank(1) << std::endl;
+
 	m_player.SetMissionStatus(MissionStatus::kMissionRunning);
 
 	// Play Menu Music Track
@@ -25,6 +28,12 @@ bool GameState::Update(sf::Time dt)
 
 	m_world.Update(dt);
 
+	if (!m_world.HasAlivePlayer1())
+	{
+		m_player.SetMissionStatus(MissionStatus::kMissionFailure);
+		RequestStackPush(StateID::kGameOver);
+	}
+	
 	//if (!m_world.HasAlivePlayer1()) // If Player 1 has died in the world
 	//{
 	//	m_player.SetMissionStatus(MissionStatus::kMissionFailure);

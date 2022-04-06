@@ -127,13 +127,13 @@ bool MultiplayerGameState::Update(sf::Time dt)
 		m_world.Update(dt);
 
 		//Remove players whose Tank was destroyed
-		bool found_local_plane = false;
+		bool found_local_tank = false;
 		for (auto itr = m_players.begin(); itr != m_players.end();)
 		{
-			//Check if there are no more local planes for remote clients
+			//Check if there are no more local tanks for remote clients
 			if (std::find(m_local_player_identifiers.begin(), m_local_player_identifiers.end(), itr->first) != m_local_player_identifiers.end())
 			{
-				found_local_plane = true;
+				found_local_tank = true;
 			}
 
 			if (!m_world.GetTank(itr->first))
@@ -152,7 +152,7 @@ bool MultiplayerGameState::Update(sf::Time dt)
 			}
 		}
 
-		if (!found_local_plane && m_game_started)
+		if (!found_local_tank && m_game_started)
 		{
 			RequestStackPush(StateID::kGameOver);
 		}
@@ -198,7 +198,7 @@ bool MultiplayerGameState::Update(sf::Time dt)
 
 		UpdateBroadcastMessage(dt);
 
-		//Time counter fro blinking second player text
+		//Time counter for blinking second player text
 		m_player_invitation_time += dt;
 		if (m_player_invitation_time > sf::seconds(1.f))
 		{
@@ -355,7 +355,7 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 	}
 	break;
 
-	//Sent by the server to spawn player 1 airplane on connect
+	//Sent by the server to spawn player 1 tank on connect
 	case Server::PacketType::SpawnSelf:
 	{
 		sf::Int32 tank_identifier;
@@ -511,8 +511,8 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 			packet >> tank_identifier >> tank_position.x >> tank_position.y >> hitpoints >> ammo;
 
 			Tank* tank = m_world.GetTank(tank_identifier);
-			bool is_local_plane = std::find(m_local_player_identifiers.begin(), m_local_player_identifiers.end(), tank_identifier) != m_local_player_identifiers.end();
-			if (tank && !is_local_plane)
+			bool is_local_tank = std::find(m_local_player_identifiers.begin(), m_local_player_identifiers.end(), tank_identifier) != m_local_player_identifiers.end();
+			if (tank && !is_local_tank)
 			{
 				sf::Vector2f interpolated_position = tank->getPosition() + (tank_position - tank->getPosition()) * 0.1f;
 				tank->setPosition(interpolated_position);

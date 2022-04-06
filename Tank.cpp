@@ -125,7 +125,7 @@ unsigned int Tank::GetCategory() const
 		}
 		else
 		{
-			return static_cast<int>(Category::kPlayer2Tank);
+			return static_cast<int>(Category::kPlayerTank);
 		}
 	}
 	return static_cast<int>(Category::kEnemyTank);
