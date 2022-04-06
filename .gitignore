@@ -1,0 +1,7 @@
+# Visual Code configuration
+.vs/GD4_MDP_CA1/v16
+
+# SFML
+/SFML-2.5.1
+
+*.dll
