@@ -41,7 +41,7 @@ MultiplayerGameState::MultiplayerGameState(StateStack& stack, Context context, b
 	, m_has_focus(true)
 	, m_host(is_host)
 	, m_game_started(false)
-	, m_client_timeout(sf::seconds(2.f))
+	, m_client_timeout(sf::seconds(10.f))
 	, m_time_since_last_packet(sf::seconds(0.f))
 {
 	m_broadcast_text.setFont(context.fonts->Get(Fonts::Main));
@@ -62,7 +62,7 @@ MultiplayerGameState::MultiplayerGameState(StateStack& stack, Context context, b
 	m_failed_connection_text.setPosition(m_window.getSize().x / 2.f, m_window.getSize().y / 2.f);
 
 	//Render an "establishing connection" frame for user feedback
-	m_window.clear(sf::Color::Black);
+	//m_window.clear(sf::Color::Black);
 	m_window.draw(m_failed_connection_text);
 	m_window.display();
 	m_failed_connection_text.setString("Could not connect to the remote server");
