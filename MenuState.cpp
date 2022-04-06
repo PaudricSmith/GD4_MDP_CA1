@@ -31,6 +31,7 @@ MenuState::MenuState(StateStack& stack, Context context)
 	host_play_button->SetCallback([this]()
 	{
 		RequestStackPop();
+		RequestStackClear();
 		RequestStackPush(StateID::kHostGame);
 	});
 
@@ -41,6 +42,7 @@ MenuState::MenuState(StateStack& stack, Context context)
 	join_play_button->SetCallback([this]()
 	{
 		RequestStackPop();
+		RequestStackClear();
 		RequestStackPush(StateID::kJoinGame);
 	});
 

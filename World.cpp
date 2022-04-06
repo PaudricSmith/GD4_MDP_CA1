@@ -41,6 +41,8 @@ World::World(sf::RenderTarget& output_target, const TextureHolder& textures, Fon
 	};
 
 	m_sfx_player.Play(SoundEffects::kToastBeep2);
+
+	
 }
 
 ///
@@ -108,7 +110,7 @@ void World::Update(sf::Time dt)
 		m_is_pickups_spawned = true;
 	}
 
-	//m_player_tank->SetVelocity(0.f, 0.f);
+	/*m_player_tank->SetVelocity(0.f, 0.f);*/
 
 	DestroyEntitiesOutsideView();
 
@@ -164,7 +166,7 @@ void World::RemoveTank(int identifier)
 
 Tank* World::AddTank(int identifier)
 {
-	std::unique_ptr<Tank> player(new Tank(TankType::kCamo, TankType::kCamo, m_textures, m_fonts));
+	std::unique_ptr<Tank> player(new Tank(TankType::kCamo, TankType::kCannonCamo, m_textures, m_fonts));
 	player->setPosition(m_camera.getCenter());
 	player->SetIdentifier(identifier);
 
