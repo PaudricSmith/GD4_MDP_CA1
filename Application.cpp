@@ -129,5 +129,6 @@ void Application::RegisterStates()
 	m_stack.RegisterState<SoundState>(StateID::kSound);
 	m_stack.RegisterState<ToastState>(StateID::kToast);
 	m_stack.RegisterState<GameOverState>(StateID::kGameOver, "Mission Failed!");
-	m_stack.RegisterState<GameOverState>(StateID::kMissionSuccess, "Mission Successful!");
+	m_stack.RegisterState<GameOverState>(StateID::kSuccessGreen, "Green team wins!");
+	m_stack.RegisterState<GameOverState>(StateID::kSuccessYellow, "Yellow team wins!");
 }

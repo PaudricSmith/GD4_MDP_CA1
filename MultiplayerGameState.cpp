@@ -473,10 +473,17 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 	}
 	break;
 
-	//Mission Successfully completed
-	case Server::PacketType::MissionSuccess:
+	//Green Team wins
+	case Server::PacketType::SuccessGreen:
 	{
-		RequestStackPush(StateID::kMissionSuccess);
+		RequestStackPush(StateID::kSuccessGreen);
+	}
+	break;
+
+	//Yellow Team wins
+	case Server::PacketType::SuccessYellow:
+	{
+		RequestStackPush(StateID::kSuccessYellow);
 	}
 	break;
 

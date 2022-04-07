@@ -166,20 +166,31 @@ void World::RemoveTank(int identifier)
 
 Tank* World::AddTank(int identifier)
 {
-	
-
 	std::cout << "idenifier " << identifier << std::endl;
 
 	TankType tankBaseType = TankType::kCamo;
 	TankType tankCannonType = TankType::kCannonCamo;
 
-	/*if (identifier % 2 == 0)
+	if (identifier % 2 == 0)
 	{
 		tankBaseType = TankType::kSand;
 		tankCannonType = TankType::kCannonSand;
-	}*/
+	}
+
 
 	std::unique_ptr<Tank> player(new Tank(tankBaseType, tankCannonType, m_textures, m_fonts));
+
+	/*sf::Vector2f playerPosition;
+
+	if (tankBaseType == TankType::kCamo)
+	{
+		playerPosition = sf::Vector2f(200, -100);
+	}
+	else
+	{
+		playerPosition = sf::Vector2f(500, -100);
+	}*/
+
 	player->setPosition(m_camera.getCenter() - sf::Vector2f(200, 0));
 	player->SetIdentifier(identifier);
 	m_player_tank.emplace_back(player.get());

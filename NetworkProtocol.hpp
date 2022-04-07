@@ -20,7 +20,8 @@ namespace Server
 		SpawnPickup,
 		SpawnSelf,
 		UpdateClientState,
-		MissionSuccess
+		SuccessGreen,
+		SuccessYellow
 	};
 }
 

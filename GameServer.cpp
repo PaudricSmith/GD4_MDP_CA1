@@ -83,7 +83,7 @@ void GameServer::NotifyPlayerRealtimeChange(sf::Int32 tank_identifier, sf::Int32
 }
 
 //This takes two sf::Int32 variables, the Tank identifier and the action identifier
-//as declared in the Player class. This is used to inform all peers that plane X has
+//as declared in the Player class. This is used to inform all peers that Tank X has
 //triggered an action
 
 void GameServer::NotifyPlayerEvent(sf::Int32 tank_identifier, sf::Int32 action)
@@ -194,7 +194,11 @@ void GameServer::Tick()
 	if (all_tank_done)
 	{
 		sf::Packet mission_success_packet;
-		mission_success_packet << static_cast<sf::Int32>(Server::PacketType::MissionSuccess);
+		
+		// If last Tank is Green then show "Success Green" packetType, else show Yellow
+		//if (m_peers[0]->m_tank_identifiers
+
+		mission_success_packet << static_cast<sf::Int32>(Server::PacketType::SuccessGreen);
 		SendToAll(mission_success_packet);
 		all_tank_done = false;
 	}
@@ -205,6 +209,7 @@ void GameServer::Tick()
 		if (itr->second.m_hitpoints <= 0)
 		{
 			m_tank_info.erase(itr++);
+			
 		}
 		else
 		{
@@ -222,14 +227,14 @@ void GameServer::Tick()
 			float spawn_centre = static_cast<float>(Utility::RandomInt(500) - 250);
 
 			//If there is only one enemy it is at the spawn_centre
-			float plane_distance = 0.f;
+			float tank_distance = 0.f;
 			float next_spawn_position = spawn_centre;
 
 			//If there are two then they are centred on the spawn centre
 			if (enemy_count == 2)
 			{
-				plane_distance = static_cast<float>(150 + Utility::RandomInt(250));
-				next_spawn_position = spawn_centre - plane_distance / 2.f;
+				tank_distance = static_cast<float>(150 + Utility::RandomInt(250));
+				next_spawn_position = spawn_centre - tank_distance / 2.f;
 			}
 
 			//TODO Do we really need two packets here?
@@ -242,7 +247,7 @@ void GameServer::Tick()
 				packet << m_world_height - m_battlefield_rect.top + 500;
 				packet << next_spawn_position;
 
-				next_spawn_position += plane_distance / 2.f;
+				next_spawn_position += tank_distance / 2.f;
 				SendToAll(packet);
 			}
 
