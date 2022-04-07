@@ -54,9 +54,29 @@ World::World(sf::RenderTarget& output_target, const TextureHolder& textures, Fon
 ///	<pa
 void World::PlaceWalls()
 {
-	std::unique_ptr<Wall> wallPtr(new Wall(sf::Vector2f(487.f, 0.5f), 0.5f, 1.f, m_textures));
-	m_wall_bounds.push_back((*wallPtr).GetBoundingRect());
-	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(wallPtr));
+	std::unique_ptr<Wall> wallTopPtr(new Wall(sf::Vector2f(512.f, .75f), 0.1f, 1.5f, m_textures));
+	m_wall_bounds.push_back((*wallTopPtr).GetBoundingRect());
+	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(wallTopPtr));
+
+	std::unique_ptr<Wall> wallBottomPtr(new Wall(sf::Vector2f(512.f, 750.f), 0.1f, 1.5f, m_textures));
+	m_wall_bounds.push_back((*wallBottomPtr).GetBoundingRect());
+	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(wallBottomPtr));
+
+	std::unique_ptr<Wall> wallLeftTopPtr(new Wall(sf::Vector2f(256.f, 256.f), 0.1f, .5f, m_textures));
+	m_wall_bounds.push_back((*wallLeftTopPtr).GetBoundingRect());
+	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(wallLeftTopPtr));
+
+	std::unique_ptr<Wall> wallLeftBottomPtr(new Wall(sf::Vector2f(256.f, 512.f), 0.1f, .5f, m_textures));
+	m_wall_bounds.push_back((*wallLeftBottomPtr).GetBoundingRect());
+	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(wallLeftBottomPtr));
+
+	std::unique_ptr<Wall> wallRightTopPtr(new Wall(sf::Vector2f(768.f, 256.f), 0.1f, .5f, m_textures));
+	m_wall_bounds.push_back((*wallRightTopPtr).GetBoundingRect());
+	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(wallRightTopPtr));
+
+	std::unique_ptr<Wall> wallRightBottomPtr(new Wall(sf::Vector2f(768.f, 512.f), 0.1f, .5f, m_textures));
+	m_wall_bounds.push_back((*wallRightBottomPtr).GetBoundingRect());
+	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(wallRightBottomPtr));
 }
 
 
