@@ -31,4 +31,3 @@ namespace GUI
 		int m_selected_child;
 	};
 }
-

@@ -362,7 +362,18 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 		sf::Vector2f tank_position;
 		packet >> tank_identifier >> tank_position.x >> tank_position.y;
 		Tank* tank = m_world.AddTank(tank_identifier);
-		tank->setPosition(tank_position);
+
+		if (tank_identifier % 2 == 0)
+		{
+			tank->setPosition(tank_position - sf::Vector2f(-350, 50 * tank_identifier - 400));
+			//tank->setRotation(-90);
+		}
+		else
+		{
+			tank->setPosition(tank_position - sf::Vector2f(350, 50 * tank_identifier - 350));
+			//tank->setRotation(90);
+		}
+		
 		m_players[tank_identifier].reset(new Player(&m_socket, tank_identifier, GetContext().keys1));
 		m_local_player_identifiers.push_back(tank_identifier);
 		m_game_started = true;

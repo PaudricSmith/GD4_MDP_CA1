@@ -44,8 +44,6 @@ World::World(sf::RenderTarget& output_target, const TextureHolder& textures, Fon
 	PlaceWalls();
 
 	m_sfx_player.Play(SoundEffects::kToastBeep2);
-
-	
 }
 
 ///
@@ -201,34 +199,51 @@ void World::RemoveTank(int identifier)
 	}
 }
 
+/// <summary>
+/// Separate Tank into either Green or Yellow team depending on its identifier being odd or even
+/// Green tanks X position is set to the left of screen centre and it's Y is multiplied by it's identifier to make a row
+/// Yellow tanks X position is set to the right of screen centre and it's Y is multiplied by it's identifier and divided by 2 to make a row
+/// </summary>
+/// <param name="identifier"></param>
+/// <returns></returns>
 Tank* World::AddTank(int identifier)
 {
-	std::cout << "idenifier " << identifier << std::endl;
+	std::cout << "identifier ****************************************************************************************: " << identifier << std::endl;
 
-	TankType tankBaseType = TankType::kCamo;
-	TankType tankCannonType = TankType::kCannonCamo;
+	bool greenTeam = true;
+	TankType tankBaseType;
+	TankType tankCannonType;
 
+	// Check identifier if it is an even number, if so then the player is on the Yellow Team.
 	if (identifier % 2 == 0)
+		greenTeam = false;	
+
+	// Player spawn position depending on which colour the Tank is
+	sf::Vector2f playerPosition;
+	if (greenTeam)
+	{
+		tankBaseType = TankType::kCamo;
+		tankCannonType = TankType::kCannonCamo;
+		playerPosition = sf::Vector2f(350, 50 * identifier - 350);
+	}
+	else
 	{
 		tankBaseType = TankType::kSand;
 		tankCannonType = TankType::kCannonSand;
+		playerPosition = sf::Vector2f(-350, 50 * identifier - 400);
 	}
 
 
 	std::unique_ptr<Tank> player(new Tank(tankBaseType, tankCannonType, m_textures, m_fonts));
-
-	/*sf::Vector2f playerPosition;
-
-	if (tankBaseType == TankType::kCamo)
+	player->setPosition(m_camera.getCenter() - playerPosition);
+	if (greenTeam)
 	{
-		playerPosition = sf::Vector2f(200, -100);
+		//player->setRotation(90);
 	}
 	else
 	{
-		playerPosition = sf::Vector2f(500, -100);
-	}*/
-
-	player->setPosition(m_camera.getCenter() - sf::Vector2f(200, 0));
+		//player->setRotation(-90);
+	}
 	player->SetIdentifier(identifier);
 	m_player_tank.emplace_back(player.get());
 	m_scene_layers[static_cast<int>(Layers::kAir)]->AttachChild(std::move(player));
