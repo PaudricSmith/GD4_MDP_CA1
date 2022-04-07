@@ -40,8 +40,23 @@ World::World(sf::RenderTarget& output_target, const TextureHolder& textures, Fon
 		CreatePickups(node, textures);
 	};
 
+	PlaceWalls();
+
 	m_sfx_player.Play(SoundEffects::kToastBeep2);
 }
+
+///
+/// Loïc Dornel, D00243372
+///	<summary>
+///	Places all walls at the start of the game
+///	</summary>
+///	<pa
+void World::PlaceWalls()
+{
+	std::unique_ptr<Wall> wallPtr(new Wall(sf::Vector2f(487.f, 0.5f), 0.5f, 1.f, m_textures));
+	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(wallPtr));
+}
+
 
 ///
 /// Paudric Smith, D00215637
@@ -243,6 +258,8 @@ void World::LoadTextures()
 	m_textures.Load(Textures::kMissileRefill, "Media/Textures/MissileRefill.png");
 	m_textures.Load(Textures::kFireSpread, "Media/Textures/FireSpread.png");
 	m_textures.Load(Textures::kFireRate, "Media/Textures/FireRate.png");
+
+	m_textures.Load(Textures::kObstacleWall, "Media/Textures/bg308.png");
 }
 
 void World::BuildScene()
@@ -312,6 +329,7 @@ void World::AdaptPlayerPosition()
 		position.x = std::min(position.x, view_bounds.left + view_bounds.width - border_distance);
 		position.y = std::max(position.y, view_bounds.top + border_distance);
 		position.y = std::min(position.y, view_bounds.top + view_bounds.height - border_distance);
+
 		tank->setPosition(position);
 	}
 
@@ -334,12 +352,67 @@ void World::AdaptPlayerVelocity()
 	//	m_player_tank_2->SetVelocity(player2Vel / std::sqrt(2.f));
 	//}
 
+	sf::FloatRect next_pos;
+
 	for (Tank* tank : m_player_tank)
 	{
 		sf::Vector2f velocity = tank->GetVelocity();
 		//if moving diagonally then reduce velocity
 		if (velocity.x != 0.f && velocity.y != 0.f)
 		{
+			// Wall collision
+			sf::FloatRect player_bounds = tank->GetBoundingRect();
+
+			// Based on a tutorial by Suraj Sharma
+			// https://www.youtube.com/watch?v=QM92txFYjLI
+			// https://www.youtube.com/watch?v=A04MPkBL5H4
+			// I need to either access the children of the layer or another way to store the walls
+			/*
+			for (auto& wall : ???)
+			{
+				FloatRect wall_bounds = wall.getGlobalBounds();
+
+				next_pos = player_bounds;
+				next_pos.left += velocity.x;
+				next_pos.top += velocity.y;
+
+				if (wall_bounds.intersects(next_pos))
+				{
+					// Right collision
+					if (player_bounds.left < wall_bounds.left && player_bounds.left + player_bounds.width < wall_bounds.left + wall_bounds.width
+					&& player_bounds.top < wall_bounds.top + wall_bounds.height && player_bounds.top + player_bounds.height > wall_bounds.top)
+					{
+						velocity.x = 0.f;
+						tank->SetPosition(wall_bounds.left - player_bounds.width, player_bounds.top);
+					}
+					
+					// Left collision
+					if (player_bounds.left > wall_bounds.left && player_bounds.left + player_bounds.width > wall_bounds.left + wall_bounds.width
+					&& player_bounds.top < wall_bounds.top + wall_bounds.height && player_bounds.top + player_bounds.height > wall_bounds.top)
+					{
+						velocity.x = 0.f;
+						tank->SetPosition(wall_bounds.left + player_bounds.width, player_bounds.top);
+					}
+
+					// Bottom collision
+					if (player_bounds.top < wall_bounds.top && player_bounds.top + player_bounds.height < wall_bounds.top + wall_bounds.height
+					&& player_bounds.left < wall_bounds.left + wall_bounds.width && player_bounds.left + player_bounds.width > wall_bounds.left)
+					{
+						velocity.y = 0.f;
+						tank->SetPosition(wall_bounds.left, player_bounds.top - player_bounds.height);
+					}
+					
+					// Top collision
+					if (player_bounds.top > wall_bounds.top && player_bounds.top + player_bounds.height > wall_bounds.top + wall_bounds.height
+					&& player_bounds.left < wall_bounds.left + wall_bounds.width && player_bounds.left + player_bounds.width > wall_bounds.left)
+					{
+						velocity.y = 0.f;
+						tank->SetPosition(wall_bounds.left, player_bounds.top + player_bounds.height);
+					}
+				}
+			}
+			*/
+
 			tank->SetVelocity(velocity / std::sqrt(2.f));
 		}
 		//Add scrolling velocity

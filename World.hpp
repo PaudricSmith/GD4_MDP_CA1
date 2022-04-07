@@ -16,6 +16,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include <array>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "CommandQueue.hpp"
@@ -24,6 +25,8 @@
 #include "NetworkProtocol.hpp"
 #include "PickupType.hpp"
 #include "PlayerActions.hpp"
+
+#include "Wall.hpp"
 
 namespace sf
 {
@@ -65,6 +68,8 @@ private:
 	void HandleCollisions();
 	void DestroyEntitiesOutsideView();
 	void UpdateSounds();
+
+	void PlaceWalls();
 
 	void CreatePickups(SceneNode& node, const TextureHolder& textures) const;
 
