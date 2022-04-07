@@ -106,6 +106,8 @@ private:
 	std::vector<SpawnPoint> m_enemy_spawn_points;
 	std::vector<Tank*>	m_active_enemies;
 
+	std::vector<sf::FloatRect> m_wall_bounds;
+
 	bool m_is_pickups_spawned;
 
 	bool m_networked_world;

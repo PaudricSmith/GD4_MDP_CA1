@@ -1,8 +1,9 @@
-﻿  World.cpp
-D:\_GitHub\GD4_MDP_CA1\World.cpp(443,18): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
-D:\_GitHub\GD4_MDP_CA1\World.cpp(444,19): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+﻿  Wall.cpp
+  World.cpp
+D:\_GitHub\GD4_MDP_CA1\World.cpp(496,18): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
+D:\_GitHub\GD4_MDP_CA1\World.cpp(497,19): warning C4244: 'argument' : conversion de 'float' en 'int', perte possible de données
   Génération de code en cours
-  9 of 4023 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  5 of 4053 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     3 functions had inline decision re-evaluated but remain unchanged
   Fin de la génération du code

@@ -22,9 +22,5 @@ sf::FloatRect Wall::GetBoundingRect() const
 
 void Wall::DrawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	/*sf::RectangleShape wall;
-	wall.setFillColor(sf::Color::Red);
-	wall.setSize(sf::Vector2f())*/
-
 	target.draw(m_sprite, states);
 }

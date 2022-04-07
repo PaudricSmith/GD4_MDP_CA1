@@ -25,6 +25,7 @@ World::World(sf::RenderTarget& output_target, const TextureHolder& textures, Fon
 	, m_is_pickups_spawned(false)
 	, m_enemy_spawn_points()
 	, m_active_enemies()
+	, m_wall_bounds()
 	, m_networked_world(networked)
 	, m_network_node(nullptr)
 	, m_finish_sprite(nullptr)
@@ -54,6 +55,7 @@ World::World(sf::RenderTarget& output_target, const TextureHolder& textures, Fon
 void World::PlaceWalls()
 {
 	std::unique_ptr<Wall> wallPtr(new Wall(sf::Vector2f(487.f, 0.5f), 0.5f, 1.f, m_textures));
+	m_wall_bounds.push_back((*wallPtr).GetBoundingRect());
 	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(wallPtr));
 }
 
@@ -352,8 +354,6 @@ void World::AdaptPlayerVelocity()
 	//	m_player_tank_2->SetVelocity(player2Vel / std::sqrt(2.f));
 	//}
 
-	sf::FloatRect next_pos;
-
 	for (Tank* tank : m_player_tank)
 	{
 		sf::Vector2f velocity = tank->GetVelocity();
@@ -362,56 +362,52 @@ void World::AdaptPlayerVelocity()
 		{
 			// Wall collision
 			sf::FloatRect player_bounds = tank->GetBoundingRect();
+			sf::FloatRect next_pos = player_bounds;
 
 			// Based on a tutorial by Suraj Sharma
 			// https://www.youtube.com/watch?v=QM92txFYjLI
 			// https://www.youtube.com/watch?v=A04MPkBL5H4
-			// I need to either access the children of the layer or another way to store the walls
-			/*
-			for (auto& wall : ???)
-			{
-				FloatRect wall_bounds = wall.getGlobalBounds();
+			
+			//for (auto& wall_bound : m_wall_bounds)
+			//{
+			//	next_pos.left += velocity.x;
+			//	next_pos.top += velocity.y;
 
-				next_pos = player_bounds;
-				next_pos.left += velocity.x;
-				next_pos.top += velocity.y;
+			//	if (wall_bound.intersects(next_pos))
+			//	{
+			//		// Right collision
+			//		if (player_bounds.left < wall_bound.left && player_bounds.left + player_bounds.width < wall_bound.left + wall_bound.width
+			//		&& player_bounds.top < wall_bound.top + wall_bound.height && player_bounds.top + player_bounds.height > wall_bound.top)
+			//		{
+			//			velocity.x = 0.f;
+			//			tank->setPosition(wall_bound.left - player_bounds.width, player_bounds.top);
+			//		}
+			//		
+			//		// Left collision
+			//		if (player_bounds.left > wall_bound.left && player_bounds.left + player_bounds.width > wall_bound.left + wall_bound.width
+			//		&& player_bounds.top < wall_bound.top + wall_bound.height && player_bounds.top + player_bounds.height > wall_bound.top)
+			//		{
+			//			velocity.x = 0.f;
+			//			tank->setPosition(wall_bound.left + player_bounds.width, player_bounds.top);
+			//		}
 
-				if (wall_bounds.intersects(next_pos))
-				{
-					// Right collision
-					if (player_bounds.left < wall_bounds.left && player_bounds.left + player_bounds.width < wall_bounds.left + wall_bounds.width
-					&& player_bounds.top < wall_bounds.top + wall_bounds.height && player_bounds.top + player_bounds.height > wall_bounds.top)
-					{
-						velocity.x = 0.f;
-						tank->SetPosition(wall_bounds.left - player_bounds.width, player_bounds.top);
-					}
-					
-					// Left collision
-					if (player_bounds.left > wall_bounds.left && player_bounds.left + player_bounds.width > wall_bounds.left + wall_bounds.width
-					&& player_bounds.top < wall_bounds.top + wall_bounds.height && player_bounds.top + player_bounds.height > wall_bounds.top)
-					{
-						velocity.x = 0.f;
-						tank->SetPosition(wall_bounds.left + player_bounds.width, player_bounds.top);
-					}
-
-					// Bottom collision
-					if (player_bounds.top < wall_bounds.top && player_bounds.top + player_bounds.height < wall_bounds.top + wall_bounds.height
-					&& player_bounds.left < wall_bounds.left + wall_bounds.width && player_bounds.left + player_bounds.width > wall_bounds.left)
-					{
-						velocity.y = 0.f;
-						tank->SetPosition(wall_bounds.left, player_bounds.top - player_bounds.height);
-					}
-					
-					// Top collision
-					if (player_bounds.top > wall_bounds.top && player_bounds.top + player_bounds.height > wall_bounds.top + wall_bounds.height
-					&& player_bounds.left < wall_bounds.left + wall_bounds.width && player_bounds.left + player_bounds.width > wall_bounds.left)
-					{
-						velocity.y = 0.f;
-						tank->SetPosition(wall_bounds.left, player_bounds.top + player_bounds.height);
-					}
-				}
-			}
-			*/
+			//		// Bottom collision
+			//		if (player_bounds.top < wall_bound.top && player_bounds.top + player_bounds.height < wall_bound.top + wall_bound.height
+			//		&& player_bounds.left < wall_bound.left + wall_bound.width && player_bounds.left + player_bounds.width > wall_bound.left)
+			//		{
+			//			velocity.y = 0.f;
+			//			tank->setPosition(wall_bound.left, player_bounds.top - player_bounds.height);
+			//		}
+			//		
+			//		// Top collision
+			//		if (player_bounds.top > wall_bound.top && player_bounds.top + player_bounds.height > wall_bound.top + wall_bound.height
+			//		&& player_bounds.left < wall_bound.left + wall_bound.width && player_bounds.left + player_bounds.width > wall_bound.left)
+			//		{
+			//			velocity.y = 0.f;
+			//			tank->setPosition(wall_bound.left, player_bounds.top + player_bounds.height);
+			//		}
+			//	}
+			//}
 
 			tank->SetVelocity(velocity / std::sqrt(2.f));
 		}
