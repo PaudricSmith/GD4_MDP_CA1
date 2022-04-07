@@ -21,7 +21,7 @@ MenuState::MenuState(StateStack& stack, Context context)
 	{
 		RequestStackPop();
 		//RequestStackClear();
-		RequestStackPush(StateID::kGame);
+		RequestStackPush(StateID::kToast);
 	});
 
 	auto host_play_button = std::make_shared<GUI::Button>(context);
