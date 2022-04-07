@@ -31,5 +31,6 @@ enum class Textures
 	kButtons,
 	kButtonNormal,
 	kButtonSelected,
-	kButtonPressed
+	kButtonPressed,
+	kObstacleWall
 };

@@ -16,6 +16,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include <array>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "CommandQueue.hpp"
@@ -24,6 +25,8 @@
 #include "NetworkProtocol.hpp"
 #include "PickupType.hpp"
 #include "PlayerActions.hpp"
+
+#include "Wall.hpp"
 
 namespace sf
 {
@@ -66,6 +69,8 @@ private:
 	void DestroyEntitiesOutsideView();
 	void UpdateSounds();
 
+	void PlaceWalls();
+
 	void CreatePickups(SceneNode& node, const TextureHolder& textures) const;
 
 private:
@@ -100,6 +105,8 @@ private:
 	std::vector<Tank*> m_player_tank;
 	std::vector<SpawnPoint> m_enemy_spawn_points;
 	std::vector<Tank*>	m_active_enemies;
+
+	std::vector<sf::FloatRect> m_wall_bounds;
 
 	bool m_is_pickups_spawned;
 
