@@ -1,2 +1,12 @@
-﻿  SettingsState.cpp
+﻿  MultiplayerGameState.cpp
+D:\_GitHub\GD4_MDP_CA1\MultiplayerGameState.cpp(370,78): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\_GitHub\GD4_MDP_CA1\MultiplayerGameState.cpp(375,77): warning C4244: 'argument' : conversion de 'int' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
   GD4_MDP_CA1.vcxproj -> D:\_GitHub\GD4_MDP_CA1\x64\Debug\GD4_MDP_CA1.exe

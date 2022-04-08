@@ -430,46 +430,61 @@ void World::AdaptPlayerVelocity()
 			// https://www.youtube.com/watch?v=QM92txFYjLI
 			// https://www.youtube.com/watch?v=A04MPkBL5H4
 			
-			//for (auto& wall_bound : m_wall_bounds)
-			//{
-			//	next_pos.left += velocity.x;
-			//	next_pos.top += velocity.y;
+			for (auto& wall_bound : m_wall_bounds)
+			{
+				next_pos.left += velocity.x;
+				next_pos.top += velocity.y;
 
-			//	if (wall_bound.intersects(next_pos))
-			//	{
-			//		// Right collision
-			//		if (player_bounds.left < wall_bound.left && player_bounds.left + player_bounds.width < wall_bound.left + wall_bound.width
-			//		&& player_bounds.top < wall_bound.top + wall_bound.height && player_bounds.top + player_bounds.height > wall_bound.top)
-			//		{
-			//			velocity.x = 0.f;
-			//			tank->setPosition(wall_bound.left - player_bounds.width, player_bounds.top);
-			//		}
-			//		
-			//		// Left collision
-			//		if (player_bounds.left > wall_bound.left && player_bounds.left + player_bounds.width > wall_bound.left + wall_bound.width
-			//		&& player_bounds.top < wall_bound.top + wall_bound.height && player_bounds.top + player_bounds.height > wall_bound.top)
-			//		{
-			//			velocity.x = 0.f;
-			//			tank->setPosition(wall_bound.left + player_bounds.width, player_bounds.top);
-			//		}
+				if (wall_bound.intersects(next_pos))
+				{
+					const float player_left = player_bounds.left, player_right = player_bounds.left + player_bounds.width;
+					const float player_top = player_bounds.top, player_bottom = player_bounds.top + player_bounds.height;
+					const float player_width = player_bounds.width, player_height = player_bounds.height;
 
-			//		// Bottom collision
-			//		if (player_bounds.top < wall_bound.top && player_bounds.top + player_bounds.height < wall_bound.top + wall_bound.height
-			//		&& player_bounds.left < wall_bound.left + wall_bound.width && player_bounds.left + player_bounds.width > wall_bound.left)
-			//		{
-			//			velocity.y = 0.f;
-			//			tank->setPosition(wall_bound.left, player_bounds.top - player_bounds.height);
-			//		}
-			//		
-			//		// Top collision
-			//		if (player_bounds.top > wall_bound.top && player_bounds.top + player_bounds.height > wall_bound.top + wall_bound.height
-			//		&& player_bounds.left < wall_bound.left + wall_bound.width && player_bounds.left + player_bounds.width > wall_bound.left)
-			//		{
-			//			velocity.y = 0.f;
-			//			tank->setPosition(wall_bound.left, player_bounds.top + player_bounds.height);
-			//		}
-			//	}
-			//}
+					const float wall_left = wall_bound.left, wall_right = wall_bound.left + wall_bound.width;
+					const float wall_top = wall_bound.top, wall_bottom = wall_bound.top + wall_bound.height;
+
+					// Horizontal collision
+					if (player_top < wall_bottom && player_bottom > wall_top)
+					{
+						velocity.x = 0.f;
+
+						// Right collision
+						if (player_left < wall_left && player_right < wall_right)
+						{
+							std::cout << "Right collision" << std::endl;
+							//tank->setPosition(wall_left - player_width, player_top);
+						}
+
+						// Left collision
+						if (player_left > wall_left && player_right > wall_right)
+						{
+							std::cout << "Left collision" << std::endl;
+							//tank->setPosition(wall_left + player_width, player_top);
+						}
+					}
+
+					// Vertical collision
+					if (player_left < wall_right && player_right > wall_left)
+					{
+						velocity.y = 0.f;
+
+						// Bottom collision
+						if (player_top < wall_top && player_bottom < wall_bottom)
+						{
+							std::cout << "Bottom collision" << std::endl;
+							//tank->setPosition(wall_left, player_top - player_height);
+						}
+
+						// Top collision
+						if (player_top > wall_top && player_bottom > wall_bottom)
+						{
+							std::cout << "Top collision" << std::endl;
+							//tank->setPosition(wall_left, player_top + player_height);
+						}
+					}
+				}
+			}
 
 			tank->SetVelocity(velocity / std::sqrt(2.f));
 		}

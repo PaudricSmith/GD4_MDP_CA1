@@ -29,4 +29,5 @@ A local 2 player top down video game based on the classic Tanks game.
 - [ ] Tank starts with super speed but if it rotates first then it won't have super speed
 - [ ] Tanks don't rotate the same on the server
 - [ ] If host dies his game quits
-- [ ] Buge here
+- [x] Black background
+- [ ] Tanks spawn outside of the game area
