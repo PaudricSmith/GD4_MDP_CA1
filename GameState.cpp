@@ -58,7 +58,7 @@ bool GameState::HandleEvent(const sf::Event& event)
 	m_player.HandleEvent(event, commands);
 
 	//Escape or start on the gamepad should bring up the Pause Menu
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape)
 	{
 		RequestStackPush(StateID::kPause);
 	}

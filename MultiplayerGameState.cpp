@@ -258,7 +258,7 @@ bool MultiplayerGameState::HandleEvent(const sf::Event& event)
 		pair.second->HandleEvent(event, commands);
 	}
 
-	if (event.type == sf::Event::KeyPressed)
+	if (event.type == sf::Event::KeyReleased)
 	{
 		//If enter pressed, add second player co-op only if there is only 1 player
 		if (event.key.code == sf::Keyboard::Return && m_local_player_identifiers.size() == 1)

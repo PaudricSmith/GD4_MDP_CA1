@@ -25,3 +25,4 @@ private:
 	bool				m_let_updates_through;
 };
 
+ 
