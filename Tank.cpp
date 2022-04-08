@@ -50,6 +50,16 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	// Reduce Tank sprite size
 	m_sprite.setScale(0.5f, 0.5f);
 	m_cannon_sprite.setScale(0.5f, 0.5f);
+
+	//// Rotate depending on type
+	//if (m_type == TankType::kCamo)
+	//{
+	//	this->setRotation(90);
+	//}
+	//else
+	//{
+	//	this->setRotation(-90);
+	//}
 	          
 	// Set Origin of Tank and Cannon
 	Utility::CentreOrigin(m_sprite);
@@ -125,7 +135,7 @@ unsigned int Tank::GetCategory() const
 		}
 		else
 		{
-			return static_cast<int>(Category::kPlayerTank);
+			return static_cast<int>(Category::kPlayer2Tank);
 		}
 	}
 	return static_cast<int>(Category::kEnemyTank);

@@ -138,8 +138,18 @@ Player::Player(sf::TcpSocket* socket, sf::Int32 identifier, const KeyBinding* bi
 
 	// Assign all categories to player's tank
 	for (auto& pair : m_action_binding)
-		pair.second.category = Category::kPlayerTank;
-
+	{
+		// Green team are odd numbers, Yellow team are even numbers.
+		if (identifier % 2 == 0)
+		{
+			pair.second.category = Category::kPlayer2Tank;
+		}
+		else
+		{
+			pair.second.category = Category::kPlayerTank;
+		}
+	}
+		
 }
 
 

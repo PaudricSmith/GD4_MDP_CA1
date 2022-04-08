@@ -417,10 +417,12 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 			sf::Int32 hitpoints;
 			sf::Int32 missile_ammo;
 			sf::Vector2f tank_position;
-			packet >> tank_identifier >> tank_position.x >> tank_position.y >> hitpoints >> missile_ammo;
+			float tank_rotation;
+			packet >> tank_identifier >> tank_position.x >> tank_position.y >> hitpoints >> missile_ammo >> tank_rotation;
 
 			Tank* tank = m_world.AddTank(tank_identifier);
 			tank->setPosition(tank_position);
+			tank->setRotation(tank_rotation);
 			tank->SetHitPoints(hitpoints);
 			tank->SetMissileAmmo(missile_ammo);
 

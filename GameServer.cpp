@@ -196,11 +196,19 @@ void GameServer::Tick()
 		sf::Packet mission_success_packet;
 		
 		// If last Tank is Green then show "Success Green" packetType, else show Yellow
-		//if (m_peers[0]->m_tank_identifiers
+		if (m_peers[0]->m_tank_identifiers[0] % 2 == 0)
+		{
+			mission_success_packet << static_cast<sf::Int32>(Server::PacketType::SuccessYellow);
+			SendToAll(mission_success_packet);
+			all_tank_done = false;
+		}
+		else
+		{
+			mission_success_packet << static_cast<sf::Int32>(Server::PacketType::SuccessGreen);
+			SendToAll(mission_success_packet);
+			all_tank_done = false;
+		}
 
-		mission_success_packet << static_cast<sf::Int32>(Server::PacketType::SuccessGreen);
-		SendToAll(mission_success_packet);
-		all_tank_done = false;
 	}
 
 	//Remove Tank that have been destroyed
@@ -209,7 +217,6 @@ void GameServer::Tick()
 		if (itr->second.m_hitpoints <= 0)
 		{
 			m_tank_info.erase(itr++);
-			
 		}
 		else
 		{
@@ -217,44 +224,44 @@ void GameServer::Tick()
 		}
 	}
 
-	//Check if it is time to spawn enemies
-	if (Now() >= m_time_for_next_spawn + m_last_spawn_time)
-	{
-		//Not going to spawn enemies near the end
-		if (m_battlefield_rect.top > 600.f)
-		{
-			std::size_t enemy_count = 1 + Utility::RandomInt(2);
-			float spawn_centre = static_cast<float>(Utility::RandomInt(500) - 250);
+	////Check if it is time to spawn enemies
+	//if (Now() >= m_time_for_next_spawn + m_last_spawn_time)
+	//{
+	//	//Not going to spawn enemies near the end
+	//	if (m_battlefield_rect.top > 600.f)
+	//	{
+	//		std::size_t enemy_count = 1 + Utility::RandomInt(2);
+	//		float spawn_centre = static_cast<float>(Utility::RandomInt(500) - 250);
 
-			//If there is only one enemy it is at the spawn_centre
-			float tank_distance = 0.f;
-			float next_spawn_position = spawn_centre;
+	//		//If there is only one enemy it is at the spawn_centre
+	//		float tank_distance = 0.f;
+	//		float next_spawn_position = spawn_centre;
 
-			//If there are two then they are centred on the spawn centre
-			if (enemy_count == 2)
-			{
-				tank_distance = static_cast<float>(150 + Utility::RandomInt(250));
-				next_spawn_position = spawn_centre - tank_distance / 2.f;
-			}
+	//		//If there are two then they are centred on the spawn centre
+	//		if (enemy_count == 2)
+	//		{
+	//			tank_distance = static_cast<float>(150 + Utility::RandomInt(250));
+	//			next_spawn_position = spawn_centre - tank_distance / 2.f;
+	//		}
 
-			//TODO Do we really need two packets here?
-			//Send a spawn packet to the clients
-			for (std::size_t i = 0; i < enemy_count; ++i)
-			{
-				sf::Packet packet;
-				packet << static_cast<sf::Int32>(Server::PacketType::SpawnEnemy);
-				packet << static_cast<sf::Int32>(1 + Utility::RandomInt(static_cast<int>(TankType::kTankCount) - 1));
-				packet << m_world_height - m_battlefield_rect.top + 500;
-				packet << next_spawn_position;
+	//		//TODO Do we really need two packets here?
+	//		//Send a spawn packet to the clients
+	//		for (std::size_t i = 0; i < enemy_count; ++i)
+	//		{
+	//			sf::Packet packet;
+	//			packet << static_cast<sf::Int32>(Server::PacketType::SpawnEnemy);
+	//			packet << static_cast<sf::Int32>(1 + Utility::RandomInt(static_cast<int>(TankType::kTankCount) - 1));
+	//			packet << m_world_height - m_battlefield_rect.top + 500;
+	//			packet << next_spawn_position;
 
-				next_spawn_position += tank_distance / 2.f;
-				SendToAll(packet);
-			}
+	//			next_spawn_position += tank_distance / 2.f;
+	//			SendToAll(packet);
+	//		}
 
-			m_last_spawn_time = Now();
-			m_time_for_next_spawn = sf::milliseconds(2000 + Utility::RandomInt(6000));
-		}
-	}
+	//		m_last_spawn_time = Now();
+	//		m_time_for_next_spawn = sf::milliseconds(2000 + Utility::RandomInt(6000));
+	//	}
+	//}
 }
 
 sf::Time GameServer::Now() const
@@ -505,7 +512,8 @@ void GameServer::InformWorldState(sf::TcpSocket& socket)
 		{
 			for (sf::Int32 identifier : m_peers[i]->m_tank_identifiers)
 			{
-				packet << identifier << m_tank_info[identifier].m_position.x << m_tank_info[identifier].m_position.y << m_tank_info[identifier].m_hitpoints << m_tank_info[identifier].m_missile_ammo;
+				packet << identifier << m_tank_info[identifier].m_position.x << m_tank_info[identifier].m_position.y 
+					<< m_tank_info[identifier].m_hitpoints << m_tank_info[identifier].m_missile_ammo << m_tank_info[identifier].m_tank_rotation;
 			}
 		}
 	}

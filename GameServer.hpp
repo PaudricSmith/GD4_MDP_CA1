@@ -33,6 +33,7 @@ private:
 
 	struct TankInfo
 	{
+		float m_tank_rotation;
 		sf::Vector2f m_position;
 		sf::Int32 m_hitpoints;
 		sf::Int32 m_missile_ammo;
