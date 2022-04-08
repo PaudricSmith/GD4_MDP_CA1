@@ -15,7 +15,8 @@ A local 2 player top down video game based on the classic Tanks game.
 ## TODO
 - [x] Green team wins text shows if green tank is left and Yellow team wins text shows if yellow tank is left.
 - [x] Fix escape key skipping in game menu straight to the main menu.
-- [ ] Keep track of Tank rotation
+- [x] Keep track of Tank rotation
+- [ ] Keep track of Tank Cannon rotation
 - [ ] Wall collision
 - [ ] Todo here
 
