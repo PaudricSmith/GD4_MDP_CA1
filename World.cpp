@@ -238,11 +238,11 @@ Tank* World::AddTank(int identifier)
 	player->setPosition(m_camera.getCenter() - playerPosition);
 	if (greenTeam)
 	{
-		//player->setRotation(90);
+		player->setRotation(90);
 	}
 	else
 	{
-		//player->setRotation(-90);
+		player->setRotation(-90);
 	}
 	player->SetIdentifier(identifier);
 	m_player_tank.emplace_back(player.get());

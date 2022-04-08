@@ -33,11 +33,11 @@ private:
 
 	struct TankInfo
 	{
-		float m_tank_rotation;
 		sf::Vector2f m_position;
 		sf::Int32 m_hitpoints;
 		sf::Int32 m_missile_ammo;
 		std::map<sf::Int32, bool> m_realtime_actions;
+		float m_tank_rotation;
 	};
 
 	typedef std::unique_ptr<RemotePeer> PeerPtr;

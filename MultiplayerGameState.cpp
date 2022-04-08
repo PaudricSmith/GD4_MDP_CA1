@@ -229,7 +229,8 @@ bool MultiplayerGameState::Update(sf::Time dt)
 			{
 				if (Tank* tank = m_world.GetTank(identifier))
 				{
-					position_update_packet << identifier << tank->getPosition().x << tank->getPosition().y << static_cast<sf::Int32>(tank->GetHitPoints()) << static_cast<sf::Int32>(tank->GetMissileAmmo());
+					position_update_packet << identifier << tank->getPosition().x << tank->getPosition().y << static_cast<sf::Int32>(tank->GetHitPoints()) 
+						<< static_cast<sf::Int32>(tank->GetMissileAmmo()) << tank->getRotation();
 				}
 			}
 			m_socket.send(position_update_packet);
@@ -360,18 +361,19 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 	{
 		sf::Int32 tank_identifier;
 		sf::Vector2f tank_position;
-		packet >> tank_identifier >> tank_position.x >> tank_position.y;
+		float tank_rotation;
+		packet >> tank_identifier >> tank_position.x >> tank_position.y >> tank_rotation;
 		Tank* tank = m_world.AddTank(tank_identifier);
 
 		if (tank_identifier % 2 == 0)
 		{
 			tank->setPosition(tank_position - sf::Vector2f(-350, 50 * tank_identifier - 400));
-			//tank->setRotation(-90);
+			tank->setRotation(-90);
 		}
 		else
 		{
 			tank->setPosition(tank_position - sf::Vector2f(350, 50 * tank_identifier - 350));
-			//tank->setRotation(90);
+			tank->setRotation(90);
 		}
 		
 		m_players[tank_identifier].reset(new Player(&m_socket, tank_identifier, GetContext().keys1));
@@ -384,10 +386,12 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 	{
 		sf::Int32 tank_identifier;
 		sf::Vector2f tank_position;
-		packet >> tank_identifier >> tank_position.x >> tank_position.y;
+		float tank_rotation;
+		packet >> tank_identifier >> tank_position.x >> tank_position.y >> tank_rotation;
 
 		Tank* tank = m_world.AddTank(tank_identifier);
 		tank->setPosition(tank_position);
+		tank->setRotation(tank_rotation);
 		m_players[tank_identifier].reset(new Player(&m_socket, tank_identifier, nullptr));
 	}
 	break;
@@ -520,7 +524,7 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 		float current_view_position = m_world.GetViewBounds().top + m_world.GetViewBounds().height;
 
 		//Set the world's scroll compensation according to whether the view is behind or ahead
-		m_world.SetWorldScrollCompensation(current_view_position / current_world_position);
+		//m_world.SetWorldScrollCompensation(current_view_position / current_world_position);
 
 		for (sf::Int32 i = 0; i < tank_count; ++i)
 		{
@@ -528,7 +532,8 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 			sf::Int32 tank_identifier;
 			sf::Int32 hitpoints;
 			sf::Int32 ammo;
-			packet >> tank_identifier >> tank_position.x >> tank_position.y >> hitpoints >> ammo;
+			float tank_rotation;
+			packet >> tank_identifier >> tank_position.x >> tank_position.y >> hitpoints >> ammo >> tank_rotation;
 
 			Tank* tank = m_world.GetTank(tank_identifier);
 			bool is_local_tank = std::find(m_local_player_identifiers.begin(), m_local_player_identifiers.end(), tank_identifier) != m_local_player_identifiers.end();
@@ -538,6 +543,7 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 				tank->setPosition(interpolated_position);
 				tank->SetHitPoints(hitpoints);
 				tank->SetMissileAmmo(ammo);
+				tank->setRotation(tank_rotation);
 			}
 		}
 	}

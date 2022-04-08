@@ -60,6 +60,8 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	//{
 	//	this->setRotation(-90);
 	//}
+
+	//SetVelocity(0, 0);
 	          
 	// Set Origin of Tank and Cannon
 	Utility::CentreOrigin(m_sprite);
