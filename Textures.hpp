@@ -22,7 +22,7 @@ enum class Textures
 	kMissile,
 	kHealthRefill,
 	kMissileRefill,
-	kFireSpread,
+	kExtraBullets,
 	kFireRate,
 	kTitleScreen,
 	kBaseMenuScreen,

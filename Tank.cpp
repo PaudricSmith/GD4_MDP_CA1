@@ -262,7 +262,7 @@ void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 	CheckProjectileLaunch(dt, commands);
 
 	// Update enemy movement pattern; apply velocity
-	UpdateMovementPattern(dt);
+	//UpdateMovementPattern(dt);
 
 	Entity::UpdateCurrent(dt, commands);
 	
@@ -400,16 +400,16 @@ void Tank::CreateBullets(SceneNode& node, const TextureHolder& textures) const
 	switch (m_spread_level)
 	{
 	case 1:
-		CreateProjectile(node, type, 0.0f, 0.5f, textures);
+		CreateProjectile(node, type, 0.f, 0.4f, textures);
 		break;
 	case 2:
-		CreateProjectile(node, type, -0.5f, 0.5f, textures);
-		CreateProjectile(node, type, 0.5f, 0.5f, textures);
+		CreateProjectile(node, type, 0.f, 0.4f, textures);
+		CreateProjectile(node, type, 0.f, 0.6f, textures);
 		break;
 	case 3:
-		CreateProjectile(node, type, -0.5f, 0.5f, textures);
-		CreateProjectile(node, type, 0.0f, 0.5f, textures);
-		CreateProjectile(node, type, 0.5f, 0.5f, textures);
+		CreateProjectile(node, type, 0.f, 0.4f, textures);
+		CreateProjectile(node, type, 0.f, 0.6f, textures);
+		CreateProjectile(node, type, 0.f, 0.8f, textures);
 		break;
 	}
 }

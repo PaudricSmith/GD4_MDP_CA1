@@ -1,4 +1,33 @@
-﻿  World.cpp
+﻿  Application.cpp
+  DataTables.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\DataTables.cpp(19,82): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\DataTables.cpp(20,89): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\DataTables.cpp(31,82): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\DataTables.cpp(32,89): warning C4305: 'argument': truncation from 'double' to 'float'
+  GameServer.cpp
+  GameState.cpp
+  MultiplayerGameState.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\MultiplayerGameState.cpp(371,78): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\MultiplayerGameState.cpp(377,77): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  Pickup.cpp
+  Tank.cpp
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(296,78): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(297,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(298,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(442,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(442,48): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(443,50): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\Tank.cpp(443,49): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  ToastState.cpp
+  World.cpp
 D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\World.cpp(227,54): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
@@ -12,8 +41,8 @@ D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\World.
 D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\World.cpp(573,18): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\GD4_MDP_CA1\World.cpp(574,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   Generating code
-  2 of 4057 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  0 of 4053 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    6 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   GD4_MDP_CA1.vcxproj -> D:\Dkit\Year4\Multiplayer Distributed Programming\GD4_MDP_CA1\Release\GD4_MDP_CA1.exe
