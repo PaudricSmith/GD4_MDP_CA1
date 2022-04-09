@@ -343,7 +343,8 @@ void GameServer::HandleIncomingPacket(sf::Packet& packet, RemotePeer& receiving_
 		m_tank_info[m_tank_identifier_counter].m_position = sf::Vector2f(m_battlefield_rect.width / 2, m_battlefield_rect.top + m_battlefield_rect.height / 2);
 		m_tank_info[m_tank_identifier_counter].m_hitpoints = 100;
 		m_tank_info[m_tank_identifier_counter].m_missile_ammo = 2;
-		//m_tank_info[m_tank_identifier_counter].m_tank_rotation = 0;
+		m_tank_info[m_tank_identifier_counter].m_tank_rotation = 0;
+		m_tank_info[m_tank_identifier_counter].m_cannon_rotation = 0;
 
 		sf::Packet request_packet;
 		request_packet << static_cast<sf::Int32>(Server::PacketType::AcceptCoopPartner);
@@ -398,8 +399,7 @@ void GameServer::HandleIncomingPacket(sf::Packet& packet, RemotePeer& receiving_
 			m_tank_info[tank_identifier].m_tank_rotation = tank_rotation;
 			m_tank_info[tank_identifier].m_cannon_rotation = cannon_rotation;
 
-			std::cout << "*SERVER* CANNON ROTATION ANGLE: " << cannon_rotation << std::endl;
-
+		    //std::cout << "*SERVER* CANNON ROTATION ANGLE: " << cannon_rotation << std::endl;
 		}
 	}
 	break;

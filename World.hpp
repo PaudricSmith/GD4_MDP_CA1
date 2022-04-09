@@ -51,7 +51,7 @@ public:
 
 	//void AddEnemy(TankType type, float rel_x, float rel_y);
 	//void SortEnemies();
-	bool HasAlivePlayer1() const;
+	//bool HasAlivePlayer1() const;
 	//bool HasAlivePlayer2() const;
 
 	void SetWorldScrollCompensation(float compensation);

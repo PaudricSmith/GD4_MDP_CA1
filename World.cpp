@@ -278,12 +278,12 @@ void World::SetWorldHeight(float height)
 	m_world_bounds.height = height;
 }
 
-bool World::HasAlivePlayer1() const
-{
-	// If a Player 1 Tank is not destroyed, hence Player 1 is still alive
-	return !m_player_tank.empty();
-}
-//
+//bool World::HasAlivePlayer1() const
+//{
+//	// If a Player 1 Tank is not destroyed, hence Player 1 is still alive
+//	return !m_player_tank.empty();
+//}
+
 //bool World::HasAlivePlayer2() const
 //{
 //	// If a Player 2 Tank is not destroyed, hence Player 2 is still alive
