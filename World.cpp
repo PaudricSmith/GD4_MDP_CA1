@@ -20,7 +20,7 @@ World::World(sf::RenderTarget& output_target, const TextureHolder& textures, Fon
 	, m_world_bounds(0.f, 0.f, m_camera.getSize().x, m_camera.getSize().y)
 	, m_spawn_position(m_camera.getSize().x / 2.f, m_world_bounds.height - m_camera.getSize().y / 2.f)
 	, m_scrollspeed(0.f)
-	, m_scrollspeed_compensation(1.f)
+	, m_scrollspeed_compensation(0.f)
 	, m_player_tank()
 	, m_is_pickups_spawned(false)
 	, m_enemy_spawn_points()
@@ -347,7 +347,7 @@ void World::BuildScene()
 
 	//Add the background sprite to our scene
 	std::unique_ptr<SpriteNode> background_sprite(new SpriteNode(texture, textureRect));
-	background_sprite->setPosition(m_world_bounds.left, m_world_bounds.top);
+	background_sprite->setPosition(m_world_bounds.left, m_world_bounds.top + 5);
 	m_scene_layers[static_cast<int>(Layers::kBackground)]->AttachChild(std::move(background_sprite));
 
 
@@ -636,11 +636,12 @@ void World::HandleCollisions()
 void World::DestroyEntitiesOutsideView()
 {
 	Command command;
-	command.category = Category::Type::kPlayerTank | Category::Type::kPlayer2Tank | Category::Type::kProjectile;
+	//command.category = Category::Type::kPlayerTank | Category::Type::kPlayer2Tank | Category::Type::kProjectile;
+	command.category = Category::Type::kProjectile;
 	command.action = DerivedAction<Entity>([this](Entity& e, sf::Time)
 		{
 			//Does the object intersect with the battlefield
-			if (!GetBattlefieldBounds().intersects(e.GetBoundingRect()))
+			if (!GetViewBounds().intersects(e.GetBoundingRect()))
 			{
 				e.Destroy();
 			}
