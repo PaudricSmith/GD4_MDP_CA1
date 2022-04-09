@@ -18,6 +18,7 @@ A local 2 player top down video game based on the classic Tanks game.
 - [x] Keep track of Tank rotation
 - [x] Keep track of Tank Cannon rotation
 - [ ] Wall collision
+- [ ] Make pickups that both Client and Server can see and use
 - [ ] Todo here
 
 ## BACKLOG
@@ -30,4 +31,4 @@ A local 2 player top down video game based on the classic Tanks game.
 - [x] Tanks don't rotate the same on the server
 - [ ] If host dies his game quits
 - [x] Black background
-- [ ] Tanks spawn outside of the game area
+- [x] Tanks spawn outside of the game area
