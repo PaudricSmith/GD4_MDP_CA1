@@ -331,6 +331,8 @@ TankType Tank::GetTankType() const
 void Tank::SetCannonAngle(float angle)
 {
 	m_cannon_rotation = angle;
+
+	m_cannon_sprite.setRotation(angle);
 }
 
 void Tank::RotateCannon(float angle)

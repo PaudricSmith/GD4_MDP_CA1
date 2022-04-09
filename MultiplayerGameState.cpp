@@ -370,13 +370,13 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 		{
 			tank->setPosition(tank_position - sf::Vector2f(-350, 50 * tank_identifier - 400));
 			tank->setRotation(-90);
-			tank->SetCannonAngle(cannon_rotation);
+			//tank->SetCannonAngle(cannon_rotation);
 		}
 		else
 		{
 			tank->setPosition(tank_position - sf::Vector2f(350, 50 * tank_identifier - 350));
 			tank->setRotation(90);
-			tank->SetCannonAngle(cannon_rotation);
+			//tank->SetCannonAngle(cannon_rotation);
 		}
 		
 		m_players[tank_identifier].reset(new Player(&m_socket, tank_identifier, GetContext().keys1));
@@ -548,6 +548,7 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 			if (tank && !is_local_tank)
 			{
 				sf::Vector2f interpolated_position = tank->getPosition() + (tank_position - tank->getPosition()) * 0.1f;
+				//float interpolated_cannon_angle = tank->GetCannonRotationAngle() + (cannon_rotation - tank->GetCannonRotationAngle()) * 0.1f;
 				tank->setPosition(interpolated_position);
 				tank->SetHitPoints(hitpoints);
 				tank->SetMissileAmmo(ammo);
