@@ -24,6 +24,7 @@ enum class Textures
 	kMissileRefill,
 	kExtraBullets,
 	kFireRate,
+	kTankSpeedIncrease,
 	kTitleScreen,
 	kBaseMenuScreen,
 	kKeyBingingsScreen,

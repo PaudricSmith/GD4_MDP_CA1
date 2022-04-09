@@ -208,7 +208,7 @@ void World::RemoveTank(int identifier)
 /// <returns></returns>
 Tank* World::AddTank(int identifier)
 {
-	std::cout << "identifier ****************************************************************************************: " << identifier << std::endl;
+	//std::cout << "identifier ****************************************************************************************: " << identifier << std::endl;
 
 	bool greenTeam = true;
 	TankType tankBaseType;
@@ -322,8 +322,9 @@ void World::LoadTextures()
 	m_textures.Load(Textures::kMissile, "Media/Textures/Missile.png");
 	m_textures.Load(Textures::kHealthRefill, "Media/Textures/HealthRefill.png");
 	m_textures.Load(Textures::kMissileRefill, "Media/Textures/MissileRefill.png");
-	m_textures.Load(Textures::kExtraBullets, "Media/Textures/FireSpread.png");
 	m_textures.Load(Textures::kFireRate, "Media/Textures/FireRate.png");
+	m_textures.Load(Textures::kExtraBullets, "Media/Textures/FireSpread.png");
+	m_textures.Load(Textures::kTankSpeedIncrease, "Media/Textures/TankSpeedIncrease.png");
 
 	m_textures.Load(Textures::kObstacleWall, "Media/Textures/bg308.png");
 }

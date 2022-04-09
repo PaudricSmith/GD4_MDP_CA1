@@ -24,7 +24,8 @@ public:
 	int GetMissileAmmo() const;
 
 	void IncreaseFireRate();
-	void IncreaseSpread();
+	void IncreaseBullets();
+	void IncreaseTankSpeed();
 	void CollectMissiles(unsigned int count);
 	void UpdateTexts();
 	void UpdateMovementPattern(sf::Time dt);
@@ -85,8 +86,9 @@ private:
 	int m_identifier;
 
 	unsigned int m_fire_rate;
-	unsigned int m_spread_level;
+	unsigned int m_extra_bullet_level;
 	unsigned int m_missile_ammo;
+	float m_tank_speed_level;
 
 	Command m_fire_command;
 	Command m_missile_command;

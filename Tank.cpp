@@ -35,7 +35,8 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	, m_move_cannon_sound_countdown(sf::Time::Zero)
 	, m_is_marked_for_removal(false)
 	, m_fire_rate(1)
-	, m_spread_level(1)
+	, m_extra_bullet_level(1)
+	, m_tank_speed_level(1)
 	, m_missile_ammo(2)
 	, m_health_display(nullptr)
 	, m_missile_display(nullptr)
@@ -145,19 +146,28 @@ unsigned int Tank::GetCategory() const
 
 void Tank::IncreaseFireRate()
 {
-	if (m_fire_rate < 10)
+	if (m_fire_rate < 3)
 	{
 		++m_fire_rate;
 	}
 }
 
-void Tank::IncreaseSpread()
+void Tank::IncreaseBullets()
 {
-	if (m_spread_level < 3)
+	if (m_extra_bullet_level < 3)
 	{
-		++m_spread_level;
+		++m_extra_bullet_level;
 	}
 }
+
+void Tank::IncreaseTankSpeed()
+{
+	if (m_tank_speed_level < 1.5f)
+	{
+		m_tank_speed_level += 0.5f;
+	}
+}
+
 
 void Tank::CollectMissiles(unsigned int count)
 {
@@ -305,7 +315,7 @@ void Tank::UpdateMovementPattern(sf::Time dt)
 
 float Tank::GetMaxSpeed() const
 {
-	return Table[static_cast<int>(m_type)].m_speed;
+	return Table[static_cast<int>(m_type)].m_speed * m_tank_speed_level;
 }
 
 float Tank::GetRotationSpeed() const
@@ -397,7 +407,7 @@ void Tank::CreateBullets(SceneNode& node, const TextureHolder& textures) const
 {
 	ProjectileType type = IsPlayerTank() ? ProjectileType::kAlliedBullet : ProjectileType::kEnemyBullet;
 
-	switch (m_spread_level)
+	switch (m_extra_bullet_level)
 	{
 	case 1:
 		CreateProjectile(node, type, 0.f, 0.4f, textures);
