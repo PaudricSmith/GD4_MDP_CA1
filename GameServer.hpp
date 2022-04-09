@@ -38,6 +38,7 @@ private:
 		sf::Int32 m_missile_ammo;
 		std::map<sf::Int32, bool> m_realtime_actions;
 		float m_tank_rotation;
+		float m_cannon_rotation;
 	};
 
 	typedef std::unique_ptr<RemotePeer> PeerPtr;

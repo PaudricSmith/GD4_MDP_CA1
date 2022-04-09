@@ -17,10 +17,11 @@ public:
 	unsigned int GetCategory() const override;
 
 	void DisablePickups();
-	int GetIdentifier();
 	void SetIdentifier(int identifier);
-	int GetMissileAmmo() const;
 	void SetMissileAmmo(int ammo);
+	void SetCannonAngle(float angle);
+	int GetIdentifier();
+	int GetMissileAmmo() const;
 
 	void IncreaseFireRate();
 	void IncreaseSpread();

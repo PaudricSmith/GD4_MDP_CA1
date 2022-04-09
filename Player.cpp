@@ -86,6 +86,8 @@ struct CannonRotator // Rotate Cannon
 		{
 			tank.RotateCannon(rotation * tank.GetCannonRotationSpeed()); // Rotate Tank Cannon by sign and cannon speed
 
+			std::cout << "*CLIENT* CANNON ROTATION ANGLE: " << tank.GetCannonRotationAngle() << std::endl;
+
 			// Play Tank Cannon moving SFX 
 			tank.CannonMoveSoundPlayInterval();
 		}	

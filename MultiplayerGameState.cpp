@@ -230,7 +230,7 @@ bool MultiplayerGameState::Update(sf::Time dt)
 				if (Tank* tank = m_world.GetTank(identifier))
 				{
 					position_update_packet << identifier << tank->getPosition().x << tank->getPosition().y << static_cast<sf::Int32>(tank->GetHitPoints()) 
-						<< static_cast<sf::Int32>(tank->GetMissileAmmo()) << tank->getRotation();
+						<< static_cast<sf::Int32>(tank->GetMissileAmmo()) << tank->getRotation() << tank->GetCannonRotationAngle();
 				}
 			}
 			m_socket.send(position_update_packet);
@@ -362,18 +362,21 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 		sf::Int32 tank_identifier;
 		sf::Vector2f tank_position;
 		float tank_rotation;
-		packet >> tank_identifier >> tank_position.x >> tank_position.y >> tank_rotation;
+		float cannon_rotation;
+		packet >> tank_identifier >> tank_position.x >> tank_position.y >> tank_rotation >> cannon_rotation;
 		Tank* tank = m_world.AddTank(tank_identifier);
 
 		if (tank_identifier % 2 == 0)
 		{
 			tank->setPosition(tank_position - sf::Vector2f(-350, 50 * tank_identifier - 400));
 			tank->setRotation(-90);
+			tank->SetCannonAngle(cannon_rotation);
 		}
 		else
 		{
 			tank->setPosition(tank_position - sf::Vector2f(350, 50 * tank_identifier - 350));
 			tank->setRotation(90);
+			tank->SetCannonAngle(cannon_rotation);
 		}
 		
 		m_players[tank_identifier].reset(new Player(&m_socket, tank_identifier, GetContext().keys1));
@@ -387,11 +390,13 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 		sf::Int32 tank_identifier;
 		sf::Vector2f tank_position;
 		float tank_rotation;
-		packet >> tank_identifier >> tank_position.x >> tank_position.y >> tank_rotation;
+		float cannon_rotation;
+		packet >> tank_identifier >> tank_position.x >> tank_position.y >> tank_rotation >> cannon_rotation;
 
 		Tank* tank = m_world.AddTank(tank_identifier);
 		tank->setPosition(tank_position);
 		tank->setRotation(tank_rotation);
+		tank->SetCannonAngle(cannon_rotation);
 		m_players[tank_identifier].reset(new Player(&m_socket, tank_identifier, nullptr));
 	}
 	break;
@@ -412,7 +417,7 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 		packet >> world_height >> current_scroll;
 
 		m_world.SetWorldHeight(world_height);
-		//m_world.SetCurrentBattleFieldPosition(current_scroll);
+		m_world.SetCurrentBattleFieldPosition(current_scroll);
 
 		packet >> tank_count;
 		for (sf::Int32 i = 0; i < tank_count; ++i)
@@ -422,13 +427,15 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 			sf::Int32 missile_ammo;
 			sf::Vector2f tank_position;
 			float tank_rotation;
-			packet >> tank_identifier >> tank_position.x >> tank_position.y >> hitpoints >> missile_ammo >> tank_rotation;
+			float cannon_rotation;
+			packet >> tank_identifier >> tank_position.x >> tank_position.y >> hitpoints >> missile_ammo >> tank_rotation >> cannon_rotation;
 
 			Tank* tank = m_world.AddTank(tank_identifier);
 			tank->setPosition(tank_position);
 			tank->setRotation(tank_rotation);
 			tank->SetHitPoints(hitpoints);
 			tank->SetMissileAmmo(missile_ammo);
+			tank->SetCannonAngle(cannon_rotation);
 
 			m_players[tank_identifier].reset(new Player(&m_socket, tank_identifier, nullptr));
 		}
@@ -533,7 +540,8 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 			sf::Int32 hitpoints;
 			sf::Int32 ammo;
 			float tank_rotation;
-			packet >> tank_identifier >> tank_position.x >> tank_position.y >> hitpoints >> ammo >> tank_rotation;
+			float cannon_rotation;
+			packet >> tank_identifier >> tank_position.x >> tank_position.y >> hitpoints >> ammo >> tank_rotation >> cannon_rotation;
 
 			Tank* tank = m_world.GetTank(tank_identifier);
 			bool is_local_tank = std::find(m_local_player_identifiers.begin(), m_local_player_identifiers.end(), tank_identifier) != m_local_player_identifiers.end();
@@ -544,6 +552,7 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 				tank->SetHitPoints(hitpoints);
 				tank->SetMissileAmmo(ammo);
 				tank->setRotation(tank_rotation);
+				tank->SetCannonAngle(cannon_rotation);
 			}
 		}
 	}

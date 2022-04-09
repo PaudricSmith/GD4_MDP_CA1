@@ -52,7 +52,8 @@ void GameServer::NotifyPlayerSpawn(sf::Int32 tank_identifier)
 	sf::Packet packet;
 	//First thing for every packet is what type of packet it is
 	packet << static_cast<sf::Int32>(Server::PacketType::PlayerConnect);
-	packet << tank_identifier << m_tank_info[tank_identifier].m_position.x << m_tank_info[tank_identifier].m_position.y << m_tank_info[tank_identifier].m_tank_rotation;
+	packet << tank_identifier << m_tank_info[tank_identifier].m_position.x << m_tank_info[tank_identifier].m_position.y 
+		<< m_tank_info[tank_identifier].m_tank_rotation << m_tank_info[tank_identifier].m_cannon_rotation;
 	for (std::size_t i = 0; i < m_connected_players; ++i)
 	{
 		if (m_peers[i]->m_ready)
@@ -350,6 +351,7 @@ void GameServer::HandleIncomingPacket(sf::Packet& packet, RemotePeer& receiving_
 		request_packet << m_tank_info[m_tank_identifier_counter].m_position.x;
 		request_packet << m_tank_info[m_tank_identifier_counter].m_position.y;
 		request_packet << m_tank_info[m_tank_identifier_counter].m_tank_rotation;
+		request_packet << m_tank_info[m_tank_identifier_counter].m_cannon_rotation;
 
 		receiving_peer.m_socket.send(request_packet);
 		m_tank_count++;
@@ -361,6 +363,7 @@ void GameServer::HandleIncomingPacket(sf::Packet& packet, RemotePeer& receiving_
 		notify_packet << m_tank_info[m_tank_identifier_counter].m_position.x;
 		notify_packet << m_tank_info[m_tank_identifier_counter].m_position.y;
 		notify_packet << m_tank_info[m_tank_identifier_counter].m_tank_rotation;
+		notify_packet << m_tank_info[m_tank_identifier_counter].m_cannon_rotation;
 
 		for (PeerPtr& peer : m_peers)
 		{
@@ -387,11 +390,16 @@ void GameServer::HandleIncomingPacket(sf::Packet& packet, RemotePeer& receiving_
 			sf::Int32 missile_ammo;
 			sf::Vector2f tank_position;
 			float tank_rotation;
-			packet >> tank_identifier >> tank_position.x >> tank_position.y >> tank_hitpoints >> missile_ammo >> tank_rotation;
+			float cannon_rotation;
+			packet >> tank_identifier >> tank_position.x >> tank_position.y >> tank_hitpoints >> missile_ammo >> tank_rotation >> cannon_rotation;
 			m_tank_info[tank_identifier].m_position = tank_position;
 			m_tank_info[tank_identifier].m_hitpoints = tank_hitpoints;
 			m_tank_info[tank_identifier].m_missile_ammo = missile_ammo;
 			m_tank_info[tank_identifier].m_tank_rotation = tank_rotation;
+			m_tank_info[tank_identifier].m_cannon_rotation = cannon_rotation;
+
+			std::cout << "*SERVER* CANNON ROTATION ANGLE: " << cannon_rotation << std::endl;
+
 		}
 	}
 	break;
@@ -437,6 +445,7 @@ void GameServer::HandleIncomingConnections()
 		m_tank_info[m_tank_identifier_counter].m_hitpoints = 100;
 		m_tank_info[m_tank_identifier_counter].m_missile_ammo = 2;
 		m_tank_info[m_tank_identifier_counter].m_tank_rotation = 0;
+		m_tank_info[m_tank_identifier_counter].m_cannon_rotation = 0;
 
 		sf::Packet packet;
 		packet << static_cast<sf::Int32>(Server::PacketType::SpawnSelf);
@@ -444,6 +453,7 @@ void GameServer::HandleIncomingConnections()
 		packet << m_tank_info[m_tank_identifier_counter].m_position.x;
 		packet << m_tank_info[m_tank_identifier_counter].m_position.y;
 		packet << m_tank_info[m_tank_identifier_counter].m_tank_rotation;
+		packet << m_tank_info[m_tank_identifier_counter].m_cannon_rotation;
 
 		m_peers[m_connected_players]->m_tank_identifiers.emplace_back(m_tank_identifier_counter);
 
@@ -520,7 +530,8 @@ void GameServer::InformWorldState(sf::TcpSocket& socket)
 			for (sf::Int32 identifier : m_peers[i]->m_tank_identifiers)
 			{
 				packet << identifier << m_tank_info[identifier].m_position.x << m_tank_info[identifier].m_position.y 
-					<< m_tank_info[identifier].m_hitpoints << m_tank_info[identifier].m_missile_ammo << m_tank_info[identifier].m_tank_rotation;
+					<< m_tank_info[identifier].m_hitpoints << m_tank_info[identifier].m_missile_ammo 
+					<< m_tank_info[identifier].m_tank_rotation << m_tank_info[identifier].m_cannon_rotation;
 			}
 		}
 	}
@@ -563,7 +574,7 @@ void GameServer::UpdateClientState()
 	for (const auto& tank : m_tank_info)
 	{
 		update_client_state_packet << tank.first << tank.second.m_position.x << tank.second.m_position.y << tank.second.m_hitpoints 
-			<< tank.second.m_missile_ammo << tank.second.m_tank_rotation;
+			<< tank.second.m_missile_ammo << tank.second.m_tank_rotation << tank.second.m_cannon_rotation;
 	}
 
 	SendToAll(update_client_state_packet);

@@ -328,6 +328,11 @@ TankType Tank::GetTankType() const
 	return m_type;
 }
 
+void Tank::SetCannonAngle(float angle)
+{
+	m_cannon_rotation = angle;
+}
+
 void Tank::RotateCannon(float angle)
 {
 	m_cannon_rotation += angle;
