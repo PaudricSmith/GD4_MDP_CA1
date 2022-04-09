@@ -16,7 +16,7 @@ A local 2 player top down video game based on the classic Tanks game.
 - [x] Green team wins text shows if green tank is left and Yellow team wins text shows if yellow tank is left.
 - [x] Fix escape key skipping in game menu straight to the main menu.
 - [x] Keep track of Tank rotation
-- [ ] Keep track of Tank Cannon rotation
+- [x] Keep track of Tank Cannon rotation
 - [ ] Wall collision
 - [ ] Todo here
 
@@ -26,8 +26,8 @@ A local 2 player top down video game based on the classic Tanks game.
 - [ ] Backlog here
 
 ## BUGS
-- [ ] Tank starts with super speed but if it rotates first then it won't have super speed
-- [ ] Tanks don't rotate the same on the server
+- [x] Tank starts with super speed but if it rotates first then it won't have super speed
+- [x] Tanks don't rotate the same on the server
 - [ ] If host dies his game quits
 - [x] Black background
 - [ ] Tanks spawn outside of the game area
