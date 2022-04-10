@@ -17,18 +17,15 @@ A local 2 player top down video game based on the classic Tanks game.
 - [x] Fix escape key skipping in game menu straight to the main menu.
 - [x] Keep track of Tank rotation
 - [x] Keep track of Tank Cannon rotation
+- [x] Make pickups that both Client and Server can see and use
 - [ ] Wall collision
-- [ ] Make pickups that both Client and Server can see and use
-- [ ] Todo here
 
 ## BACKLOG
 - [ ] Add Lobby State for players to join before and after the game.
-- [ ] Backlog here
-- [ ] Backlog here
 
 ## BUGS
 - [x] Tank starts with super speed but if it rotates first then it won't have super speed
 - [x] Tanks don't rotate the same on the server
-- [ ] If host dies his game quits
+- [x] If host dies his game quits
 - [x] Black background
 - [x] Tanks spawn outside of the game area
