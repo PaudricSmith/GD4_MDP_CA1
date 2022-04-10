@@ -33,6 +33,8 @@ GameServer::GameServer(sf::Vector2f battlefield_size)
 	, m_last_spawn_time(sf::Time::Zero)
 	, m_time_for_next_spawn(sf::seconds(5.f))
 	, m_can_succeed(false)
+	, m_green_tanks(0)
+	, m_yellow_tanks(0)
 {
 	m_listener_socket.setBlocking(false);
 	m_peers[0].reset(new RemotePeer());
@@ -61,6 +63,21 @@ void GameServer::NotifyPlayerSpawn(sf::Int32 tank_identifier)
 			m_peers[i]->m_socket.send(packet);
 		}
 	}
+
+
+	// Increment each team , green or yellow tank
+	if ((m_tank_identifier_counter % 2) - 1 == 0)
+	{
+		m_yellow_tanks++;
+	}
+	else
+	{
+		m_green_tanks++;
+	}
+
+	//std::cout << "Green Tanks: " << m_green_tanks << std::endl;
+	//std::cout << "Yellow Tanks: " << m_yellow_tanks << std::endl;
+
 }
 
 //This is the same as PlayerEvent, but for real-time actions. This means that we are changing an ongoing state to either true or false, so we add a Boolean value to the parameters
@@ -165,8 +182,8 @@ void GameServer::ExecutionThread()
 
 void GameServer::Tick()
 {
-	//std::cout << "Connected players = " << m_connected_players << std::endl;
-	//std::cout << "Tank Count = " << m_tank_count << std::endl;
+	
+
 	std::cout << "Peer Size = " << m_peers.size() << std::endl;
 	for (int i = 0; i < m_peers.size(); i++)
 	{
@@ -180,23 +197,8 @@ void GameServer::Tick()
 
 	UpdateClientState();
 
-	//Check if the game is over = all Tanks position.y < offset
-	bool all_tank_done = true;
-	for (const auto& current : m_tank_info)
-	{
-		//As long one player has not crossed the finish line game on
-		if (current.second.m_position.y > 0.f)
-		{
-			all_tank_done = false;
-		}
 
-		if (m_tank_count == 1 && m_can_succeed)
-		{
-			all_tank_done = true;
-		}
-	}
-
-	if (all_tank_done)
+	if (m_tank_count == 1 && m_can_succeed)
 	{
 		sf::Packet mission_success_packet;
 		
@@ -205,15 +207,12 @@ void GameServer::Tick()
 		{
 			mission_success_packet << static_cast<sf::Int32>(Server::PacketType::SuccessYellow);
 			SendToAll(mission_success_packet);
-			all_tank_done = false;
 		}
 		else
 		{
 			mission_success_packet << static_cast<sf::Int32>(Server::PacketType::SuccessGreen);
 			SendToAll(mission_success_packet);
-			all_tank_done = false;
 		}
-
 	}
 
 	//Remove Tank that have been destroyed
@@ -229,44 +228,6 @@ void GameServer::Tick()
 		}
 	}
 
-	////Check if it is time to spawn enemies
-	//if (Now() >= m_time_for_next_spawn + m_last_spawn_time)
-	//{
-	//	//Not going to spawn enemies near the end
-	//	if (m_battlefield_rect.top > 600.f)
-	//	{
-	//		std::size_t enemy_count = 1 + Utility::RandomInt(2);
-	//		float spawn_centre = static_cast<float>(Utility::RandomInt(500) - 250);
-
-	//		//If there is only one enemy it is at the spawn_centre
-	//		float tank_distance = 0.f;
-	//		float next_spawn_position = spawn_centre;
-
-	//		//If there are two then they are centred on the spawn centre
-	//		if (enemy_count == 2)
-	//		{
-	//			tank_distance = static_cast<float>(150 + Utility::RandomInt(250));
-	//			next_spawn_position = spawn_centre - tank_distance / 2.f;
-	//		}
-
-	//		//TODO Do we really need two packets here?
-	//		//Send a spawn packet to the clients
-	//		for (std::size_t i = 0; i < enemy_count; ++i)
-	//		{
-	//			sf::Packet packet;
-	//			packet << static_cast<sf::Int32>(Server::PacketType::SpawnEnemy);
-	//			packet << static_cast<sf::Int32>(1 + Utility::RandomInt(static_cast<int>(TankType::kTankCount) - 1));
-	//			packet << m_world_height - m_battlefield_rect.top + 500;
-	//			packet << next_spawn_position;
-
-	//			next_spawn_position += tank_distance / 2.f;
-	//			SendToAll(packet);
-	//		}
-
-	//		m_last_spawn_time = Now();
-	//		m_time_for_next_spawn = sf::milliseconds(2000 + Utility::RandomInt(6000));
-	//	}
-	//}
 }
 
 sf::Time GameServer::Now() const

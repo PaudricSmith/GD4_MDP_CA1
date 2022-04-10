@@ -84,4 +84,7 @@ private:
 
 	sf::Time m_last_spawn_time;
 	sf::Time m_time_for_next_spawn;
+
+	sf::Int32 m_green_tanks;
+	sf::Int32 m_yellow_tanks;
 };

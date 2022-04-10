@@ -293,8 +293,11 @@ void MultiplayerGameState::OnActivate()
 
 void MultiplayerGameState::OnDestroy()
 {
+	std::cout << "1 HOST QUIT" << std::endl;
 	if (!m_host && m_connected)
 	{
+		std::cout << "2 HOST QUIT" << std::endl;
+
 		//Inform server this client is dying
 		sf::Packet packet;
 		packet << static_cast<sf::Int32>(Client::PacketType::Quit);
