@@ -34,12 +34,16 @@ World::World(sf::RenderTarget& output_target, const TextureHolder& textures, Fon
 	BuildScene();
 	m_camera.setCenter(m_spawn_position);
 
-	//// Pickup Node
-	//m_drop_pickup_command.category = static_cast<int>(Category::Type::kScene);
-	//m_drop_pickup_command.action = [this, &textures](SceneNode& node, sf::Time)
-	//{
-	//	CreatePickups(node, textures);
-	//};
+	// Pickup Node
+	if (!m_networked_world)
+	{
+		m_drop_pickup_command.category = static_cast<int>(Category::Type::kScene);
+		m_drop_pickup_command.action = [this, &textures](SceneNode& node, sf::Time)
+		{
+			CreatePickups(node, textures);
+		};
+	}
+	
 
 	//PlaceWalls();
 
@@ -136,6 +140,15 @@ void World::SetWorldScrollCompensation(float compensation)
 
 void World::Update(sf::Time dt)
 {
+
+	// Spawn Pickups at start of game
+	if (m_is_pickups_spawned == false && !m_networked_world)
+	{
+		CommandQueue& commands = GetCommandQueue();
+		commands.Push(m_drop_pickup_command);
+
+		m_is_pickups_spawned = true;
+	}
 
 	DestroyEntitiesOutsideView();
 
