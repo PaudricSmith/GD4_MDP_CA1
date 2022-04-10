@@ -78,6 +78,7 @@ private:
 	bool m_played_explosion_sound;
 	bool m_is_playing_move_sound;
 	bool m_is_playing_cannon_move_sound;
+	bool m_is_pickups_spawned;
 
 	float m_travelled_distance;
 	float m_cannon_rotation;

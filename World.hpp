@@ -49,11 +49,6 @@ public:
 	void SetCurrentBattleFieldPosition(float line_y);
 	void SetWorldHeight(float height);
 
-	//void AddEnemy(TankType type, float rel_x, float rel_y);
-	//void SortEnemies();
-	//bool HasAlivePlayer1() const;
-	//bool HasAlivePlayer2() const;
-
 	void SetWorldScrollCompensation(float compensation);
 	Tank* GetTank(int identifier) const;
 	sf::FloatRect GetBattlefieldBounds() const;

@@ -167,7 +167,11 @@ void GameServer::Tick()
 {
 	//std::cout << "Connected players = " << m_connected_players << std::endl;
 	//std::cout << "Tank Count = " << m_tank_count << std::endl;
-	//std::cout << "Peer Size = " << m_peers.size() << std::endl;
+	std::cout << "Peer Size = " << m_peers.size() << std::endl;
+	for (int i = 0; i < m_peers.size(); i++)
+	{
+		std::cout << "Peer = " << m_peers[i].get() << std::endl;
+	}
 
 	if (m_tank_count == 2)
 	{
@@ -311,124 +315,122 @@ void GameServer::HandleIncomingPacket(sf::Packet& packet, RemotePeer& receiving_
 
 	switch (static_cast<Client::PacketType> (packet_type))
 	{
-	case Client::PacketType::Quit:
-	{
-		receiving_peer.m_timed_out = true;
-		detected_timeout = true;
-	}
-	break;
-
-	case Client::PacketType::PlayerEvent:
-	{
-		sf::Int32 tank_identifier;
-		sf::Int32 action;
-		packet >> tank_identifier >> action;
-		NotifyPlayerEvent(tank_identifier, action);
-	}
-	break;
-
-	case Client::PacketType::PlayerRealtimeChange:
-	{
-		sf::Int32 tank_identifier;
-		sf::Int32 action;
-		bool action_enabled;
-		packet >> tank_identifier >> action >> action_enabled;
-		NotifyPlayerRealtimeChange(tank_identifier, action, action_enabled);
-	}
-	break;
-
-	case Client::PacketType::RequestCoopPartner:
-	{
-		receiving_peer.m_tank_identifiers.emplace_back(m_tank_identifier_counter);
-		m_tank_info[m_tank_identifier_counter].m_position = sf::Vector2f(m_battlefield_rect.width / 2, m_battlefield_rect.top + m_battlefield_rect.height / 2);
-		m_tank_info[m_tank_identifier_counter].m_hitpoints = 100;
-		m_tank_info[m_tank_identifier_counter].m_missile_ammo = 2;
-		m_tank_info[m_tank_identifier_counter].m_tank_rotation = 0;
-		m_tank_info[m_tank_identifier_counter].m_cannon_rotation = 0;
-
-		sf::Packet request_packet;
-		request_packet << static_cast<sf::Int32>(Server::PacketType::AcceptCoopPartner);
-		request_packet << m_tank_identifier_counter;
-		request_packet << m_tank_info[m_tank_identifier_counter].m_position.x;
-		request_packet << m_tank_info[m_tank_identifier_counter].m_position.y;
-		request_packet << m_tank_info[m_tank_identifier_counter].m_tank_rotation;
-		request_packet << m_tank_info[m_tank_identifier_counter].m_cannon_rotation;
-
-		receiving_peer.m_socket.send(request_packet);
-		m_tank_count++;
-
-		// Tell everyone else about the new Tank
-		sf::Packet notify_packet;
-		notify_packet << static_cast<sf::Int32>(Server::PacketType::PlayerConnect);
-		notify_packet << m_tank_identifier_counter;
-		notify_packet << m_tank_info[m_tank_identifier_counter].m_position.x;
-		notify_packet << m_tank_info[m_tank_identifier_counter].m_position.y;
-		notify_packet << m_tank_info[m_tank_identifier_counter].m_tank_rotation;
-		notify_packet << m_tank_info[m_tank_identifier_counter].m_cannon_rotation;
-
-		for (PeerPtr& peer : m_peers)
+		case Client::PacketType::Quit:
 		{
-			if (peer.get() != &receiving_peer && peer->m_ready)
-			{
-
-				peer->m_socket.send(notify_packet);
-			}
+			receiving_peer.m_timed_out = true;
+			detected_timeout = true;
 		}
+		break;
 
-		m_tank_identifier_counter++;
-	}
-	break;
-
-	case Client::PacketType::PositionUpdate:
-	{
-		sf::Int32 num_tank;
-		packet >> num_tank;
-
-		for (sf::Int32 i = 0; i < num_tank; ++i)
+		case Client::PacketType::PlayerEvent:
 		{
 			sf::Int32 tank_identifier;
-			sf::Int32 tank_hitpoints;
-			sf::Int32 missile_ammo;
-			sf::Vector2f tank_position;
-			float tank_rotation;
-			float cannon_rotation;
-			packet >> tank_identifier >> tank_position.x >> tank_position.y >> tank_hitpoints >> missile_ammo >> tank_rotation >> cannon_rotation;
-			m_tank_info[tank_identifier].m_position = tank_position;
-			m_tank_info[tank_identifier].m_hitpoints = tank_hitpoints;
-			m_tank_info[tank_identifier].m_missile_ammo = missile_ammo;
-			m_tank_info[tank_identifier].m_tank_rotation = tank_rotation;
-			m_tank_info[tank_identifier].m_cannon_rotation = cannon_rotation;
-
-		    //std::cout << "*SERVER* CANNON ROTATION ANGLE: " << cannon_rotation << std::endl;
+			sf::Int32 action;
+			packet >> tank_identifier >> action;
+			NotifyPlayerEvent(tank_identifier, action);
 		}
-	}
-	break;
+		break;
 
-	case Client::PacketType::GameEvent:
-	{
-		sf::Int32 action;
-		float x;
-		float y;
-
-		packet >> action;
-		packet >> x;
-		packet >> y;
-
-		//Enemy explodes, with a certain probability, drop a pickup
-		//To avoid multiple messages only listen to the first peer (host)
-		if (action == GameActions::EnemyExplode && Utility::RandomInt(3) == 0 && &receiving_peer == m_peers[0].get())
+		case Client::PacketType::PlayerRealtimeChange:
 		{
-			sf::Packet packet;
-			packet << static_cast<sf::Int32>(Server::PacketType::SpawnPickup);
-			packet << static_cast<sf::Int32>(Utility::RandomInt(static_cast<int>(PickupType::kPickupCount)));
-			packet << x;
-			packet << y;
+			sf::Int32 tank_identifier;
+			sf::Int32 action;
+			bool action_enabled;
+			packet >> tank_identifier >> action >> action_enabled;
+			NotifyPlayerRealtimeChange(tank_identifier, action, action_enabled);
+		}
+		break;
 
-			SendToAll(packet);
+		case Client::PacketType::RequestCoopPartner:
+		{
+			receiving_peer.m_tank_identifiers.emplace_back(m_tank_identifier_counter);
+			m_tank_info[m_tank_identifier_counter].m_position = sf::Vector2f(m_battlefield_rect.width / 2, m_battlefield_rect.top + m_battlefield_rect.height / 2);
+			m_tank_info[m_tank_identifier_counter].m_hitpoints = 100;
+			m_tank_info[m_tank_identifier_counter].m_missile_ammo = 2;
+			m_tank_info[m_tank_identifier_counter].m_tank_rotation = 0;
+			m_tank_info[m_tank_identifier_counter].m_cannon_rotation = 0;
+
+			sf::Packet request_packet;
+			request_packet << static_cast<sf::Int32>(Server::PacketType::AcceptCoopPartner);
+			request_packet << m_tank_identifier_counter;
+			request_packet << m_tank_info[m_tank_identifier_counter].m_position.x;
+			request_packet << m_tank_info[m_tank_identifier_counter].m_position.y;
+			request_packet << m_tank_info[m_tank_identifier_counter].m_tank_rotation;
+			request_packet << m_tank_info[m_tank_identifier_counter].m_cannon_rotation;
+
+			receiving_peer.m_socket.send(request_packet);
+			m_tank_count++;
+
+			// Tell everyone else about the new Tank
+			sf::Packet notify_packet;
+			notify_packet << static_cast<sf::Int32>(Server::PacketType::PlayerConnect);
+			notify_packet << m_tank_identifier_counter;
+			notify_packet << m_tank_info[m_tank_identifier_counter].m_position.x;
+			notify_packet << m_tank_info[m_tank_identifier_counter].m_position.y;
+			notify_packet << m_tank_info[m_tank_identifier_counter].m_tank_rotation;
+			notify_packet << m_tank_info[m_tank_identifier_counter].m_cannon_rotation;
+
+			for (PeerPtr& peer : m_peers)
+			{
+				if (peer.get() != &receiving_peer && peer->m_ready)
+				{
+
+					peer->m_socket.send(notify_packet);
+				}
+			}
+
+			m_tank_identifier_counter++;
+		}
+		break;
+
+		case Client::PacketType::PositionUpdate:
+		{
+			sf::Int32 num_tank;
+			packet >> num_tank;
+
+			for (sf::Int32 i = 0; i < num_tank; ++i)
+			{
+				sf::Int32 tank_identifier;
+				sf::Int32 tank_hitpoints;
+				sf::Int32 missile_ammo;
+				sf::Vector2f tank_position;
+				float tank_rotation;
+				float cannon_rotation;
+				packet >> tank_identifier >> tank_position.x >> tank_position.y >> tank_hitpoints >> missile_ammo >> tank_rotation >> cannon_rotation;
+				m_tank_info[tank_identifier].m_position = tank_position;
+				m_tank_info[tank_identifier].m_hitpoints = tank_hitpoints;
+				m_tank_info[tank_identifier].m_missile_ammo = missile_ammo;
+				m_tank_info[tank_identifier].m_tank_rotation = tank_rotation;
+				m_tank_info[tank_identifier].m_cannon_rotation = cannon_rotation;
+
+			}
+		}
+		break;
+
+		case Client::PacketType::GameEvent:
+		{
+			sf::Int32 action;
+			float x;
+			float y;
+
+			packet >> action;
+			packet >> x;
+			packet >> y;
+
+			//Drop pickup at start of game
+			//To avoid multiple messages only listen to the first peer (host)
+			if (action == GameActions::GameStartPickup && &receiving_peer == m_peers[0].get())
+			{
+				sf::Packet packet;
+				packet << static_cast<sf::Int32>(Server::PacketType::SpawnPickup);
+				packet << static_cast<sf::Int32>(Utility::RandomInt(static_cast<int>(PickupType::kPickupCount)));
+				packet << x;
+				packet << y;
+
+				SendToAll(packet);
+			}
 		}
 	}
-	}
-
 }
 
 void GameServer::HandleIncomingConnections()

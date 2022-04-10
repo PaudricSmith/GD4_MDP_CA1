@@ -45,7 +45,8 @@ namespace GameActions
 {
 	enum Type
 	{
-		EnemyExplode
+		EnemyExplode,
+		GameStartPickup
 	};
 
 	struct Action

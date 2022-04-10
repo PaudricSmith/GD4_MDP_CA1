@@ -47,6 +47,7 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	, m_is_playing_move_sound(false)
 	, m_is_playing_cannon_move_sound(false)
 	, m_identifier(0)
+	, m_is_pickups_spawned(false)
 {
 	// Reduce Tank sprite size
 	m_sprite.setScale(0.5f, 0.5f);
@@ -74,8 +75,6 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	sf::Vector2f cannonOriginOffset = sf::Vector2f(1.0f, 2.0f);
 	m_cannon_sprite.setPosition(cannonOriginOffset);
 
-
-
 	// Create Nodes
 	m_fire_command.category = static_cast<int>(Category::Type::kScene);
 	m_fire_command.action = [this, &textures](SceneNode& node, sf::Time)
@@ -89,11 +88,11 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 		CreateProjectile(node, ProjectileType::kMissile, 0.f, 0.5f, textures);
 	};
 
-	m_drop_pickup_command.category = static_cast<int>(Category::Type::kScene);
+	/*m_drop_pickup_command.category = static_cast<int>(Category::Type::kScene);
 	m_drop_pickup_command.action = [this, &textures](SceneNode& node, sf::Time)
 	{
 		CreatePickup(node, textures);
-	};
+	};*/
 
 	std::unique_ptr<TextNode> healthDisplay(new TextNode(fonts, ""));
 	m_health_display = healthDisplay.get();
@@ -105,6 +104,8 @@ Tank::Tank(TankType type, TankType cannonType, const TextureHolder& textures, co
 	AttachChild(std::move(missileDisplay));
 
 	UpdateTexts();
+
+	
 }
 
 int Tank::GetMissileAmmo() const
@@ -263,7 +264,7 @@ void Tank::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 	
 	if (IsDestroyed())
 	{
-		CheckPickupDrop(commands);
+		//CheckPickupDrop(commands);
 		m_is_marked_for_removal = true;
 		return;
 	}
@@ -485,7 +486,7 @@ void Tank::CreatePickup(SceneNode& node, const TextureHolder& textures) const
 	auto type = static_cast<PickupType>(Utility::RandomInt(static_cast<int>(PickupType::kPickupCount)));
 	std::unique_ptr<Pickup> pickup(new Pickup(type, textures));
 	pickup->setPosition(GetWorldPosition());
-	pickup->SetVelocity(0.f, 1.f);
+	pickup->SetVelocity(0.f, 0.f);
 	node.AttachChild(std::move(pickup));
 }
 

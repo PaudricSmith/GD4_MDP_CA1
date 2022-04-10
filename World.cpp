@@ -34,14 +34,14 @@ World::World(sf::RenderTarget& output_target, const TextureHolder& textures, Fon
 	BuildScene();
 	m_camera.setCenter(m_spawn_position);
 
-	// Pickup Node
-	m_drop_pickup_command.category = static_cast<int>(Category::Type::kScene);
-	m_drop_pickup_command.action = [this, &textures](SceneNode& node, sf::Time)
-	{
-		CreatePickups(node, textures);
-	};
+	//// Pickup Node
+	//m_drop_pickup_command.category = static_cast<int>(Category::Type::kScene);
+	//m_drop_pickup_command.action = [this, &textures](SceneNode& node, sf::Time)
+	//{
+	//	CreatePickups(node, textures);
+	//};
 
-	PlaceWalls();
+	//PlaceWalls();
 
 	m_sfx_player.Play(SoundEffects::kToastBeep2);
 }
@@ -91,11 +91,11 @@ void World::PlaceWalls()
 /// <param name="textures"></param>
 void World::CreatePickups(SceneNode& node, const TextureHolder& textures) const
 {
-	sf::Vector2f topLeftCorner = sf::Vector2f(100, 100);
+	/*sf::Vector2f topLeftCorner = sf::Vector2f(100, 100);
 	sf::Vector2f topRightCorner = sf::Vector2f(924, 100);
 	sf::Vector2f bottomLeftCorner = sf::Vector2f(100, 668);
 	sf::Vector2f bottomRightCorner = sf::Vector2f(924, 668);
-	sf::Vector2f middle = sf::Vector2f(512, 385);
+	
 
 	auto randType1 = static_cast<PickupType>(Utility::RandomInt(static_cast<int>(PickupType::kPickupCount)));
 	std::unique_ptr<Pickup> pickup1(new Pickup(randType1, m_textures));
@@ -119,8 +119,9 @@ void World::CreatePickups(SceneNode& node, const TextureHolder& textures) const
 	std::unique_ptr<Pickup> pickup4(new Pickup(randType4, m_textures));
 	pickup4->setPosition(bottomRightCorner);
 	pickup4->SetVelocity(2.0f, 2.0f);
-	node.AttachChild(std::move(pickup4));
+	node.AttachChild(std::move(pickup4));*/
 
+	sf::Vector2f middle = sf::Vector2f(512, 385);
 	auto randType5 = static_cast<PickupType>(Utility::RandomInt(static_cast<int>(PickupType::kPickupCount)));
 	std::unique_ptr<Pickup> pickup5(new Pickup(randType5, m_textures));
 	pickup5->setPosition(middle);
@@ -135,17 +136,6 @@ void World::SetWorldScrollCompensation(float compensation)
 
 void World::Update(sf::Time dt)
 {
-
-	// Spawn Pickups at start of game
-	if (m_is_pickups_spawned == false)
-	{
-		CommandQueue& commands = GetCommandQueue();
-		commands.Push(m_drop_pickup_command);
-
-		m_is_pickups_spawned = true;
-	}
-
-	/*m_player_tank->SetVelocity(0.f, 0.f);*/
 
 	DestroyEntitiesOutsideView();
 

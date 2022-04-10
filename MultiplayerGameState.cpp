@@ -399,6 +399,20 @@ void MultiplayerGameState::HandlePacket(sf::Int32 packet_type, sf::Packet& packe
 		tank->setRotation(tank_rotation);
 		tank->SetCannonAngle(cannon_rotation);
 		m_players[tank_identifier].reset(new Player(&m_socket, tank_identifier, nullptr));
+
+		// Make a random pickup around the middle area of the arena when someone new joins
+		sf::Vector2f startMiddlePickupPosition = 
+			sf::Vector2f(static_cast<float>((Utility::RandomInt(100)) + 412.f), static_cast<float>((Utility::RandomInt(100)) + 285.f));
+		CommandQueue& commands = m_world.GetCommandQueue();
+		Command command;
+		command.category = Category::kNetwork;
+		command.action = DerivedAction<NetworkNode>([startMiddlePickupPosition](NetworkNode& node, sf::Time)
+			{
+				node.NotifyGameAction(GameActions::GameStartPickup, startMiddlePickupPosition);
+			});
+
+		commands.Push(command);
+		
 	}
 	break;
 
