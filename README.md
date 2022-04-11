@@ -1,8 +1,10 @@
-## GD4_MDP_CA1 Paudric Smith and Loïc Dornel
+## GD4_MDP_CA2 Paudric Smith and Loïc Dornel
+
+## Totaled Tanks
 
 ### Description
 Multiplayer Distributed Programming assignment video game made using SFML/C++.
-A local 2 player top down video game based on the classic Tanks game.
+A local 2 player and multiplayer top down video game based on the classic Tanks game.
 
 ### Git-Rules
 - **Create new branch for new feature**
